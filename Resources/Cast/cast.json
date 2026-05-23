@@ -1,0 +1,33 @@
+{
+  "app": "microbelab",
+  "format": "webp",
+  "source": "labsmith scripts/copy_cast_to_repos.sh (from spark-anvil-site/public/cast/)",
+  "characters": [
+    {
+      "slug": "guard",
+      "portrait": "guard.webp"
+    },
+    {
+      "slug": "lacto",
+      "portrait": "lacto.webp"
+    },
+    {
+      "slug": "net",
+      "portrait": "net.webp"
+    },
+    {
+      "slug": "photo",
+      "portrait": "photo.webp"
+    },
+    {
+      "slug": "spore",
+      "portrait": "spore.webp"
+    },
+    {
+      "slug": "yeast",
+      "portrait": "yeast.webp"
+    }
+  ],
+  "count": 6,
+  "loading_hint": "Load via Bundle.module.url(forResource: slug, withExtension: \"webp\"). Each entry's slug matches the character's dnCast.members[].slug in spark-anvil-site/src/data/apps.generated.ts."
+}
