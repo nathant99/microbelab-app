@@ -1,0 +1,100 @@
+{
+  "app": "microbelab",
+  "mode": "chapters",
+  "generated_at": "2026-06-01T16:54:51",
+  "total_estimated_cost_usd": 1.074,
+  "actual_cost_usd": 1.074,
+  "chapters_count": 6,
+  "results": [
+    {
+      "asset": "chapters/guard_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_guard_opener.png"
+    },
+    {
+      "asset": "chapters/guard_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_guard_spot.png"
+    },
+    {
+      "asset": "chapters/lacto_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_lacto_opener.png"
+    },
+    {
+      "asset": "chapters/lacto_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_lacto_spot.png"
+    },
+    {
+      "asset": "chapters/net_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_net_opener.png"
+    },
+    {
+      "asset": "chapters/net_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_net_spot.png"
+    },
+    {
+      "asset": "chapters/photo_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_photo_opener.png"
+    },
+    {
+      "asset": "chapters/photo_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_photo_spot.png"
+    },
+    {
+      "asset": "chapters/spore_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_spore_opener.png"
+    },
+    {
+      "asset": "chapters/spore_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_spore_spot.png"
+    },
+    {
+      "asset": "chapters/yeast_opener",
+      "model": "gemini-3-pro-image-preview",
+      "cost": 0.134,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_yeast_opener.png"
+    },
+    {
+      "asset": "chapters/yeast_spot",
+      "model": "gemini-3.1-flash-image-preview",
+      "cost": 0.045,
+      "ref_locked": true,
+      "ok": true,
+      "path": "/Volumes/Data/Projects/GitHub/microbelab-app/Resources/Illustrations/chapters/chapter_yeast_spot.png"
+    }
+  ]
+}
