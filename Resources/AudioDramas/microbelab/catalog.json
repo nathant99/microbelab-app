@@ -3,11 +3,12 @@
     {
       "id": "02e3e887-41bf-4b46-b0af-4ddfe959b06e",
       "title": "Lacto \u2014 Friend in Your Food, Friend in Your Gut",
+      "titleSlug": "lacto-friend-in-your-food",
       "appSlug": "microbelab",
       "sourceChapterSlugs": [
         "lacto"
       ],
-      "durationSeconds": 223.94,
+      "durationSeconds": 270.92,
       "bundlePath": "AudioDramas/microbelab/lacto-friend-in-your-food.caf",
       "webM4APath": "AudioDramas/microbelab/lacto-friend-in-your-food.m4a",
       "webVTTPath": "AudioDramas/microbelab/lacto-friend-in-your-food.vtt",
@@ -15,126 +16,214 @@
         {
           "index": 1,
           "startMs": 0,
-          "endMs": 18450,
+          "endMs": 9250,
           "character": "NARRATOR"
         },
         {
           "index": 2,
-          "startMs": 18450,
-          "endMs": 36941,
+          "startMs": 9250,
+          "endMs": 16821,
           "character": "NARRATOR"
         },
         {
           "index": 3,
-          "startMs": 36941,
-          "endMs": 40992,
-          "character": "LACTO"
+          "startMs": 16821,
+          "endMs": 34512,
+          "character": "NARRATOR"
         },
         {
           "index": 4,
-          "startMs": 40992,
-          "endMs": 48083,
+          "startMs": 34512,
+          "endMs": 54203,
           "character": "NARRATOR"
         },
         {
           "index": 5,
-          "startMs": 48083,
-          "endMs": 53734,
-          "character": "STUDENT"
-        },
-        {
-          "index": 6,
-          "startMs": 53734,
-          "endMs": 66665,
+          "startMs": 54203,
+          "endMs": 57934,
           "character": "LACTO"
         },
         {
+          "index": 6,
+          "startMs": 57934,
+          "endMs": 64865,
+          "character": "NARRATOR"
+        },
+        {
           "index": 7,
-          "startMs": 66665,
-          "endMs": 69036,
+          "startMs": 64865,
+          "endMs": 70116,
           "character": "STUDENT"
         },
         {
           "index": 8,
-          "startMs": 69036,
-          "endMs": 88767,
+          "startMs": 70116,
+          "endMs": 82927,
           "character": "LACTO"
         },
         {
           "index": 9,
-          "startMs": 88767,
-          "endMs": 93978,
+          "startMs": 82927,
+          "endMs": 85218,
           "character": "STUDENT"
         },
         {
           "index": 10,
-          "startMs": 93978,
-          "endMs": 111749,
+          "startMs": 85218,
+          "endMs": 103669,
           "character": "LACTO"
         },
         {
           "index": 11,
-          "startMs": 111749,
-          "endMs": 117760,
-          "character": "NARRATOR"
+          "startMs": 103669,
+          "endMs": 108400,
+          "character": "STUDENT"
         },
         {
           "index": 12,
-          "startMs": 117760,
-          "endMs": 137091,
+          "startMs": 108400,
+          "endMs": 125531,
           "character": "LACTO"
         },
         {
           "index": 13,
-          "startMs": 137091,
-          "endMs": 141222,
-          "character": "STUDENT"
+          "startMs": 125531,
+          "endMs": 131422,
+          "character": "NARRATOR"
         },
         {
           "index": 14,
-          "startMs": 141222,
-          "endMs": 150113,
+          "startMs": 131422,
+          "endMs": 151513,
           "character": "LACTO"
         },
         {
           "index": 15,
-          "startMs": 150113,
-          "endMs": 164844,
-          "character": "NARRATOR"
+          "startMs": 151513,
+          "endMs": 155444,
+          "character": "STUDENT"
         },
         {
           "index": 16,
-          "startMs": 164844,
-          "endMs": 191135,
+          "startMs": 155444,
+          "endMs": 164135,
           "character": "LACTO"
         },
         {
           "index": 17,
-          "startMs": 191135,
-          "endMs": 195666,
-          "character": "STUDENT"
+          "startMs": 164135,
+          "endMs": 178506,
+          "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 195666,
-          "endMs": 207517,
+          "startMs": 178506,
+          "endMs": 203757,
           "character": "LACTO"
         },
         {
           "index": 19,
-          "startMs": 207517,
-          "endMs": 217528,
-          "character": "NARRATOR"
+          "startMs": 203757,
+          "endMs": 208128,
+          "character": "STUDENT"
         },
         {
           "index": 20,
-          "startMs": 217528,
-          "endMs": 223939,
+          "startMs": 208128,
+          "endMs": 219099,
           "character": "LACTO"
+        },
+        {
+          "index": 21,
+          "startMs": 219099,
+          "endMs": 230230,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 22,
+          "startMs": 230230,
+          "endMs": 235761,
+          "character": "LACTO"
+        },
+        {
+          "index": 23,
+          "startMs": 235761,
+          "endMs": 244492,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 24,
+          "startMs": 244492,
+          "endMs": 252183,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 25,
+          "startMs": 252183,
+          "endMs": 257873,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 26,
+          "startMs": 257873,
+          "endMs": 270924,
+          "character": "NARRATOR"
         }
       ],
       "moderationSensitivity": "normal",
-      "traumaConstraints": null
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-05",
+      "releaseDate": "2026-06-05",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/lacto",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-05",
+          "attributionVersion": "v1-pre-2026-06-04",
+          "durationMs": 223940,
+          "bundlePath": "AudioDramas/microbelab/lacto-friend-in-your-food-v1-2026-06-05.caf",
+          "webM4APath": "AudioDramas/microbelab/lacto-friend-in-your-food-v1-2026-06-05.m4a",
+          "webVTTPath": "AudioDramas/microbelab/lacto-friend-in-your-food-v1-2026-06-05.vtt"
+        },
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-05",
+          "attributionVersion": "v2",
+          "durationMs": 270924,
+          "bundlePath": "AudioDramas/microbelab/lacto-friend-in-your-food.caf",
+          "webM4APath": "AudioDramas/microbelab/lacto-friend-in-your-food.m4a",
+          "webVTTPath": "AudioDramas/microbelab/lacto-friend-in-your-food.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 1
     }
   ]
 }
