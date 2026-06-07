@@ -224,6 +224,1014 @@
         }
       ],
       "canonicalVersionIndex": 1
+    },
+    {
+      "id": "3deb114d-c3ff-4684-aa45-ae5098d03883",
+      "title": "Guard \u2014 I Check Ids",
+      "titleSlug": "guard-guard",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "guard"
+      ],
+      "durationSeconds": 141.76,
+      "bundlePath": "AudioDramas/microbelab/guard-guard.caf",
+      "webM4APath": "AudioDramas/microbelab/guard-guard.m4a",
+      "webVTTPath": "AudioDramas/microbelab/guard-guard.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7410,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7410,
+          "endMs": 14981,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 14981,
+          "endMs": 22032,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 22032,
+          "endMs": 28883,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 28883,
+          "endMs": 36814,
+          "character": "GUARD"
+        },
+        {
+          "index": 6,
+          "startMs": 36814,
+          "endMs": 44225,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 44225,
+          "endMs": 54236,
+          "character": "GUARD"
+        },
+        {
+          "index": 8,
+          "startMs": 54236,
+          "endMs": 61847,
+          "character": "GUARD"
+        },
+        {
+          "index": 9,
+          "startMs": 61847,
+          "endMs": 69018,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 10,
+          "startMs": 69018,
+          "endMs": 77469,
+          "character": "GUARD"
+        },
+        {
+          "index": 11,
+          "startMs": 77469,
+          "endMs": 84600,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 84600,
+          "endMs": 90891,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 13,
+          "startMs": 90891,
+          "endMs": 97462,
+          "character": "GUARD"
+        },
+        {
+          "index": 14,
+          "startMs": 97462,
+          "endMs": 107473,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 15,
+          "startMs": 107473,
+          "endMs": 116204,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 116204,
+          "endMs": 123455,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 123455,
+          "endMs": 129346,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 129346,
+          "endMs": 141757,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/guard",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 141757,
+          "bundlePath": "AudioDramas/microbelab/guard-guard.caf",
+          "webM4APath": "AudioDramas/microbelab/guard-guard.m4a",
+          "webVTTPath": "AudioDramas/microbelab/guard-guard.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "ed730391-e948-416d-b041-5c1373d91f80",
+      "title": "Lacto \u2014 Friend In Your Food",
+      "titleSlug": "lacto-lacto",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "lacto"
+      ],
+      "durationSeconds": 147.12,
+      "bundlePath": "AudioDramas/microbelab/lacto-lacto.caf",
+      "webM4APath": "AudioDramas/microbelab/lacto-lacto.m4a",
+      "webVTTPath": "AudioDramas/microbelab/lacto-lacto.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 9130,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 9130,
+          "endMs": 15741,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 15741,
+          "endMs": 23632,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 23632,
+          "endMs": 33923,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 33923,
+          "endMs": 42414,
+          "character": "LACTO"
+        },
+        {
+          "index": 6,
+          "startMs": 42414,
+          "endMs": 50145,
+          "character": "LACTO"
+        },
+        {
+          "index": 7,
+          "startMs": 50145,
+          "endMs": 55916,
+          "character": "LACTO"
+        },
+        {
+          "index": 8,
+          "startMs": 55916,
+          "endMs": 65487,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 65487,
+          "endMs": 74498,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 10,
+          "startMs": 74498,
+          "endMs": 81029,
+          "character": "LACTO"
+        },
+        {
+          "index": 11,
+          "startMs": 81029,
+          "endMs": 89000,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 89000,
+          "endMs": 96371,
+          "character": "LACTO"
+        },
+        {
+          "index": 13,
+          "startMs": 96371,
+          "endMs": 104782,
+          "character": "LACTO"
+        },
+        {
+          "index": 14,
+          "startMs": 104782,
+          "endMs": 114313,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 15,
+          "startMs": 114313,
+          "endMs": 122324,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 122324,
+          "endMs": 129175,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 129175,
+          "endMs": 134866,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 134866,
+          "endMs": 147117,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/lacto",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 147117,
+          "bundlePath": "AudioDramas/microbelab/lacto-lacto.caf",
+          "webM4APath": "AudioDramas/microbelab/lacto-lacto.m4a",
+          "webVTTPath": "AudioDramas/microbelab/lacto-lacto.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "95f2b677-da94-4946-9f7a-2cbc42c35a46",
+      "title": "Net \u2014 Forests Talk Through Me",
+      "titleSlug": "net-net",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "net"
+      ],
+      "durationSeconds": 156.44,
+      "bundlePath": "AudioDramas/microbelab/net-net.caf",
+      "webM4APath": "AudioDramas/microbelab/net-net.m4a",
+      "webVTTPath": "AudioDramas/microbelab/net-net.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7450,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7450,
+          "endMs": 14781,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 14781,
+          "endMs": 24792,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 24792,
+          "endMs": 32843,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 32843,
+          "endMs": 41454,
+          "character": "NET"
+        },
+        {
+          "index": 6,
+          "startMs": 41454,
+          "endMs": 51905,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 51905,
+          "endMs": 60916,
+          "character": "NET"
+        },
+        {
+          "index": 8,
+          "startMs": 60916,
+          "endMs": 70167,
+          "character": "NET"
+        },
+        {
+          "index": 9,
+          "startMs": 70167,
+          "endMs": 78178,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 10,
+          "startMs": 78178,
+          "endMs": 87789,
+          "character": "NET"
+        },
+        {
+          "index": 11,
+          "startMs": 87789,
+          "endMs": 95880,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 95880,
+          "endMs": 105251,
+          "character": "NET"
+        },
+        {
+          "index": 13,
+          "startMs": 105251,
+          "endMs": 114902,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 114902,
+          "endMs": 122513,
+          "character": "NET"
+        },
+        {
+          "index": 15,
+          "startMs": 122513,
+          "endMs": 131084,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 131084,
+          "endMs": 138215,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 138215,
+          "endMs": 143866,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 143866,
+          "endMs": 156437,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/net",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 156437,
+          "bundlePath": "AudioDramas/microbelab/net-net.caf",
+          "webM4APath": "AudioDramas/microbelab/net-net.m4a",
+          "webVTTPath": "AudioDramas/microbelab/net-net.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "4359bb01-48e6-40c4-85bb-a1b59f463a44",
+      "title": "Photo \u2014 Sunlight",
+      "titleSlug": "photo-photo",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "photo"
+      ],
+      "durationSeconds": 158.17,
+      "bundlePath": "AudioDramas/microbelab/photo-photo.caf",
+      "webM4APath": "AudioDramas/microbelab/photo-photo.m4a",
+      "webVTTPath": "AudioDramas/microbelab/photo-photo.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7330,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7330,
+          "endMs": 14741,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 14741,
+          "endMs": 26352,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 26352,
+          "endMs": 34523,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 34523,
+          "endMs": 42654,
+          "character": "PHOTO"
+        },
+        {
+          "index": 6,
+          "startMs": 42654,
+          "endMs": 51865,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 51865,
+          "endMs": 59116,
+          "character": "PHOTO"
+        },
+        {
+          "index": 8,
+          "startMs": 59116,
+          "endMs": 68047,
+          "character": "PHOTO"
+        },
+        {
+          "index": 9,
+          "startMs": 68047,
+          "endMs": 79138,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 10,
+          "startMs": 79138,
+          "endMs": 88469,
+          "character": "PHOTO"
+        },
+        {
+          "index": 11,
+          "startMs": 88469,
+          "endMs": 96680,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 96680,
+          "endMs": 101171,
+          "character": "STRATA"
+        },
+        {
+          "index": 13,
+          "startMs": 101171,
+          "endMs": 111462,
+          "character": "PHOTO"
+        },
+        {
+          "index": 14,
+          "startMs": 111462,
+          "endMs": 113753,
+          "character": "STRATA"
+        },
+        {
+          "index": 15,
+          "startMs": 113753,
+          "endMs": 123524,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 123524,
+          "endMs": 132215,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 132215,
+          "endMs": 139666,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 139666,
+          "endMs": 145557,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 145557,
+          "endMs": 158168,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/photo",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 158168,
+          "bundlePath": "AudioDramas/microbelab/photo-photo.caf",
+          "webM4APath": "AudioDramas/microbelab/photo-photo.m4a",
+          "webVTTPath": "AudioDramas/microbelab/photo-photo.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "b31140c9-6937-43b7-b298-efa740dfb5db",
+      "title": "Spore \u2014 Some Friends",
+      "titleSlug": "spore-spore",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "spore"
+      ],
+      "durationSeconds": 137.56,
+      "bundlePath": "AudioDramas/microbelab/spore-spore.caf",
+      "webM4APath": "AudioDramas/microbelab/spore-spore.m4a",
+      "webVTTPath": "AudioDramas/microbelab/spore-spore.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7450,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7450,
+          "endMs": 15661,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 15661,
+          "endMs": 23192,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 23192,
+          "endMs": 31963,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 31963,
+          "endMs": 42334,
+          "character": "SPORE"
+        },
+        {
+          "index": 6,
+          "startMs": 42334,
+          "endMs": 49545,
+          "character": "SPORE"
+        },
+        {
+          "index": 7,
+          "startMs": 49545,
+          "endMs": 57076,
+          "character": "SPORE"
+        },
+        {
+          "index": 8,
+          "startMs": 57076,
+          "endMs": 62127,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 62127,
+          "endMs": 70338,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 10,
+          "startMs": 70338,
+          "endMs": 76509,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 11,
+          "startMs": 76509,
+          "endMs": 81560,
+          "character": "THE CURATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 81560,
+          "endMs": 87851,
+          "character": "SPORE"
+        },
+        {
+          "index": 13,
+          "startMs": 87851,
+          "endMs": 94182,
+          "character": "THE CURATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 94182,
+          "endMs": 103713,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 15,
+          "startMs": 103713,
+          "endMs": 112244,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 112244,
+          "endMs": 120135,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 120135,
+          "endMs": 126506,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 126506,
+          "endMs": 137557,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/spore",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 137557,
+          "bundlePath": "AudioDramas/microbelab/spore-spore.caf",
+          "webM4APath": "AudioDramas/microbelab/spore-spore.m4a",
+          "webVTTPath": "AudioDramas/microbelab/spore-spore.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "c14028e2-43b5-4039-8a37-6fb19167ffaa",
+      "title": "Yeast \u2014 I Make Air Inside Bread",
+      "titleSlug": "yeast-yeast",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "yeast"
+      ],
+      "durationSeconds": 132.68,
+      "bundlePath": "AudioDramas/microbelab/yeast-yeast.caf",
+      "webM4APath": "AudioDramas/microbelab/yeast-yeast.m4a",
+      "webVTTPath": "AudioDramas/microbelab/yeast-yeast.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7730,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7730,
+          "endMs": 16061,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 16061,
+          "endMs": 24192,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 24192,
+          "endMs": 31043,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 31043,
+          "endMs": 38654,
+          "character": "YEAST"
+        },
+        {
+          "index": 6,
+          "startMs": 38654,
+          "endMs": 46345,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 46345,
+          "endMs": 55236,
+          "character": "YEAST"
+        },
+        {
+          "index": 8,
+          "startMs": 55236,
+          "endMs": 62807,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 62807,
+          "endMs": 70418,
+          "character": "YEAST"
+        },
+        {
+          "index": 10,
+          "startMs": 70418,
+          "endMs": 77549,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 11,
+          "startMs": 77549,
+          "endMs": 80960,
+          "character": "WHISK"
+        },
+        {
+          "index": 12,
+          "startMs": 80960,
+          "endMs": 86891,
+          "character": "YEAST"
+        },
+        {
+          "index": 13,
+          "startMs": 86891,
+          "endMs": 91582,
+          "character": "WHISK"
+        },
+        {
+          "index": 14,
+          "startMs": 91582,
+          "endMs": 98913,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 15,
+          "startMs": 98913,
+          "endMs": 107524,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 107524,
+          "endMs": 115535,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 115535,
+          "endMs": 120906,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 120906,
+          "endMs": 132677,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-06-07",
+      "releaseDate": "2026-06-07",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://spark-and-anvil.com/cast/microbelab/yeast",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-06-07",
+          "attributionVersion": "v2",
+          "durationMs": 132677,
+          "bundlePath": "AudioDramas/microbelab/yeast-yeast.caf",
+          "webM4APath": "AudioDramas/microbelab/yeast-yeast.m4a",
+          "webVTTPath": "AudioDramas/microbelab/yeast-yeast.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
     }
   ]
 }
