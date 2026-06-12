@@ -18,15 +18,18 @@ public struct ExploreView: View {
     private let catalog: MicrobeCatalogService
     private let mentor: VeeMentor
     private let sessionCount: Int
+    private let analytics: AnalyticsService?
 
     public init(
         catalog: MicrobeCatalogService,
         mentor: VeeMentor,
-        sessionCount: Int = 0
+        sessionCount: Int = 0,
+        analytics: AnalyticsService? = nil
     ) {
         self.catalog = catalog
         self.mentor = mentor
         self.sessionCount = sessionCount
+        self.analytics = analytics
         // The scene's size is reset by `.resizeFill` once SpriteView lays out.
         let initialScene = MicroscopeScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initialScene)
@@ -82,6 +85,9 @@ public struct ExploreView: View {
                         refreshMentorCue(for: resolved)
                     }
                     DebugLog.state("ExploreView snap to \(tier); visitedTiers=\(easterEgg.visitedTiers.count)")
+                    if let analytics {
+                        Task { await analytics.track(.zoomTierReached(tier: resolved)) }
+                    }
                 }
                 .padding(.horizontal)
                 .padding(.top, 4)

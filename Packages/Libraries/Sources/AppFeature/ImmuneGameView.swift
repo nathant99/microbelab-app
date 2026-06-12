@@ -35,13 +35,15 @@ public struct ImmuneGameView: View {
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
     private let celebration: CelebrationCoordinator?
+    private let analytics: AnalyticsService?
 
     public init(
         showWarningInitially: Bool = true,
         mentor: VeeMentor? = nil,
         gamification: GamificationService? = nil,
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
-        celebration: CelebrationCoordinator? = nil
+        celebration: CelebrationCoordinator? = nil,
+        analytics: AnalyticsService? = nil
     ) {
         let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
         let initial = MacrophagePacmanScene(
@@ -56,6 +58,7 @@ public struct ImmuneGameView: View {
         self.mentor = mentor
         self.gamification = gamification
         self.celebration = celebration
+        self.analytics = analytics
     }
 
     public var body: some View {
@@ -221,9 +224,16 @@ public struct ImmuneGameView: View {
         if finished {
             mentorMessage = "All waves cleared. Your body's quiet helpers had your back."
             celebration?.celebrate(.epic, message: "Defense run complete", emoji: "🛡️", slug: "game-complete")
+            if let analytics {
+                Task { await analytics.track(.immuneRunCompleted) }
+            }
         } else {
             mentorMessage = "Wave clear. The next group is on its way — take a breath."
             celebration?.celebrate(.medium, message: "Wave clear", emoji: "✨")
+            if let analytics {
+                let captured = wave
+                Task { await analytics.track(.immuneWaveCleared(waveIndex: captured)) }
+            }
         }
     }
 

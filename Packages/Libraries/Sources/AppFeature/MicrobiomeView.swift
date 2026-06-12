@@ -34,13 +34,15 @@ public struct MicrobiomeView: View {
     private let gamification: GamificationService?
     private let difficulty: DifficultyAdjuster
     private let celebration: CelebrationCoordinator?
+    private let analytics: AnalyticsService?
 
     public init(
         simulator: MicrobiomeSimulator,
         mentor: VeeMentor? = nil,
         gamification: GamificationService? = nil,
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
-        celebration: CelebrationCoordinator? = nil
+        celebration: CelebrationCoordinator? = nil,
+        analytics: AnalyticsService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -51,6 +53,7 @@ public struct MicrobiomeView: View {
         self.gamification = gamification
         self.difficulty = difficulty
         self.celebration = celebration
+        self.analytics = analytics
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -97,7 +100,8 @@ public struct MicrobiomeView: View {
                     mentor: mentor,
                     gamification: gamification,
                     difficulty: difficulty,
-                    celebration: celebration
+                    celebration: celebration,
+                    analytics: analytics
                 )
                     .navigationTitle("Defense")
                     #if os(iOS)
@@ -124,6 +128,9 @@ public struct MicrobiomeView: View {
                 if mode == .sugar { hasFedSugar = true }
                 refreshMentorCue(forFeedingMode: mode)
                 evaluateAchievements()
+                if let analytics {
+                    Task { await analytics.track(.feedingModeChanged(modeSlug: mode.rawValue)) }
+                }
             }
             HStack(spacing: 12) {
                 Button("Tick") {
@@ -142,6 +149,10 @@ public struct MicrobiomeView: View {
                     if tickCount > 0, tickCount % 5 == 0 {
                         refreshMentorCue(forFeedingMode: feedingMode)
                         DebugLog.state("MicrobiomeView milestone tick=\(tickCount) stableRun=\(stableTickRun)")
+                        if let analytics {
+                            let captured = tickCount
+                            Task { await analytics.track(.microbiomeMilestone(tickCount: captured)) }
+                        }
                     }
                     evaluateAchievements()
                 }
@@ -189,6 +200,10 @@ public struct MicrobiomeView: View {
         for definition in newlyEarned {
             DebugLog.state("MicrobiomeView achievement \(definition.id) earned (+\(definition.xpValue) XP)")
             celebration?.badgeEarned(title: definition.title)
+            if let analytics {
+                let capturedSlug = definition.id
+                Task { await analytics.track(.achievementEarned(slug: capturedSlug)) }
+            }
         }
     }
 }

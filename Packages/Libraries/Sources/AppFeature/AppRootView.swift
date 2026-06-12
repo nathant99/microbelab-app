@@ -29,6 +29,11 @@ public struct AppRootView: View {
     @State private var celebration = CelebrationCoordinator()
     @State private var dailyTime: DailyTimeCoordinator
     @State private var showDailyCapOverlay: Bool = false
+    // On-device privacy-first analytics. Per CLAUDE.md § ForgeAnalytics +
+    // .claude/rules/age-assurance.md § Portfolio Status: every event stays
+    // local. Sessions track the kid's play span; events surface engagement
+    // milestones (zoom-tier reached, immune wave cleared, etc.).
+    @State private var analytics = AnalyticsService()
     // Auto-surface session-summary on app background (PR #61). Pure
     // in-memory — the welcome-back overlay covers the "kid left for 3+
     // days" case via LastActiveStore. Per Docs/FEATURE_PLAN.md § Parent
@@ -185,6 +190,10 @@ public struct AppRootView: View {
                 // re-stamps on each .active resume.
                 sessionStartedAt = Date()
                 sessionStartXP = gamification.totalXP
+                // Start the on-device analytics session in parallel with the
+                // ForgeAccessibility timer. Engine is an actor so the call is
+                // safe to schedule from the .task block.
+                await analytics.startSession()
             }
         }
         .onChange(of: settingsStore.settings.dailySessionCap) { _, newCap in
@@ -200,7 +209,8 @@ public struct AppRootView: View {
             case .background:
                 Task {
                     await dailyTime.endSession()
-                    DebugLog.lifecycle("AppRootView — scenePhase → background; daily timer flushed")
+                    await analytics.endSession()
+                    DebugLog.lifecycle("AppRootView — scenePhase → background; daily timer + analytics flushed")
                 }
                 // Capture the auto-surface session summary BEFORE clearing
                 // the start markers; pendingSessionSummary surfaces on the
@@ -210,7 +220,10 @@ public struct AppRootView: View {
                 Task { await dailyTime.pause() }
             case .active:
                 if onboarding.hasCompletedOnboarding {
-                    Task { await dailyTime.startSession() }
+                    Task {
+                        await dailyTime.startSession()
+                        await analytics.startSession()
+                    }
                     // Surface the pending summary captured on the previous
                     // .background. Skipped when (a) the daily cap is
                     // currently showing, (b) the welcome-back / streak-
@@ -350,7 +363,8 @@ public struct AppRootView: View {
                 ExploreView(
                     catalog: catalog,
                     mentor: mentor,
-                    sessionCount: sessionCount.sessionCount
+                    sessionCount: sessionCount.sessionCount,
+                    analytics: analytics
                 )
             }
             Tab("Codex", systemImage: "book") {
@@ -363,7 +377,8 @@ public struct AppRootView: View {
                         mentor: mentor,
                         gamification: gamification,
                         difficulty: difficulty,
-                        celebration: celebration
+                        celebration: celebration,
+                        analytics: analytics
                     )
                 }
             }
