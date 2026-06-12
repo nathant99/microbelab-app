@@ -104,3 +104,63 @@ struct VeeMentorTests {
         #expect(mentor.voiceLine(for: "voicy", rotation: 3) == "line A")
     }
 }
+
+@Suite("VeeMentor.recallCue")
+@MainActor
+struct VeeMentorRecallCueTests {
+    private func mentor() -> VeeMentor {
+        VeeMentor(microbes: [
+            MicrobeCharacter(
+                id: UUID(uuidString: "00000000-0000-0000-0000-00000000ABCD")!,
+                slug: "lacto",
+                displayName: "Lacto",
+                kingdom: .bacteria,
+                role: .beneficial,
+                preferredEnvironment: .colon,
+                growthRate: GrowthRate(onFiber: 0.6, onSugar: 0.1, onBalanced: 0.4, onNone: -0.1),
+                catchphrase: "Friend in your food. Friend in your gut.",
+                factCard: "Lactobacillus species ferment milk into yogurt.",
+                firstKit: 1
+            )
+        ])
+    }
+
+    @Test func recallCueForUnknownSlugReturnsNil() {
+        // Caller can fall back to the default mentor copy.
+        #expect(mentor().recallCue(for: "missing", daysSinceLastSeen: 0) == nil)
+    }
+
+    @Test func sameDayCueQuotesDisplayNameAndUsesEarlierFraming() {
+        let line = mentor().recallCue(for: "lacto", daysSinceLastSeen: 0) ?? ""
+        #expect(line.contains("Lacto"))
+        #expect(line.contains("earlier today"))
+    }
+
+    @Test func yesterdayCueUsesYesterdayFraming() {
+        let line = mentor().recallCue(for: "lacto", daysSinceLastSeen: 1) ?? ""
+        #expect(line.contains("yesterday"))
+    }
+
+    @Test func multiDayCueUsesGentleStillAroundFraming() {
+        let line = mentor().recallCue(for: "lacto", daysSinceLastSeen: 4) ?? ""
+        #expect(line.contains("Lacto"))
+        // Trauma-informed: warm "still around" never "you abandoned us."
+        #expect(line.contains("still"))
+    }
+
+    @Test func longGapCueAvoidsAbandonmentFraming() {
+        let line = mentor().recallCue(for: "lacto", daysSinceLastSeen: 30) ?? ""
+        // Make sure we never frame the gap as loss or shame.
+        #expect(!line.contains("missed"))
+        #expect(!line.contains("abandon"))
+        #expect(!line.contains("forgot"))
+    }
+
+    @Test func negativeDaysCollapsesToSameDayCopy() {
+        // Defensive: a negative offset (clock-skew) should never produce
+        // weird out-of-band copy.
+        let sameDay = mentor().recallCue(for: "lacto", daysSinceLastSeen: 0) ?? ""
+        let negative = mentor().recallCue(for: "lacto", daysSinceLastSeen: -3) ?? ""
+        #expect(sameDay == negative)
+    }
+}
