@@ -52,9 +52,20 @@ Per `forgekit.md` § "Asset generation ownership", labsmith owns asset generatio
 
 The four SPM test targets (`ModelsTests` / `ServicesTests` / `GameEngineTests` / `AIMentorTests`) are wired into `MicrobeLab.xctestplan` via `container:../../Packages/Libraries` references. Re-run Test (⌘U) in Xcode to confirm.
 
-## 6. Scheme edits (none required)
+## 6. Scheme edits — wire the new `SharedUITests` SPM test target (PR #59)
 
-The MicrobeLab scheme that Xcode auto-generated is sufficient. No agent edits needed; no GUI edits expected.
+PR #59 adds a fifth SPM test target — `SharedUITests` — at `Packages/Libraries/Tests/SharedUITests/` covering the ForgePedagogy hint-tier progression on `QuizMachine` + `QuestionHintStrategy`. Per `.claude/rules/spm-architecture.md` § Adding New Package Test Targets, the test target compiles via SPM but Xcode won't discover it in the test navigator until a `<TestableReference>` is added to the scheme's `<Testables>` section — that's an `.xcscheme` JSON edit, off-limits to the agent.
+
+**To wire** (do once + commit Xcode regenerated diffs):
+
+1. Open `MicrobeLab.xcworkspace`
+2. **Product → Scheme → Edit Scheme** → select the **Test** action in the left sidebar
+3. Under **Test Plans** → confirm `MicrobeLab.xctestplan` is selected (it's the default)
+4. **Tests** tab → click `+` → **Add Test Target...** → select `SharedUITests` from the SPM Libraries package
+5. Xcode regenerates `MicrobeLab.xctestplan` JSON (and possibly the scheme JSON); stage + commit the regenerated diff (per CLAUDE.md § Xcode-managed file safety — staging Xcode-regenerated diffs IS fine)
+6. **⌘U** to confirm the 11 `QuizMachineHintTests` tests appear + pass
+
+Until wired, the test file lives on disk + builds via SPM but doesn't run via Xcode's test action. The Swift surface in `QuizView` / `QuizMachine` / `QuestionHintStrategy` works regardless.
 
 ## 6b. Declared Age Range API entitlement (deferred — pre-TestFlight)
 

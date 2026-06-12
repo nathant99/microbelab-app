@@ -67,6 +67,7 @@ let package = Package(
             dependencies: [
                 "Models",
                 .product(name: "ForgeUI", package: "forgekit"),
+                .product(name: "ForgePedagogy", package: "forgekit"),
             ],
             swiftSettings: defaultSwiftSettings
         ),
@@ -138,6 +139,11 @@ let package = Package(
         .testTarget(
             name: "AIMentorTests",
             dependencies: ["AIMentor"],
+            swiftSettings: defaultSwiftSettings
+        ),
+        .testTarget(
+            name: "SharedUITests",
+            dependencies: ["SharedUI", "Models"],
             swiftSettings: defaultSwiftSettings
         ),
     ]

@@ -3,6 +3,7 @@ import Models
 import Services
 import SharedUI
 import ForgeCelebration
+import ForgePedagogy
 
 /// Multiple-choice quiz surface for a `QuestionKit`. Per
 /// `.claude/rules/state-machines.md` § `*Machine` Structs, view-local state
@@ -117,12 +118,35 @@ public struct QuizView: View {
                 choiceRow(index: index, label: choice)
             }
 
+            if let tier = machine.requestedHintTier, !machine.revealed {
+                hintCard(for: tier)
+            }
+
             if machine.revealed {
                 explanationCard
             }
 
             actionRow
         }
+    }
+
+    private func hintCard(for tier: ForgePedagogy.HintTier) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "lightbulb")
+                .foregroundStyle(.yellow)
+                .padding(.top, 2)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(verbatim: tier.displayName)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Text(verbatim: QuestionHintStrategy.hint(for: tier, in: currentQuestion))
+                    .font(.callout)
+            }
+        }
+        .padding(12)
+        .background(Color.yellow.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .transition(.opacity)
+        .accessibilityElement(children: .combine)
     }
 
     private func choiceRow(index: Int, label: String) -> some View {
@@ -185,6 +209,16 @@ public struct QuizView: View {
                     .foregroundStyle(.orange)
             }
             Spacer()
+            if !machine.revealed, let nextTier = machine.nextRequestableHintTier {
+                Button {
+                    let granted = machine.requestNextHint()
+                    DebugLog.state("QuizView hint requested \(machine.currentIndex): tier=\(granted?.displayName ?? "none")")
+                } label: {
+                    Label(nextTier.displayName, systemImage: "lightbulb")
+                }
+                .buttonStyle(.glass)
+                .accessibilityHint("Reveals a hint for this question — you can always pick on your own first")
+            }
             if !machine.revealed {
                 Button("Check") {
                     machine.reveal(against: currentQuestion)
@@ -218,6 +252,15 @@ public struct QuizView: View {
                 Label("Best streak: \(machine.maxCombo)", systemImage: "flame.fill")
                     .font(.callout.weight(.semibold))
                     .foregroundStyle(.orange)
+            }
+            if machine.hintsUsedCount > 0 {
+                // Trauma-informed framing per
+                // `.claude/rules/trauma-informed-content.md`: asking for help is
+                // celebrated, never penalized.
+                Label("Asked for help on \(machine.hintsUsedCount) — that's how learning works", systemImage: "lightbulb")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
             Button("Play again") {
                 machine.reset()
