@@ -236,8 +236,8 @@ Audio/visual/haptic polish, parent-facing dashboards, and emotional design. Runs
 - [ ] VoiceOver labels for every microscope LOD sprite + cast portrait
 - [ ] Dynamic Type support across all SwiftUI views
 - [ ] Color-contrast audit (WCAG AA in default + dark + high-contrast themes)
-- [ ] Reduce-Motion variants for celebration + tier-transition animations
-- [ ] Reduce-Transparency variants for any glass UI (per portfolio Liquid Glass policy)
+- [x] Reduce-Motion variants for celebration + tier-transition animations — `A11yPreferences` (Services/) is a pure nonisolated value type that OR-combines the system `accessibilityReduceMotion` env with the parent-gated `AppSettings.forceReduceMotion` toggle. Wired into `AppRootView` (overlay morph + animation), `SessionNudgeOverlay` (slide-from-top transition + easeInOut), and the two centered overlays (`WelcomeBackOverlay` / `StreakRescueOverlay` no longer scale-morph when Reduce-Motion is active). Scene-side tier-transition + celebration polish lands with the LOD sprite atlas item (still asset-blocked).
+- [x] Reduce-Transparency variants for any glass UI (per portfolio Liquid Glass policy) — same `A11yPreferences` surface. `SharedUI.MentorBubble` + `SharedUI.MicroscopeHUD` read `@Environment(\.accessibilityReduceTransparency)` directly (system-only — they're outside the AppSettings dep graph); AppFeature-level overlays (`AppRootView`, `SessionNudgeOverlay`, the two centered overlays) combine system + force via the resolver. Glass surfaces swap to a solid `Color.primary.opacity(...)` fill that adapts to light/dark mode. Liquid Glass on Chrome (TabBar / NavBar / etc.) stays unmodified per portfolio policy.
 - [ ] Trauma-informed gate review for disease-story arcs (SAMHSA TIP 57 register; off-ramps + crisis-resource surface; cultural-context note for global-microbiome cards)
 - [ ] Crisis-resource list (988 / Childhelp / Crisis Text Line) surfaced from Settings + disease-story arcs
 

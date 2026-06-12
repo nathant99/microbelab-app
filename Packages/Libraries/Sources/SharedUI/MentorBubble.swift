@@ -3,9 +3,16 @@ import SwiftUI
 /// Cilia mentor speech bubble. Surfaces static catchphrases + curriculum
 /// fact cards from `AIMentor.VeeMentor`. Real FoundationModels-driven
 /// Socratic dialogue lands in a follow-up PR.
+///
+/// Honors `@Environment(\.accessibilityReduceTransparency)` by swapping
+/// `.thinMaterial` for a solid neutral fill. The app-level
+/// `forceReduceTransparency` toggle layers on top of the system env in
+/// `AppRootView`; the bubble itself only needs to read the resolved env.
 public struct MentorBubble: View {
     public let mentorName: String
     public let message: String
+
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     public init(mentorName: String = "Cilia", message: String) {
         self.mentorName = mentorName
@@ -30,8 +37,28 @@ public struct MentorBubble: View {
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .background(bubbleBackground)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(mentorName) says: \(message)")
     }
+
+    @ViewBuilder
+    private var bubbleBackground: some View {
+        if reduceTransparency {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(SolidReduceTransparencyFill.color)
+        } else {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(.thinMaterial)
+        }
+    }
+}
+
+/// Cross-platform solid-fill replacement for `.thinMaterial` / `.glassEffect`
+/// surfaces when Reduce Transparency is active. Adapts to light/dark mode
+/// via `Color.primary` opacity rather than picking a UIKit-only system
+/// color (so the package can compile for both iOS + macOS targets per
+/// `Package.swift`).
+enum SolidReduceTransparencyFill {
+    static let color: Color = Color.primary.opacity(0.08)
 }

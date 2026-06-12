@@ -14,6 +14,8 @@ public struct MicroscopeHUD: View {
     public let currentTier: ZoomTier
     public let onSnap: (ZoomTier) -> Void
 
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+
     public init(currentTier: ZoomTier, onSnap: @escaping (ZoomTier) -> Void) {
         self.currentTier = currentTier
         self.onSnap = onSnap
@@ -36,8 +38,9 @@ public struct MicroscopeHUD: View {
         .accessibilityLabel("Microscope HUD; current tier \(currentTier.displayLabel)")
     }
 
+    @ViewBuilder
     private var magnificationChip: some View {
-        HStack(spacing: 6) {
+        let label = HStack(spacing: 6) {
             Image(systemName: "scope")
                 .imageScale(.small)
             Text(verbatim: currentTier.displayLabel)
@@ -45,8 +48,15 @@ public struct MicroscopeHUD: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 4)
-        .glassEffect(.regular.interactive(), in: .capsule)
-        .accessibilityHidden(true)
+        if reduceTransparency {
+            label
+                .background(Capsule().fill(Color.primary.opacity(0.10)))
+                .accessibilityHidden(true)
+        } else {
+            label
+                .glassEffect(.regular.interactive(), in: .capsule)
+                .accessibilityHidden(true)
+        }
     }
 }
 

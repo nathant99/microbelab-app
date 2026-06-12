@@ -13,7 +13,18 @@ import Services
 /// without shame, acknowledge the prior achievement, frame return as choice.
 struct StreakRescueOverlay: View {
     let priorStreak: Int
+    let reduceTransparency: Bool
     let onContinue: () -> Void
+
+    init(
+        priorStreak: Int,
+        reduceTransparency: Bool = false,
+        onContinue: @escaping () -> Void
+    ) {
+        self.priorStreak = priorStreak
+        self.reduceTransparency = reduceTransparency
+        self.onContinue = onContinue
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -42,10 +53,21 @@ struct StreakRescueOverlay: View {
             .accessibilityHint("Dismisses the streak rescue card and opens the app")
         }
         .padding(.vertical, 24)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .background(cardBackground)
         .padding()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("StreakRescueOverlay")
+    }
+
+    @ViewBuilder
+    private var cardBackground: some View {
+        if reduceTransparency {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color.primary.opacity(0.10))
+        } else {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(.regularMaterial)
+        }
     }
 
     private var bodyCopy: String {
