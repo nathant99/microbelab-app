@@ -68,7 +68,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Build `MicrobiomeView` wrapping simulator with feeding-mode + antibiotic controls
 - [x] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` — reached via NavigationStack toolbar in MicrobiomeView; ships trauma-safe off-ramp + score HUD
 - [x] Build `ProgressTabView` with XP / streak / codex grid
-- [x] Build `ProfileView` placeholder (`ForgeAvatar.AvatarStudioView(.lite)` wiring lands next PR)
+- [x] Build `ProfileView` with `ForgeAvatar.AvatarStudioView(.lite)` sheet — `AvatarStudioSheet` seeds the ForgeID via `getOrCreateForgeID(displayName:)` in `.task` before the editor opens (R489 gotcha), reads back `currentForgeID()?.avatar` on appear so the row shows the saved look
 - [x] Build `SettingsView` with parental gate (`AppSettings` + `AppSettingsStore` in Services; `ParentalGateView` math gate; sensory toggles kid-accessible, content gate + session cap parent-gated)
 - [x] Build `QuizView` for question kits — wired from MicrobeCodexView toolbar Menu; `QuestionKit` + `Question` in Models; `QuestionKitService` loader; `QuizMachine` in SharedUI; kit 01 (microbiology basics, 5 questions) bundled
 
