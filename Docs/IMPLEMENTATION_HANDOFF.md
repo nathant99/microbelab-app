@@ -1,8 +1,19 @@
 # Implementation Handoff — MicrobeLab
 
-**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #61 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
+**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #66 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
 
-**Latest round (2026-06-12, PRs #58 → #61, single-session auto-cycle)**: 4-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`) paired with an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive. Each PR landed end-to-end before the next branched. Rollup:
+**Latest round (2026-06-12, PRs #63 → #66, sixth-pass auto-cycle sweep)**: 4-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`) paired with the **sixth-pass** Xcode-managed file safety reinforcement + an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes + follow-technical-design-doc + SPM-folder-structure directive set. Each PR landed end-to-end before the next branched. Rollup:
+
+| PR | Theme |
+|---|---|
+| #63 | **Sixth-pass** Xcode-managed file safety reinforcement — codifies the **six-pass invariant** (when a single safety rule is restated six times in one calendar day, every subsequent session treats it as an immutable pre-flight check + every subsequent handoff doc carries a rule-restatement summary at the top so the cadence is inherited without re-reading the entire CLAUDE.md). Adds two new 6th-pass interaction notes (SPM folder-structure + technical-design-doc) clarifying that neither directive extends to managed-file edits. Also commits the Xcode-regenerated diff to `MicrobeLab.xctestplan` that wires the `SharedUITests` SPM test target from PR #59 — per the rule, staging+committing the Xcode-regenerated diff IS fine. Closes `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6. |
+| #64 | ForgeAnalytics on-device privacy-first event totals — closes the "still declared but unused" gap from § ForgeKit Integration Status. Adds `AnalyticsService` (MainActor `@Observable` wrapper around the `ForgeAnalytics.AnalyticsEngine` actor) under `Services/Engagement/` + a canonical `MicrobeLabAnalyticsEvent` enum with grep-able snake_case event names + PII-safe property bags (counts + slugs only). Wires `AppRootView` (session start/end on scenePhase), `ExploreView` (zoom_tier_reached on every microscope snap), `MicrobiomeView` (feeding_mode_changed + microbiome_milestone every 5th tick + achievement_earned per ForgeGamification unlock), and `ImmuneGameView` (immune_wave_cleared per wave + immune_run_completed on full-run clear). 12 new `@Test` covering init defaults + session lifecycle + per-event name mapping + accumulation + activeDays plumbing + ZoomTier slug stability + property-bag PII discipline. |
+| #65 | ForgeSpotlight indexing for the 12-microbe codex — closes the "still declared but unused" ForgeSpotlight gap. Adds `MicrobeSpotlightItem` (pure `SpotlightIndexable` adapter; stable slug-based `spotlightID` so UUID churn doesn't fragment the index) + `MicrobeSpotlightIndex` (MainActor `@Observable` wrapper around `ForgeSpotlightIndexer`). `AppRootView.loadCatalog()` indexes the catalog on every cold launch; ForgeSpotlight dedupes via `spotlightID`. Trauma-informed posture mirrors `MicrobeCodexView`: entire catalog indexed (the codex already shows all 12 cards from launch — locked entries render as "???"); locked microbes still gate the fact card behind discovery once landed. Privacy: `CSSearchableIndex` is on-device per `.claude/rules/age-assurance.md`; keywords ship stable enum slugs only (pinned by `spotlightKeywordsContainOnlyStableEnumSlugs` invariant). 7 new `@Test`. |
+| #66 | Mentor personality callbacks — closes the FEATURE_PLAN § Delight & Polish → "Character personality" item. Adds `MentorRecallStore` (UserDefaults-persisted ring buffer of recently-met microbe slugs; cap 5; FIFO recency dedup) + `VeeMentor.recallCue(for:daysSinceLastSeen:)` (warm trauma-informed callback copy with day-bucket pivots 0 / 1 / 2-6 / 7+ — "still hanging around" / "still here when you're ready" — never "you abandoned us" or loss-aversion). `ExploreView.init()` prefers a recall callback over the variable-reward / default cold-open copy when the store has entries; `ExploreView.onAppear` records rare-microbe-sighting slugs into the store so subsequent cold opens can quote them. 8 new `@Test` for the store + 6 new `@Test` for the cue (pinning the trauma-safe no-abandonment-words discipline). |
+
+Net additions: 2 new Services modules (`AnalyticsService` + `MicrobeSpotlightIndex` + `MentorRecallStore` — the last two land flat at the Services root + under `Services/Engagement/` respectively per the SPM folder convention) + 1 new SharedUITests xctestplan wiring (Xcode GUI) + 33 new unit tests across 4 suites + 3 ForgeKit modules promoted from declared-but-unused → actively consumed (`ForgeAnalytics` → Services, `ForgeSpotlight` → Services; the recall surface extends the existing `ForgeAI`-fronted `VeeMentor`). Build green at each merge.
+
+**Previous round (2026-06-12, PRs #58 → #61, fifth-pass auto-cycle)**: 4-PR sweep driven by the user-direct standing auto-cycle paired with the fifth-pass Xcode-managed file safety reinforcement + maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive. Rollup:
 
 | PR | Theme |
 |---|---|
@@ -45,12 +56,13 @@ Modules now actively consumed (vs the `Package.swift` declared list):
 | `ForgeGameEngine` | GameEngine (SpriteKit scenes import for base helpers) | LOD swap infrastructure pending portrait pack |
 | `ForgePedagogy` | SharedUI (`QuestionHintStrategy` derives per-tier hint text; `QuizMachine` exposes `HintTier`-driven progression) | Hint scaffolding in QuizView (PR #59) |
 | `ForgeKnowledgeGraph` | Services (`MicrobeKnowledgeGraph` wraps `KnowledgeGraph` with shared-habitat edges; `MicrobeCodexView` surfaces "Lives near" hints) | Cross-microbe ecology surfacing (PR #60) |
+| `ForgeAnalytics` | Services (`AnalyticsService` wraps the actor-based `AnalyticsEngine`; `MicrobeLabAnalyticsEvent` enum carries grep-able event names + PII-safe property bags) | On-device event totals + session lifecycle (PR #64) |
+| `ForgeSpotlight` | Services (`MicrobeSpotlightIndex` wraps `ForgeSpotlightIndexer`; `MicrobeSpotlightItem` adapts `MicrobeCharacter` to `SpotlightIndexable`) | 12-microbe codex Spotlight indexing (PR #65) |
 
 Still declared but unused in Swift code (deps stay in `Package.swift` so future wiring is friction-free):
 
 - `ForgeAdventure` — awaits the Life Zone hub-contribution wiring (FEATURE_PLAN.md § Adventure Mode)
 - `ForgeNavigation` — TabView's native iOS 26 chrome covers Phase 1; lift when nav grids land
-- `ForgeAnalytics` — privacy-first on-device only; wires when MicrobeLab needs cross-session event totals
 
 ## What's Shipped (Phase 1)
 
@@ -77,6 +89,10 @@ Still declared but unused in Swift code (deps stay in `Package.swift` so future 
 - `AppSettings` + `AppSettingsStore` — UserDefaults-backed, dependency-injected per `.claude/rules/testing.md`
 - `GamificationService` — `@Observable` MainActor wrapper around `XPEngine` + `StreakManager` + `AchievementEngine`
 - `MicrobeLabAchievements` — 10 Phase 1 achievement definitions
+- `MicrobeKnowledgeGraph` — pure value-type wrapper around `ForgeKnowledgeGraph.KnowledgeGraph` with shared-habitat edges (PR #60)
+- `AnalyticsService` — MainActor `@Observable` wrapper around the `ForgeAnalytics.AnalyticsEngine` actor; on-device only (PR #64)
+- `MicrobeSpotlightIndex` — MainActor `@Observable` wrapper around `ForgeSpotlightIndexer`; indexes the 12-microbe catalog for Spotlight search (PR #65)
+- `MentorRecallStore` — UserDefaults-persisted ring buffer of recently-met microbe slugs; powers Cilia's callback line surface (PR #66)
 - `DebugLog` — single-seam emitter with 7 categories per `.claude/rules/debug-logging.md`
 
 ### Game Engine
