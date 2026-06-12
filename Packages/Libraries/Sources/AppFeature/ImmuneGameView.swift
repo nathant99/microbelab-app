@@ -37,9 +37,15 @@ public struct ImmuneGameView: View {
     public init(
         showWarningInitially: Bool = true,
         mentor: VeeMentor? = nil,
-        gamification: GamificationService? = nil
+        gamification: GamificationService? = nil,
+        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard)
     ) {
-        let initial = MacrophagePacmanScene(size: CGSize(width: 400, height: 600))
+        let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
+        let initial = MacrophagePacmanScene(
+            size: CGSize(width: 400, height: 600),
+            totalWaves: wavePathogenCounts.count,
+            wavePathogenCounts: wavePathogenCounts
+        )
         _scene = State(initialValue: initial)
         _hasAcknowledgedWarning = State(initialValue: !showWarningInitially)
         _showWarning = State(initialValue: showWarningInitially)

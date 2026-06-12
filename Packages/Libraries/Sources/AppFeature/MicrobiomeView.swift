@@ -31,11 +31,13 @@ public struct MicrobiomeView: View {
 
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
+    private let difficulty: DifficultyAdjuster
 
     public init(
         simulator: MicrobiomeSimulator,
         mentor: VeeMentor? = nil,
-        gamification: GamificationService? = nil
+        gamification: GamificationService? = nil,
+        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard)
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -44,6 +46,7 @@ public struct MicrobiomeView: View {
         _scene = State(initialValue: initial)
         self.mentor = mentor
         self.gamification = gamification
+        self.difficulty = difficulty
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -86,7 +89,11 @@ public struct MicrobiomeView: View {
                 }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
-                ImmuneGameView(mentor: mentor, gamification: gamification)
+                ImmuneGameView(
+                    mentor: mentor,
+                    gamification: gamification,
+                    difficulty: difficulty
+                )
                     .navigationTitle("Defense")
                     #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
@@ -168,7 +175,7 @@ public struct MicrobiomeView: View {
             switch definition.id {
             case MicrobeLabAchievements.fiberPioneer.id: return hasFedFiber
             case MicrobeLabAchievements.sugarTrial.id: return hasFedSugar
-            case MicrobeLabAchievements.microbiomeSteady.id: return stableTickRun >= 10
+            case MicrobeLabAchievements.microbiomeSteady.id: return stableTickRun >= difficulty.microbiomeSteadyTickThreshold
             default: return false
             }
         }

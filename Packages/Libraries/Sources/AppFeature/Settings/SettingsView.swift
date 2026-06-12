@@ -70,11 +70,16 @@ public struct SettingsView: View {
                     .accessibilityHint(hasPassedGate ? "Toggle the disease story gate" : "Confirm adult first")
             }
             .disabled(!hasPassedGate)
+            Toggle(isOn: bindingForBool(\.simplifyChallenge)) {
+                Label("Keep it gentle", systemImage: "leaf")
+                    .accessibilityHint(hasPassedGate ? "Pin the experience to the gentlest difficulty" : "Confirm adult first")
+            }
+            .disabled(!hasPassedGate)
         } header: {
             Text("Content gates")
         } footer: {
             if hasPassedGate {
-                Text("Adult-confirmed. These toggle disease story arcs in Phase 3+.")
+                Text("Adult-confirmed. Disease story gate toggles Phase 3+ arcs. \"Keep it gentle\" keeps the immune game + microbiome puzzle at their easiest setting forever.")
                     .font(.caption)
             } else {
                 HStack {

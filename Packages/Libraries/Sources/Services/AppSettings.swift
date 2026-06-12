@@ -45,6 +45,11 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
     /// Disease-narrative content gate. Phase 3 surfaces only opt-in. Defaults ON.
     public var diseaseStoryGateEnabled: Bool
     public var dailySessionCap: DailySessionCap
+    /// Parent-gated accessibility toggle that pins `DifficultyAdjuster` to
+    /// `.introductory` regardless of session count. Defaults OFF; the curve
+    /// already starts gentle in sessions 1-2 — this is the long-term
+    /// override for kids who want the chill version permanently.
+    public var simplifyChallenge: Bool
 
     public init(
         soundEffectsEnabled: Bool = true,
@@ -52,7 +57,8 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
         forceReduceMotion: Bool = false,
         forceReduceTransparency: Bool = false,
         diseaseStoryGateEnabled: Bool = true,
-        dailySessionCap: DailySessionCap = .thirty
+        dailySessionCap: DailySessionCap = .thirty,
+        simplifyChallenge: Bool = false
     ) {
         self.soundEffectsEnabled = soundEffectsEnabled
         self.hapticsEnabled = hapticsEnabled
@@ -60,9 +66,26 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
         self.forceReduceTransparency = forceReduceTransparency
         self.diseaseStoryGateEnabled = diseaseStoryGateEnabled
         self.dailySessionCap = dailySessionCap
+        self.simplifyChallenge = simplifyChallenge
     }
 
     public static let `default` = AppSettings()
+
+    // Custom decoder so adding fields over time doesn't invalidate the
+    // entire persisted struct. `try?` in `AppSettingsStore.init` would
+    // otherwise discard every preference the kid + parent already saved
+    // the moment a new field lands.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaults = AppSettings.default
+        self.soundEffectsEnabled = try container.decodeIfPresent(Bool.self, forKey: .soundEffectsEnabled) ?? defaults.soundEffectsEnabled
+        self.hapticsEnabled = try container.decodeIfPresent(Bool.self, forKey: .hapticsEnabled) ?? defaults.hapticsEnabled
+        self.forceReduceMotion = try container.decodeIfPresent(Bool.self, forKey: .forceReduceMotion) ?? defaults.forceReduceMotion
+        self.forceReduceTransparency = try container.decodeIfPresent(Bool.self, forKey: .forceReduceTransparency) ?? defaults.forceReduceTransparency
+        self.diseaseStoryGateEnabled = try container.decodeIfPresent(Bool.self, forKey: .diseaseStoryGateEnabled) ?? defaults.diseaseStoryGateEnabled
+        self.dailySessionCap = try container.decodeIfPresent(DailySessionCap.self, forKey: .dailySessionCap) ?? defaults.dailySessionCap
+        self.simplifyChallenge = try container.decodeIfPresent(Bool.self, forKey: .simplifyChallenge) ?? defaults.simplifyChallenge
+    }
 }
 
 /// On-device persistent store for `AppSettings`. UserDefaults-backed per
