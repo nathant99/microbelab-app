@@ -1,8 +1,22 @@
 # Implementation Handoff — MicrobeLab
 
-**Status**: Phase 1 in flight. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #30 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked or covered by follow-up rounds (see § Outstanding).
+**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #56 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
 
-**Latest round (2026-06-12, PRs #28 + #29 + #30)**: Phase-1 question kits 02 (microbiome), 03 (immune defense, trauma-informed register), and 04 (beneficial microbes) shipped — each as its own auto-cycle PR with bundled JSON in `Services/Resources/`, `QuestionKitService.phase1KitSlugs` extended in canonical order, and new `QuestionKitServiceTests` coverage (9/9 pass). FEATURE_PLAN.md § Gamification kit-bundling work item is now closed. CLAUDE.md Xcode-managed-file safety table (workspace + scheme + test plan) is the canonical reference — the user reinforced this guard at session start.
+**Latest round (2026-06-12, PRs #52 → #56, single-session auto-cycle)**: 5-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`). Each PR landed end-to-end before the next branched. Rollup:
+
+| PR | Theme |
+|---|---|
+| #52 | Xcode-managed file safety — fourth-pass reinforcement (CLAUDE.md / `xcode-agent-safety.md` / `HANDOFF_TO_USER_XCODE_GUI_TASKS.md`). Codified the auto-cycle interaction: auto-cycle approval does NOT extend to managed files. |
+| #53 | ForgeCelebration coordinator — wired at `AppRootView` with `.celebrationOverlay(coordinator)` on the tab shell; passed down to `MicrobeCodexView` → `QuizView` and `MicrobiomeView` → `ImmuneGameView`. Proportional tier matrix (per-wave `.medium`, full immune run `.epic`, quiz perfect `.epic`, quiz near-perfect `.major`, quiz partial `.small`, microbiome achievement `.major`). Closes FEATURE_PLAN.md § Delight & Polish → Celebration system. |
+| #54 | ForgeAccessibility daily-cap pipeline — `DailyTimeCoordinator` (Services/Engagement/, MainActor `@Observable` wrapper around the `SessionTimerService` actor). `DailyCapOverlay` (AppFeature/Engagement/) is the centered trauma-safe wrap-up surface. Scene-phase-driven start/end/pause/resume; cap-change rebuilds the config; `unlimited` collapses to 24h so the timer never trips. Closes FEATURE_PLAN.md § Parental controls. |
+| #55 | Declared Age Range API gate scaffold — `Services/AgeAssuranceService.swift` (MainActor `@Observable`), `AgeAssuranceCapability.isDeclaredAgeRangeAvailable` entitlement probe, `requestSystemVerification(...)` stub (no-op until COPPA consent + retention surface ships). Settings → About surfaces a passive readout. Entitlement provisioning routed through `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6b. |
+| #56 | OSSignposter perf probes — `PerfSignpost` (Models/) wraps `OSSignposter` with 3 channels (`zoom` / `simulator` / `immune`). Wired into the hot loops; zero-overhead in release builds. Open Instruments → Points of Interest → filter `com.microbelab.app` to verify FEATURE_PLAN.md exit-criteria budgets. |
+
+Net additions: 4 new Services modules (DailyTimeCoordinator / AgeAssuranceService) + 1 new Models module (PerfSignpost) + 2 new AppFeature overlays (DailyCapOverlay) + ~22 new unit tests across 4 test targets. Build green at each merge.
+
+**Pre-2026-06-12 PR #51**: Read-only accessibility audit (`Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md`) — covered every SwiftUI surface shipped through PR #50, verdict PASS WITH GAPS (Dynamic Type + color contrast portfolio-wide PASS; 3 prioritized gaps remain).
+
+**Earlier 2026-06-12 (PRs #28 + #29 + #30)**: Phase-1 question kits 02 (microbiome), 03 (immune defense, trauma-informed register), and 04 (beneficial microbes) shipped — each as its own auto-cycle PR with bundled JSON in `Services/Resources/`, `QuestionKitService.phase1KitSlugs` extended in canonical order, and new `QuestionKitServiceTests` coverage (9/9 pass). FEATURE_PLAN.md § Gamification kit-bundling work item closed. CLAUDE.md Xcode-managed-file safety table (workspace + scheme + test plan) is the canonical reference — the user reinforced this guard at session start.
 
 **Earlier this day (PRs #25 + #26)**: Mentor (Cilia) cue refreshes on `MicrobiomeView` feeding-mode change + every-5th-tick milestone + on `ImmuneGameView` wave-clear / run-complete. Phase-1 achievements `fiberPioneer` / `sugarTrial` / `microbiomeSteady` / `immuneRookie` / `immuneRunner` auto-evaluate as the kid hits criteria; XP awards flow through `GamificationService.evaluateAchievements`. Doc-path drift (`Libraries/Package.swift` → `Packages/Libraries/Package.swift`) corrected across CLAUDE.md + TECHNICAL_DESIGN.md + FEATURE_PLAN.md + APP_SPECIFIC_NOTES.md. Pre-existing `MacrophagePacmanSceneTests.spawnIsReproducibleAcrossSeeds()` failure (UUID-identity drift) fixed by comparing the deterministic `(kind, position, velocity)` projection.
 
@@ -12,6 +26,30 @@
 2. **`Docs/FEATURE_PLAN.md`** — phased roadmap with checkbox status per work item
 3. **This repo's CLAUDE.md** — portfolio tech stack + reference doc index + Xcode-managed file constraints
 4. **Portfolio patterns**: `labsmith/Docs/PORTFOLIO_PATTERNS.md` § Implementation Prep
+
+## ForgeKit Integration Status (post-2026-06-12 sweep)
+
+Modules now actively consumed (vs the `Package.swift` declared list):
+
+| Module | Where it's wired | Notes |
+|---|---|---|
+| `ForgeModels` | Models, Services, AppFeature | `StudentProfile`, `BloomLevel`, base value types |
+| `ForgePersistence` | Services | SwiftData helpers |
+| `ForgeGamification` | Services (`GamificationService` wraps `XPEngine` + `StreakManager` + `AchievementEngine`) | Phase-1 achievements + XP curve |
+| `ForgeAccessibility` | Services (`DailyTimeCoordinator` wraps `SessionTimerService`) | Daily-cap pipeline (PR #54) |
+| `ForgeUI` | AppFeature (`MicrobeLabOnboardingFlow` wraps `ForgeOnboardingFlow`) | Onboarding glass buttons + flow scaffolding |
+| `ForgeCelebration` | AppFeature (`CelebrationCoordinator` at `AppRootView` + `.celebrationOverlay`) | Proportional milestone celebrations (PR #53) |
+| `ForgeAvatar` | AppFeature (`AvatarStudioSheet` hosts `AvatarStudioView(.lite)`) | Avatar studio + ForgeID seeding |
+| `ForgeSync` | AppFeature (`AvatarStudioSheet` / `ProfileView` read/write the canonical avatar via `AppGroupStore`) | Cross-portfolio identity |
+| `ForgeGameEngine` | GameEngine (SpriteKit scenes import for base helpers) | LOD swap infrastructure pending portrait pack |
+
+Still declared but unused in Swift code (deps stay in `Package.swift` so future wiring is friction-free):
+
+- `ForgeAdventure` — awaits the Life Zone hub-contribution wiring (FEATURE_PLAN.md § Adventure Mode)
+- `ForgeNavigation` — TabView's native iOS 26 chrome covers Phase 1; lift when nav grids land
+- `ForgeAnalytics` — privacy-first on-device only; wires when MicrobeLab needs cross-session event totals
+- `ForgeKnowledgeGraph` — cross-microbe ecology surfacing; Phase 2+
+- `ForgePedagogy` — hint scaffolding; Phase 2+
 
 ## What's Shipped (Phase 1)
 
@@ -90,9 +128,13 @@ These remain unchecked in `Docs/FEATURE_PLAN.md`:
 | Microscope LOD sprite atlas + per-tier sprite swap | Asset-blocked on 12-microbe portrait pack — labsmith handoff `HANDOFF_FROM_APP_MICROBE_ILLUSTRATIONS.md` queued per `.claude/rules/forgekit.md` § Asset generation ownership |
 | 12 cast portrait WebPs + `ForgeIllustrations.IllustrationRegistry` wiring | Same as above |
 | ~~Question kits 02-04~~ | ✅ SHIPPED 2026-06-12 via PRs #28 / #29 / #30 |
-| Onboarding flow (5-step) | Requires `ForgeOnboardingFlow.Page` builder + ForgeKit avatar wiring |
+| ~~Onboarding flow (5-step)~~ | ✅ SHIPPED via `MicrobeLabOnboardingFlow` (AppFeature/Onboarding/) |
+| ~~Celebration system~~ | ✅ SHIPPED via PR #53 — `CelebrationCoordinator` proportional juice layer |
+| ~~Parental controls (daily cap)~~ | ✅ SHIPPED via PR #54 — `DailyTimeCoordinator` + `DailyCapOverlay` |
+| Declared Age Range API gate (iOS 26.2+) | **Scaffold landed PR #55**. Live `await requestAgeRange(...)` blocked on (a) entitlement provisioning via Xcode GUI per `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6b, (b) COPPA consent + retention surface (receiving "Under 13" creates actual knowledge) |
 | Adventure Mode (Life Zone) wire-up | Awaits AdventureHub Level 1 config + Level 2 Swift overlay handoff |
-| UI / accessibility / performance tests | Best landed once portrait pack + onboarding ship — UI tests rely on rendered assets |
+| Performance profiling (16ms tier transition / 8ms sim tick) | **Signposts landed PR #56**. Real-device Instruments capture + bench-harness assertions still pending |
+| UI tests / accessibility XCUITests | Best landed once portrait pack ships (UI tests rely on rendered assets) — accessibility audit already PASS WITH GAPS per `Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md` |
 
 ## Sequencing Constraints
 
