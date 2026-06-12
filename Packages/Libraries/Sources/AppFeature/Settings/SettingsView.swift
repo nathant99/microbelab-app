@@ -16,6 +16,12 @@ public struct SettingsView: View {
     }
 
     public var body: some View {
+        NavigationStack {
+            settingsForm
+        }
+    }
+
+    private var settingsForm: some View {
         Form {
             sensorySection
             contentGateSection
@@ -122,10 +128,16 @@ public struct SettingsView: View {
 
     private var footerSection: some View {
         Section("About") {
-            Label("Privacy policy", systemImage: "hand.raised")
+            NavigationLink {
+                PrivacyPolicyView()
+            } label: {
+                Label("Privacy policy", systemImage: "hand.raised")
+            }
+            .accessibilityHint("Opens the plain-language privacy policy")
             Label("Acknowledgements", systemImage: "doc.text")
+                .foregroundStyle(.secondary)
+                .accessibilityHint("Placeholder — wired in a follow-up PR")
         }
-        .accessibilityHint("Static placeholder rows — wired in a follow-up PR")
     }
 
     // MARK: - Bindings
