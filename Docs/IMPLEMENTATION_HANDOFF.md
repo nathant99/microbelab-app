@@ -1,8 +1,10 @@
 # Implementation Handoff — MicrobeLab
 
-**Status**: Phase 1 in flight. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #26 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked or covered by follow-up rounds (see § Outstanding).
+**Status**: Phase 1 in flight. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #30 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked or covered by follow-up rounds (see § Outstanding).
 
-**Latest round (2026-06-12, PRs #25 + #26)**: Mentor (Cilia) cue refreshes on `MicrobiomeView` feeding-mode change + every-5th-tick milestone + on `ImmuneGameView` wave-clear / run-complete. Phase-1 achievements `fiberPioneer` / `sugarTrial` / `microbiomeSteady` / `immuneRookie` / `immuneRunner` auto-evaluate as the kid hits criteria; XP awards flow through `GamificationService.evaluateAchievements`. Doc-path drift (`Libraries/Package.swift` → `Packages/Libraries/Package.swift`) corrected across CLAUDE.md + TECHNICAL_DESIGN.md + FEATURE_PLAN.md + APP_SPECIFIC_NOTES.md. Pre-existing `MacrophagePacmanSceneTests.spawnIsReproducibleAcrossSeeds()` failure (UUID-identity drift) fixed by comparing the deterministic `(kind, position, velocity)` projection.
+**Latest round (2026-06-12, PRs #28 + #29 + #30)**: Phase-1 question kits 02 (microbiome), 03 (immune defense, trauma-informed register), and 04 (beneficial microbes) shipped — each as its own auto-cycle PR with bundled JSON in `Services/Resources/`, `QuestionKitService.phase1KitSlugs` extended in canonical order, and new `QuestionKitServiceTests` coverage (9/9 pass). FEATURE_PLAN.md § Gamification kit-bundling work item is now closed. CLAUDE.md Xcode-managed-file safety table (workspace + scheme + test plan) is the canonical reference — the user reinforced this guard at session start.
+
+**Earlier this day (PRs #25 + #26)**: Mentor (Cilia) cue refreshes on `MicrobiomeView` feeding-mode change + every-5th-tick milestone + on `ImmuneGameView` wave-clear / run-complete. Phase-1 achievements `fiberPioneer` / `sugarTrial` / `microbiomeSteady` / `immuneRookie` / `immuneRunner` auto-evaluate as the kid hits criteria; XP awards flow through `GamificationService.evaluateAchievements`. Doc-path drift (`Libraries/Package.swift` → `Packages/Libraries/Package.swift`) corrected across CLAUDE.md + TECHNICAL_DESIGN.md + FEATURE_PLAN.md + APP_SPECIFIC_NOTES.md. Pre-existing `MacrophagePacmanSceneTests.spawnIsReproducibleAcrossSeeds()` failure (UUID-identity drift) fixed by comparing the deterministic `(kind, position, velocity)` projection.
 
 ## Read First
 
@@ -32,7 +34,7 @@
 ### Services
 
 - `MicrobeCatalogService` — loads bundled `microbes.json` (v2 schema, 12 entries)
-- `QuestionKitService` — bundled kit loader; ships kit 01 (microbiology basics, 5 questions, NGSS-tagged)
+- `QuestionKitService` — bundled kit loader; ships kits 01-04 (microbiology basics 5q + microbiome 6q + immune defense 6q + beneficial microbes 6q, all NGSS / NHES tagged) via `phase1KitSlugs`
 - `AppSettings` + `AppSettingsStore` — UserDefaults-backed, dependency-injected per `.claude/rules/testing.md`
 - `GamificationService` — `@Observable` MainActor wrapper around `XPEngine` + `StreakManager` + `AchievementEngine`
 - `MicrobeLabAchievements` — 10 Phase 1 achievement definitions
@@ -87,7 +89,7 @@ These remain unchecked in `Docs/FEATURE_PLAN.md`:
 |---|---|
 | Microscope LOD sprite atlas + per-tier sprite swap | Asset-blocked on 12-microbe portrait pack — labsmith handoff `HANDOFF_FROM_APP_MICROBE_ILLUSTRATIONS.md` queued per `.claude/rules/forgekit.md` § Asset generation ownership |
 | 12 cast portrait WebPs + `ForgeIllustrations.IllustrationRegistry` wiring | Same as above |
-| Question kits 02-04 (microbiome / immune defense / beneficial microbes) | Authoring pass + JSON bundle in `Services/Resources/` |
+| ~~Question kits 02-04~~ | ✅ SHIPPED 2026-06-12 via PRs #28 / #29 / #30 |
 | Onboarding flow (5-step) | Requires `ForgeOnboardingFlow.Page` builder + ForgeKit avatar wiring |
 | Adventure Mode (Life Zone) wire-up | Awaits AdventureHub Level 1 config + Level 2 Swift overlay handoff |
 | UI / accessibility / performance tests | Best landed once portrait pack + onboarding ship — UI tests rely on rendered assets |
