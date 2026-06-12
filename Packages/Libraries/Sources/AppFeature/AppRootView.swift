@@ -29,6 +29,15 @@ public struct AppRootView: View {
     @State private var celebration = CelebrationCoordinator()
     @State private var dailyTime: DailyTimeCoordinator
     @State private var showDailyCapOverlay: Bool = false
+    // Auto-surface session-summary on app background (PR #61). Pure
+    // in-memory — the welcome-back overlay covers the "kid left for 3+
+    // days" case via LastActiveStore. Per Docs/FEATURE_PLAN.md § Parent
+    // Integration → "Session closer" follow-up.
+    @State private var pendingSessionSummary: SessionSummary?
+    @State private var showingPendingSummary: Bool = false
+    @State private var sessionStartedAt: Date?
+    @State private var sessionStartXP: Int?
+    @State private var sessionStartMicrobeCount: Int?
     @Environment(\.scenePhase) private var scenePhase
 
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
@@ -122,6 +131,18 @@ public struct AppRootView: View {
                     }
                     .animation(overlayAnimation(reduceMotion: prefs.reduceMotion), value: welcomeBackDaysAway)
                     .animation(overlayAnimation(reduceMotion: prefs.reduceMotion), value: streakRescue)
+                    // Auto-surfaced session-summary sheet — only fires after
+                    // the kid has actually backgrounded a productive session
+                    // (see captureSessionSummaryIfProductive).
+                    .sheet(isPresented: $showingPendingSummary) {
+                        if let summary = pendingSessionSummary {
+                            SessionSummarySheet(summary: summary) {
+                                showingPendingSummary = false
+                                pendingSessionSummary = nil
+                            }
+                            .presentationDetents([.medium])
+                        }
+                    }
             } else if let loadError {
                 catalogLoadFailure(loadError)
             } else {
@@ -158,6 +179,12 @@ public struct AppRootView: View {
                     streakRescue = .none
                     DebugLog.lifecycle("AppRootView — daily cap reached on launch; showing wrap-up overlay")
                 }
+                // Auto-surface session-summary markers: stamped on cold
+                // launch so a subsequent .background → .active cycle can
+                // evaluate productivity. The .onChange(scenePhase) handler
+                // re-stamps on each .active resume.
+                sessionStartedAt = Date()
+                sessionStartXP = gamification.totalXP
             }
         }
         .onChange(of: settingsStore.settings.dailySessionCap) { _, newCap in
@@ -175,16 +202,81 @@ public struct AppRootView: View {
                     await dailyTime.endSession()
                     DebugLog.lifecycle("AppRootView — scenePhase → background; daily timer flushed")
                 }
+                // Capture the auto-surface session summary BEFORE clearing
+                // the start markers; pendingSessionSummary surfaces on the
+                // next .active scene phase.
+                captureSessionSummaryIfProductive()
             case .inactive:
                 Task { await dailyTime.pause() }
             case .active:
                 if onboarding.hasCompletedOnboarding {
                     Task { await dailyTime.startSession() }
+                    // Surface the pending summary captured on the previous
+                    // .background. Skipped when (a) the daily cap is
+                    // currently showing, (b) the welcome-back / streak-
+                    // rescue overlay is up — those carry precedence per
+                    // the centered-overlay priority chain.
+                    if pendingSessionSummary != nil,
+                       !showDailyCapOverlay,
+                       welcomeBackDaysAway == nil,
+                       streakRescue == .none {
+                        showingPendingSummary = true
+                        DebugLog.lifecycle("AppRootView — scenePhase → active; auto-surfacing session summary")
+                    }
+                    // Start markers for the NEW session segment. Captured
+                    // once per cold launch + once per .background → .active
+                    // resume — so a kid who backgrounds for 10 seconds to
+                    // check a notification still gets the summary if their
+                    // previous active span was productive.
+                    sessionStartedAt = Date()
+                    sessionStartXP = gamification.totalXP
+                    sessionStartMicrobeCount = nil // wired when discovery surface lands
                 }
             @unknown default:
                 break
             }
         }
+    }
+
+    /// Decides whether the just-ended session is "productive enough" to
+    /// surface a summary on the next launch. Trauma-informed posture:
+    /// summary fires on EARNED engagement, not on every background. A 5-
+    /// second background to check a notification doesn't trigger; an 8-
+    /// minute play session does.
+    ///
+    /// Rules (all required):
+    /// 1. The kid has completed onboarding (so they've seen the tab shell)
+    /// 2. Session duration ≥ 60 seconds (`sessionStartedAt` was stamped)
+    /// 3. The kid earned at least 1 XP during this session segment
+    /// 4. No summary is currently presented or pending (no stacking)
+    private func captureSessionSummaryIfProductive() {
+        guard onboarding.hasCompletedOnboarding else { return }
+        guard pendingSessionSummary == nil, !showingPendingSummary else { return }
+        guard let startedAt = sessionStartedAt else { return }
+        let elapsed = Date().timeIntervalSince(startedAt)
+        guard elapsed >= 60 else {
+            DebugLog.lifecycle("AppRootView — session too short for summary (elapsed=\(Int(elapsed))s)")
+            return
+        }
+        let xpEarned: Int
+        if let baseline = sessionStartXP {
+            xpEarned = max(0, gamification.totalXP - baseline)
+        } else {
+            xpEarned = 0
+        }
+        guard xpEarned > 0 else {
+            DebugLog.lifecycle("AppRootView — session yielded 0 XP; skipping auto summary")
+            return
+        }
+        let summary = SessionSummary(
+            currentLevel: gamification.currentLevel,
+            totalXP: gamification.totalXP,
+            currentStreak: gamification.currentStreak,
+            microbesDiscovered: sessionStartMicrobeCount ?? 0,
+            achievementsEarned: gamification.earnedAchievementSlugs.count
+        )
+        pendingSessionSummary = summary
+        DebugLog.lifecycle("AppRootView — captured session summary (elapsed=\(Int(elapsed))s, xpEarned=\(xpEarned))")
     }
 
     /// Combine the system accessibility env values with the parent-gated
