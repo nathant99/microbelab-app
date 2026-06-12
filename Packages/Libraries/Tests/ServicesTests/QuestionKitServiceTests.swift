@@ -66,6 +66,27 @@ nonisolated struct QuestionKitServiceTests {
         }
     }
 
+    @Test func loadsKit04BeneficialMicrobesFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "beneficial-microbes")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 4)
+        #expect(kit.slug == "beneficial-microbes")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
+    @Test func phase1KitSlugsReachesPhase1Target() {
+        // Phase-1 ships kits 01-04 per Docs/FEATURE_PLAN.md § Gamification.
+        // Guards against accidental regression while Phase-2 kits land later.
+        #expect(QuestionKitService.phase1KitSlugs.count == 4)
+    }
+
     @Test func everyPhase1KitNumberMatchesCanonicalOrder() {
         let service = QuestionKitService()
         let kits = service.loadAllPhase1Kits()

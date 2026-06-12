@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4004-A000-000000000004",
+  "slug": "beneficial-microbes",
+  "title": "Friends in Disguise",
+  "summary": "How microbes you can't see help your body, your food, and the planet — the beneficial-first framing of the cast.",
+  "kitNumber": 4,
+  "questions": [
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000001",
+      "prompt": "Cyanobacteria like Photo helped shape Earth's atmosphere by…",
+      "choices": [
+        "Releasing oxygen during photosynthesis over billions of years",
+        "Eating sand",
+        "Trapping water in the ocean",
+        "Creating volcanoes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cyanobacteria use sunlight to make their own food and release oxygen — they helped build the oxygen-rich air we breathe today.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000002",
+      "prompt": "Mycorrhizal fungi like Net help forests by…",
+      "choices": [
+        "Linking tree roots so plants can share water and nutrients",
+        "Making leaves grow faster than is healthy",
+        "Eating tree bark",
+        "Replacing the soil"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mycorrhizal fungi connect tree roots underground in a living network — many plants share resources and warnings through it.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000003",
+      "prompt": "Many strains of Escherichia coli are actually beneficial because they…",
+      "choices": [
+        "Help make vitamin K inside the gut",
+        "Replace red blood cells",
+        "Cause every infection",
+        "Live only on the moon"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most E. coli strains are harmless gut residents — they help produce vitamin K, which the body uses for healthy bones and blood clotting.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000004",
+      "prompt": "Yogurt, kefir, and kimchi all rely on which kind of microbe to ferment them?",
+      "choices": [
+        "Beneficial bacteria and yeasts",
+        "Viruses only",
+        "No microbes at all",
+        "Soil-only archaea"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fermented foods use beneficial bacteria (often Lactobacillus) and sometimes yeasts to transform milk, vegetables, or grain into longer-lasting, tangier foods.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    },
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000005",
+      "prompt": "Akkermansia muciniphila supports your gut by…",
+      "choices": [
+        "Feeding on the mucus layer and helping keep the gut wall strong",
+        "Replacing your liver",
+        "Producing oxygen for your lungs",
+        "Making your heart beat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Akkermansia muciniphila feeds on the gut's mucus layer — when it's thriving, the intestinal lining tends to stay strong.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA004-0000-4004-8000-000000000006",
+      "prompt": "Deinococcus radiodurans is famous because it…",
+      "choices": [
+        "Survives extreme radiation, cold, and dehydration",
+        "Lives only in milk",
+        "Eats only sugar",
+        "Causes the common cold"
+      ],
+      "correctIndex": 0,
+      "explanation": "Deinococcus radiodurans is one of Earth's toughest microbes — scientists study it to learn how life endures conditions that would defeat most cells.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    }
+  ]
+}

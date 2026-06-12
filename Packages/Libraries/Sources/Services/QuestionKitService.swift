@@ -15,7 +15,8 @@ public nonisolated struct QuestionKitService: Sendable {
     public static let phase1KitSlugs: [String] = [
         "microbiology-basics",
         "microbiome",
-        "immune-defense"
+        "immune-defense",
+        "beneficial-microbes"
     ]
 
     public init() {}
