@@ -74,11 +74,11 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### AI Mentor (Vee — Socratic)
 
-- [ ] Create `VeeMentor` class with lazy `LanguageModelSession`
-- [ ] Implement `MicrobeFact` `@Generable` with curriculum-guarded fallbacks for all 12 microbes
-- [ ] Implement `ZoomCue` `@Generable` for tier-transition Socratic prompts
-- [ ] Implement `EcologyHypothesis` `@Generable` for microbiome puzzle scaffolding
-- [ ] Implement static fallbacks for every `@Generable` per `.claude/rules/foundationmodels.md`
+- [x] Create `VeeMentor` class with lazy `LanguageModelSession`
+- [x] Implement `MicrobeFact` `@Generable` with curriculum-guarded fallbacks for all 12 microbes
+- [x] Implement `ZoomCue` `@Generable` for tier-transition Socratic prompts
+- [x] Implement `EcologyHypothesis` `@Generable` for microbiome puzzle scaffolding
+- [x] Implement static fallbacks for every `@Generable` per `.claude/rules/foundationmodels.md`
 - [ ] Create mentor speech-bubble UI component
 - [ ] Wire mentor to events: microscope tier-up, microbiome milestone, immune wave-clear
 

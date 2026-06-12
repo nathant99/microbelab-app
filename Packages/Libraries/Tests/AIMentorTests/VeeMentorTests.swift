@@ -41,4 +41,36 @@ struct VeeMentorTests {
         let mentor = fixture()
         #expect(mentor.factCard(for: "lacto")?.contains("Lactobacillus") == true)
     }
+
+    @Test func fallbackMicrobeFactWiresStaticCatalog() {
+        let mentor = fixture()
+        let fact = mentor.fallbackMicrobeFact(for: "lacto")
+        #expect(fact?.factBody.contains("Lactobacillus") == true)
+        #expect(fact?.socraticPrompt.contains("Lacto") == true)
+    }
+
+    @Test func fallbackMicrobeFactForUnknownSlugIsNil() {
+        let mentor = fixture()
+        #expect(mentor.fallbackMicrobeFact(for: "missing") == nil)
+    }
+
+    @Test func fallbackZoomCueCoversAllTiers() {
+        let mentor = fixture()
+        for tier in ZoomTier.allCases {
+            let cue = mentor.fallbackZoomCue(for: tier)
+            #expect(!cue.reaction.isEmpty)
+            #expect(!cue.lookForHint.isEmpty)
+            // Trauma-safe register: no exclamation points in mentor reactions.
+            #expect(!cue.reaction.contains("!"))
+        }
+    }
+
+    @Test func fallbackEcologyHypothesisCoversAllModes() {
+        let mentor = fixture()
+        for mode in FeedingMode.allCases {
+            let hyp = mentor.fallbackEcologyHypothesis(for: mode)
+            #expect(!hyp.observation.isEmpty)
+            #expect(!hyp.hypothesis.isEmpty)
+        }
+    }
 }
