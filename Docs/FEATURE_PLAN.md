@@ -69,7 +69,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` — reached via NavigationStack toolbar in MicrobiomeView; ships trauma-safe off-ramp + score HUD
 - [x] Build `ProgressTabView` with XP / streak / codex grid
 - [x] Build `ProfileView` placeholder (`ForgeAvatar.AvatarStudioView(.lite)` wiring lands next PR)
-- [ ] Build `SettingsView` with parental gate (next PR)
+- [x] Build `SettingsView` with parental gate (`AppSettings` + `AppSettingsStore` in Services; `ParentalGateView` math gate; sensory toggles kid-accessible, content gate + session cap parent-gated)
 - [ ] Build `QuizView` for question kits (next PR)
 
 ### AI Mentor (Vee — Socratic)

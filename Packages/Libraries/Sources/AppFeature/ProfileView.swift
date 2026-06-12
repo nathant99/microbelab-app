@@ -23,13 +23,11 @@ public struct ProfileView: View {
                     }
                 }
                 Section("Settings") {
-                    Label("Parental controls", systemImage: "lock.shield")
-                    Label("Sound effects", systemImage: "speaker.wave.2")
-                    Label("Reduce Motion", systemImage: "figure.walk.motion")
-                }
-                Section("About") {
-                    Label("Privacy policy", systemImage: "hand.raised")
-                    Label("Acknowledgements", systemImage: "doc.text")
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Label("All settings", systemImage: "gear")
+                    }
                 }
             }
             .navigationTitle(Text(verbatim: "Profile"))
