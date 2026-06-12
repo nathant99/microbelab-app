@@ -1,6 +1,10 @@
 # MicrobeLab — Feature Plan
 
 > Phased delivery roadmap. Mirrors the engineering breakdown in `@Docs/TECHNICAL_DESIGN.md`. Implementing sessions check off boxes as work lands; do not collapse phases — the per-phase exit criteria gate ship readiness.
+>
+> **SPM folder convention** (per `@CLAUDE.md` § SPM Folder Convention): new feature surfaces with ≥ 3 files (view + machine + service) land in a per-feature subdirectory under their target (e.g., `AppFeature/Onboarding/`, `AppFeature/Engagement/`). Add subdirs as the codebase grows; the flat-root pattern stays canonical SPM regardless.
+>
+> **Xcode-managed file constraint** (per `@CLAUDE.md` § Xcode-managed file safety): no item in this plan implies edits to `*.xcodeproj/*.xcscheme/*.xctestplan/Info.plist/*.entitlements/Package.resolved`. Items that need them ship via `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
 
 ## Phase 1: Microscope Foundations (MVP)
 

@@ -60,6 +60,23 @@ See `@.claude/rules/xcode-agent-safety.md` for the full classification of Xcode-
 
 See `@Docs/APP_SPECIFIC_NOTES.md` for the preserved prior CLAUDE.md content (architecture / domain patterns / gotchas accumulated through development). Portfolio-wide rules — Swift 6 concurrency, SwiftData patterns, testing conventions, ForgeKit module APIs, Liquid Glass register, distributed-narrative methodology, trauma-informed gates, COPPA / age-assurance — auto-load from `@.claude/rules/` (24+ files synced from labsmith). Do NOT re-state portfolio-wide rules here.
 
+## SPM Folder Convention
+
+The local Swift Package at `Packages/Libraries/` follows the portfolio standard layout per `@.claude/rules/spm-architecture.md`. Source files live directly under `Sources/<TargetName>/` and may optionally be grouped into subdirectories when a target accumulates many files. Current per-target subdirectory groupings shipped through Phase 1:
+
+| Target | Subdirectories | Convention |
+|---|---|---|
+| `AppFeature` | `Onboarding/`, `Profile/`, `Engagement/` | One subdir per cross-cutting feature surface — pages / sheets / overlays |
+| `Models` / `Services` / `SharedUI` / `GameEngine` / `AIMentor` | flat | Files at target root; promote to subdirs when count > ~12 OR a logical cluster emerges |
+
+When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.
+
+## Xcode-managed file safety (reinforced 2026-06-12)
+
+The `*.xcworkspace` / `*.xcodeproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved` files at the top of this file remain off-limits to the agent. **`git add` + `git commit` on Xcode-regenerated diffs IS fine** — only authoring/editing from disk is prohibited. Verify SPM-only changes with `swift build --package-path Packages/Libraries` (NEVER `xcodebuild` from inside the Xcode-hosted agent — it terminates the session).
+
+Any change that requires a managed file (new test target wiring, new app capability, new asset catalog entry, new scheme) ships via `Docs/HANDOFF_TO_USER_<TOPIC>.md` instead of an attempted direct edit.
+
 ## Reference Documents
 
 - `@Docs/TECHNICAL_DESIGN.md` — architecture, state machines, domain model
