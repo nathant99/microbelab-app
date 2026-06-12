@@ -32,7 +32,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Implement pinch-to-zoom gesture handler + tier boundary snap (via `ZoomMachine` + `MicroscopeScene.handlePinch(delta:)`)
 - [ ] Implement LOD sprite atlas + per-tier sprite swap (asset-blocked on microbe portrait pack)
 - [x] Implement `ZoomMachine` view-local state machine
-- [ ] Implement microscope HUD overlay (tier badge + zoom level) — SwiftUI view PR next
+- [x] Implement microscope HUD overlay (tier badge + zoom level) — `MicroscopeHUD` in SharedUI, wired into ExploreView with mentor-cue refresh on snap
 
 ### Microbiome Simulator
 
