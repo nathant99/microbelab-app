@@ -72,9 +72,11 @@ The local Swift Package at `Packages/Libraries/` follows the portfolio standard 
 
 When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.
 
-## Xcode-managed file safety (reinforced 2026-06-12 — second pass, user-direct)
+## Xcode-managed file safety (reinforced 2026-06-12 — third pass, user-direct)
 
-**Critical** (verbatim user-direct, 2026-06-12): *"do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* The named files at the top of this file remain off-limits to the agent for authoring/editing from disk. Specifically called out by name in today's reinforcement:
+**Critical** (verbatim user-direct, 2026-06-12 — repeated across three reinforcement passes the same day): *"do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* The fact that the user has now re-stated this rule three times in a single day is itself the signal: this is THE most load-bearing safety rule for the in-IDE agent. Treat any future ambiguity around an `.xcworkspace` / `.xcscheme` / `.xctestplan` / `.pbxproj` / `Info.plist` / `.entitlements` / asset-catalog `Contents.json` / `Package.resolved` / `xcuserdata/` edit as a STOP and route through `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps — never attempt the edit.
+
+The named files at the top of this file remain off-limits to the agent for authoring/editing from disk. Specifically called out by name in today's reinforcement:
 
 - `MicrobeLab.xcworkspace/contents.xcworkspacedata` — Xcode workspace membership; editing forces workspace reload, can terminate the agent session
 - `MicrobeLab.xcodeproj/project.pbxproj` — project membership; system hook blocks edits while Xcode is open
@@ -85,7 +87,16 @@ When introducing a new feature surface that owns ≥ 3 files (view + machine + s
 
 Any change that requires a managed file (new test target wiring, new app capability, new asset catalog entry, new scheme) ships via `Docs/HANDOFF_TO_USER_<TOPIC>.md` instead of an attempted direct edit. The canonical handoff doc at `@Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` aggregates open GUI tasks.
 
-Engagement-foundation work landing in the same round (Session nudge / Progressive disclosure / Streak persistence + rescue / Variable rewards / SPM folder refresh — PRs #35 / #36 / #37 / #38 / #40) stayed entirely inside `Packages/Libraries/Sources/` + `Docs/` — no managed-file edits required. The same discipline applies for follow-up engagement + onboarding work; if a new XCUITest launch-argument needs scheme wiring, ship the change via a `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
+Engagement-foundation work landing in the same round (Session nudge / Progressive disclosure / Streak persistence + rescue / Variable rewards / SPM folder refresh — PRs #35 / #36 / #37 / #38 / #40) stayed entirely inside `Packages/Libraries/Sources/` + `Docs/` — no managed-file edits required. The parent-handoff flow (PR #42) + retention-metrics baseline (PR #43) extended that same discipline. The same discipline applies for follow-up engagement + onboarding work; if a new XCUITest launch-argument needs scheme wiring, ship the change via a `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
+
+### Self-check before every edit
+
+Before any `Edit` / `Write` tool call, the agent answers two questions internally:
+
+1. Does the target path match any glob in the table at the top of this file (workspace / pbxproj / scheme / test plan / Info.plist / entitlements / asset-catalog Contents.json / xcuserdata / Package.resolved)?
+2. If yes — STOP. Route the change through `Docs/HANDOFF_TO_USER_<TOPIC>.md` and surface the GUI steps to the user. Never attempt the edit "just to see if it works".
+
+If no — proceed. SPM source under `Packages/Libraries/Sources/<Target>/`, SPM tests under `Packages/Libraries/Tests/<TargetTests>/`, markdown under `Docs/` + `.claude/rules/` + `CLAUDE.md`, JSON resources under `Packages/Libraries/Sources/Services/Resources/`, scripts, `.gitignore`, `ExportOptions.plist` at repo root are all SAFE.
 
 ## Reference Documents
 

@@ -1,12 +1,12 @@
 ---
 status: open
 last-updated: 2026-06-12
-last-reinforced: 2026-06-12 (user-direct: workspace + scheme + test plan files called out by name)
+last-reinforced: 2026-06-12 (user-direct third pass: workspace + scheme + test plan files called out by name AGAIN — confirms this is THE most load-bearing safety rule for the in-IDE agent)
 ---
 
 # Handoff to User — Xcode GUI Tasks
 
-Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — second pass, user-direct)" must never write the following Xcode-managed files from disk:
+Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — third pass, user-direct)" must never write the following Xcode-managed files from disk:
 
 - `MicrobeLab.xcworkspace/contents.xcworkspacedata` (workspace membership)
 - `MicrobeLab.xcodeproj/project.pbxproj` (project membership)
