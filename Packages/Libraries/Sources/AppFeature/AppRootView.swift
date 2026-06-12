@@ -27,6 +27,9 @@ public struct AppRootView: View {
     @State private var welcomeBackDaysAway: Int?
     @State private var streakRescue: StreakRescue = .none
     @State private var celebration = CelebrationCoordinator()
+    @State private var dailyTime: DailyTimeCoordinator
+    @State private var showDailyCapOverlay: Bool = false
+    @Environment(\.scenePhase) private var scenePhase
 
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.accessibilityReduceTransparency) private var systemReduceTransparency
@@ -37,6 +40,11 @@ public struct AppRootView: View {
         let store = StreakStore()
         _streakStore = State(initialValue: store)
         _gamification = State(initialValue: GamificationService.hydrated(from: store))
+        // Daily-cap coordinator reads the parent-set cap from the settings
+        // store at first launch; later changes flow through .onChange below.
+        let settings = AppSettingsStore()
+        _settingsStore = State(initialValue: settings)
+        _dailyTime = State(initialValue: DailyTimeCoordinator(cap: settings.settings.dailySessionCap))
     }
 
     public var body: some View {
@@ -59,6 +67,23 @@ public struct AppRootView: View {
                 let prefs = effectiveA11yPreferences
                 tabShell(catalog: catalog)
                     .celebrationOverlay(celebration)
+                    .overlay(alignment: .center) {
+                        // Daily-cap overlay takes priority over the other
+                        // centered overlays so the kid sees a calm wrap-up
+                        // instead of a streak-rescue or welcome-back on the
+                        // same launch they crossed the parent-set cap.
+                        if showDailyCapOverlay {
+                            DailyCapOverlay(
+                                dailyElapsedMinutes: Int(dailyTime.dailyElapsedMinutes),
+                                reduceTransparency: prefs.reduceTransparency
+                            ) {
+                                showDailyCapOverlay = false
+                                welcomeBackDaysAway = nil
+                                streakRescue = .none
+                            }
+                            .transition(overlayTransition(reduceMotion: prefs.reduceMotion))
+                        }
+                    }
                     .overlay(alignment: .top) {
                         // Session-target nudge pins to the top so the kid sees
                         // it without losing the current tab. Either centered
@@ -121,6 +146,43 @@ public struct AppRootView: View {
                 // Record the session AFTER counter bump so the StreakManager
                 // sees the actual play session, not a launch into onboarding.
                 await gamification.recordSession()
+                // Wire the ForgeAccessibility SessionTimerService daily-cap
+                // pipeline. Refresh + decide whether the kid is already over
+                // the cap from a prior session today; if so, surface the
+                // wrap-up overlay immediately. `unlimited` never trips this
+                // because DailyTimeCoordinator collapses to a 24h cap.
+                await dailyTime.startSession()
+                if dailyTime.isDailyLimitReached {
+                    showDailyCapOverlay = true
+                    welcomeBackDaysAway = nil
+                    streakRescue = .none
+                    DebugLog.lifecycle("AppRootView — daily cap reached on launch; showing wrap-up overlay")
+                }
+            }
+        }
+        .onChange(of: settingsStore.settings.dailySessionCap) { _, newCap in
+            // Parent rebuilt the cap from Settings → propagate to the
+            // ForgeKit timer. `updateCap` is no-op if `newCap == activeCap`.
+            Task { await dailyTime.updateCap(newCap) }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // Pause / resume the daily timer with scene phase so backgrounded
+            // time doesn't count against the cap. End-session flushes on
+            // .background so the daily bucket persists across cold launches.
+            switch newPhase {
+            case .background:
+                Task {
+                    await dailyTime.endSession()
+                    DebugLog.lifecycle("AppRootView — scenePhase → background; daily timer flushed")
+                }
+            case .inactive:
+                Task { await dailyTime.pause() }
+            case .active:
+                if onboarding.hasCompletedOnboarding {
+                    Task { await dailyTime.startSession() }
+                }
+            @unknown default:
+                break
             }
         }
     }
