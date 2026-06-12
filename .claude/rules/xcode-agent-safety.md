@@ -119,3 +119,7 @@ When labsmith next syncs `.claude/rules/` across all 131 apps, this rule propaga
 - Internal incident: triggered the original portfolio rule "Cannot edit `.pbxproj` while Xcode is open" in `spm-architecture.md`
 - Internal incident (2026-05-19): user noted the agent IS inside the workspace and any direct Xcode-file edit risks restarting the workspace and losing context — leading to this rule
 <!-- END LABSMITH-SYNCED CONTENT -->
+
+## App-local reinforcement (MicrobeLab 2026-06-12)
+
+User-direct restated this rule THREE times in a single day (2026-06-12). PRs #41 (first reinforcement) → CLAUDE.md "second-pass" section (12:48) → today's third-pass refresh. App-local note for future MicrobeLab sessions: when this rule has been reinforced this many times in a single day, do NOT treat it as "noise" — treat it as the most load-bearing safety rule in this repo. The cost of mis-edits (lost agent session, corrupted scheme/test plan JSON, mid-task workspace reload) far exceeds the cost of routing through `Docs/HANDOFF_TO_USER_<TOPIC>.md`. See `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` for the canonical aggregator of open GUI tasks.
