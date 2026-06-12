@@ -105,7 +105,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 - [x] Create 5-step onboarding flow (welcome, first zoom-in, meet first microbe, first observation, first quiz) — `MicrobeLabOnboardingFlow` wraps `ForgeUI.ForgeOnboardingFlow`; `OnboardingMachine` value-type state + `OnboardingStore` UserDefaults persistence; gated at `AppRootView` before the tab shell
 - [x] Implement aha moment: first microscope zoom reveals a character introducing themselves — onboarding step 3 introduces Lacto verbatim ("one of trillions of tiny lives that help you digest food"); `ExploreView` mentor-bubble cue refreshes on tier snap (the in-app aha continues after onboarding completes)
-- [ ] Implement progressive disclosure (Session 1: microscope + codex only)
+- [x] Implement progressive disclosure (Session 1: microscope + codex only) — `SessionCountStore` (UserDefaults monotonic counter) + `TabDisclosure` (pure mapping: count < 2 → Explore + Codex; 2-3 → + Microbiome; 4+ → full chrome incl. Progress + Profile); wired into `AppRootView.tabShell`; increment fires only after onboarding completes so the 5-step flow isn't counted as session #1
 - [ ] Implement parent handoff flow (30s setup)
 - [ ] Implement Apple Declared Age Range API gate (iOS 26+)
 
@@ -193,7 +193,7 @@ COPPA compliance, parental consent, age gates, and first-time experience polish.
 - [ ] **Parental consent service** — COPPA-compliant consent; annual re-consent per 2026 FTC
 - [ ] **Privacy policy** — Plain-language policy accessible from Settings and App Store listing
 - [ ] **Parental gates** — Required for external links and data-sharing permissions
-- [ ] **Progressive disclosure** — Session 1: microscope only → Sessions 2-3: + simulator → Sessions 4+: full feature set
+- [x] **Progressive disclosure** — Session 1: microscope + codex only → Sessions 2-3: + simulator (Microbiome tab) → Sessions 4+: full feature set incl. Progress + Profile. Shipped via `SessionCountStore` + `TabDisclosure` pure-mapping enum + `AppRootView.tabShell` conditional `Tab(...)` blocks
 
 ### Engagement Foundation (Excellence Framework)
 

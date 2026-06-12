@@ -17,6 +17,7 @@ public struct AppRootView: View {
     @State private var gamification = GamificationService()
     @State private var onboarding = OnboardingStore()
     @State private var lastActive = LastActiveStore()
+    @State private var sessionCount = SessionCountStore()
     @State private var sessionTarget = SessionTargetService()
     @State private var welcomeBackDaysAway: Int?
 
@@ -57,6 +58,13 @@ public struct AppRootView: View {
             evaluateWelcomeBack()
             loadCatalog()
             lastActive.recordSessionStart()
+            // Increment AFTER welcome-back evaluation so the days-away
+            // computation reads the prior timestamp, not the fresh one.
+            // Onboarding completion is the gate — counting only "real" play
+            // sessions keeps progressive disclosure honest.
+            if onboarding.hasCompletedOnboarding {
+                sessionCount.incrementForSessionStart()
+            }
         }
     }
 
@@ -75,6 +83,10 @@ public struct AppRootView: View {
     private func tabShell(catalog: MicrobeCatalogService) -> some View {
         let mentor = VeeMentor(microbes: catalog.microbes)
         let simulator = MicrobiomeSimulator(microbes: catalog.microbes)
+        // Progressive disclosure: hide Microbiome / Progress / Profile until
+        // the kid has launched enough sessions. Reduces day-1 decision
+        // fatigue + lands the aha moment inside the microscope loop.
+        let disclosure = TabDisclosure.from(sessionCount: sessionCount.sessionCount)
         return TabView {
             Tab("Explore", systemImage: "microscope") {
                 ExploreView(catalog: catalog, mentor: mentor)
@@ -82,18 +94,24 @@ public struct AppRootView: View {
             Tab("Codex", systemImage: "book") {
                 MicrobeCodexView(catalog: catalog, gamification: gamification)
             }
-            Tab("Microbiome", systemImage: "leaf") {
-                MicrobiomeView(simulator: simulator, mentor: mentor, gamification: gamification)
+            if disclosure.showsMicrobiome {
+                Tab("Microbiome", systemImage: "leaf") {
+                    MicrobiomeView(simulator: simulator, mentor: mentor, gamification: gamification)
+                }
             }
-            Tab("Progress", systemImage: "chart.bar") {
-                ProgressTabView(
-                    progress: PlayerProgressData.empty(),
-                    totalMicrobes: catalog.microbes.count,
-                    gamification: gamification
-                )
+            if disclosure.showsProgress {
+                Tab("Progress", systemImage: "chart.bar") {
+                    ProgressTabView(
+                        progress: PlayerProgressData.empty(),
+                        totalMicrobes: catalog.microbes.count,
+                        gamification: gamification
+                    )
+                }
             }
-            Tab("Profile", systemImage: "person") {
-                ProfileView()
+            if disclosure.showsProfile {
+                Tab("Profile", systemImage: "person") {
+                    ProfileView()
+                }
             }
         }
     }
