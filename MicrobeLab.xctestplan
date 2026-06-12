@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "8904C783-B3DA-46DB-A325-800AEB94DA1A",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MicrobeLab.xcodeproj",
+      "identifier" : "FBEC75EF2FDBB0D0001015F9",
+      "name" : "MicrobeLab"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MicrobeLab.xcodeproj",
+        "identifier" : "FBEC75FC2FDBB0D0001015F9",
+        "name" : "MicrobeLabTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MicrobeLab.xcodeproj",
+        "identifier" : "FBEC76062FDBB0D0001015F9",
+        "name" : "MicrobeLabUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

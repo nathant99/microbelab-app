@@ -16,7 +16,7 @@ Guard is *a careful-macrophage-tween (chunky-cartoon checking-pose) in chunky-ca
 
 Guard is *small + careful + ID-checking*, *warm-cream-with-soft-blue-tones*, *deeply attentive-to-self-vs-other*, *fond-of-saying-"I check IDs. Patient + careful."* Signature: *immune-cell-cards + ID-checking-tracker* showing innate immunity (macrophages, neutrophils) + adaptive immunity (T-cells, B-cells, antibodies).
 
-This is *load-bearing — closes cast arc.* Guard embodies the *immune cells* primitive — *the microbiology craft of THE-BODY'S-ID-CHECKING-SYSTEM.* The immune system has two layers: INNATE (fast, general — macrophages engulf invaders; neutrophils swarm) + ADAPTIVE (slow first time, fast on repeat — T-cells coordinate; B-cells make antibodies). Both work together; both check IDs (distinguishing self from non-self). Vaccines train the adaptive immune system by exposing it to harmless versions of pathogens. Closes MicrobeLab cast arc: Lacto + Yeast + Photo + Net + Spore + Guard = full microbiome + immune toolkit.
+This is *essential — closes cast arc.* Guard embodies the *immune cells* primitive — *the microbiology craft of THE-BODY'S-ID-CHECKING-SYSTEM.* The immune system has two layers: INNATE (fast, general — macrophages engulf invaders; neutrophils swarm) + ADAPTIVE (slow first time, fast on repeat — T-cells coordinate; B-cells make antibodies). Both work together; both check IDs (distinguishing self from non-self). Vaccines train the adaptive immune system by exposing it to harmless versions of pathogens. Closes MicrobeLab cast arc: Lacto + Yeast + Photo + Net + Spore + Guard = full microbiome + immune toolkit.
 
 Guard teaches: innate vs adaptive immunity; macrophages / T-cells / B-cells; antibodies; vaccines as immune-training; closes cast arc; cross-app with BioForge body-systems.
 
@@ -34,10 +34,10 @@ Careful-macrophage-tween.
 
 Closes MicrobeLab cast arc.
 
-## Cultural-sensitivity gate
+## cultural sensitivity
 
-Story-axis per ADR-016.
+Story-axis.
 
-## Cultural-context note
+## cultural context
 
 Immune-system pedagogy: standard immunology + AAP pediatric materials.
