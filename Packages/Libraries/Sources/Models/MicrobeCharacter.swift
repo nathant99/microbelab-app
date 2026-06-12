@@ -72,6 +72,9 @@ public nonisolated struct MicrobeCharacter: Codable, Sendable, Identifiable, Equ
     public let factCard: String
     /// Kit number at which this character is first introduced (1-indexed).
     public let firstKit: Int
+    /// 3-5 in-character voice lines per the DN-S voice-register card. Decoded
+    /// with a default so older JSON catalogs without the field still parse.
+    public let voiceLines: [String]
 
     public init(
         id: UUID,
@@ -83,7 +86,8 @@ public nonisolated struct MicrobeCharacter: Codable, Sendable, Identifiable, Equ
         growthRate: GrowthRate,
         catchphrase: String,
         factCard: String,
-        firstKit: Int
+        firstKit: Int,
+        voiceLines: [String] = []
     ) {
         self.id = id
         self.slug = slug
@@ -95,5 +99,26 @@ public nonisolated struct MicrobeCharacter: Codable, Sendable, Identifiable, Equ
         self.catchphrase = catchphrase
         self.factCard = factCard
         self.firstKit = firstKit
+        self.voiceLines = voiceLines
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, slug, displayName, kingdom, role, preferredEnvironment
+        case growthRate, catchphrase, factCard, firstKit, voiceLines
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.slug = try container.decode(String.self, forKey: .slug)
+        self.displayName = try container.decode(String.self, forKey: .displayName)
+        self.kingdom = try container.decode(MicrobeKingdom.self, forKey: .kingdom)
+        self.role = try container.decode(MicrobeRole.self, forKey: .role)
+        self.preferredEnvironment = try container.decode(GutSlot.self, forKey: .preferredEnvironment)
+        self.growthRate = try container.decode(GrowthRate.self, forKey: .growthRate)
+        self.catchphrase = try container.decode(String.self, forKey: .catchphrase)
+        self.factCard = try container.decode(String.self, forKey: .factCard)
+        self.firstKit = try container.decode(Int.self, forKey: .firstKit)
+        self.voiceLines = (try? container.decode([String].self, forKey: .voiceLines)) ?? []
     }
 }

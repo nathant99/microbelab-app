@@ -45,4 +45,21 @@ nonisolated struct MicrobeCatalogServiceTests {
         let slugs = service.microbes.map(\.slug)
         #expect(Set(slugs).count == slugs.count, "Slugs must be unique")
     }
+
+    @Test func everyMicrobeHasVoiceLines() throws {
+        guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
+            Issue.record("Catalog should have loaded")
+            return
+        }
+        for microbe in service.microbes {
+            // Each character ships 3-5 in-character lines per the DN-S voice
+            // register card.
+            #expect(microbe.voiceLines.count >= 2,
+                    "\(microbe.slug) must ship at least 2 voice lines")
+            for line in microbe.voiceLines {
+                #expect(!line.isEmpty,
+                        "\(microbe.slug) voice line must not be empty")
+            }
+        }
+    }
 }
