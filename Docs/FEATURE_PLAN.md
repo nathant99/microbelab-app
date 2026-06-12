@@ -197,7 +197,7 @@ COPPA compliance, parental consent, age gates, and first-time experience polish.
 
 ### Engagement Foundation (Excellence Framework)
 
-- [ ] **Streak system** — Daily activity with streak freeze (one mercy day per week), warm broken-streak messaging ("The microbiome missed you!")
+- [x] **Streak system** — `StreakStore` (UserDefaults persistence of current / longest / freezes / lastRecordedAt) + `GamificationService.hydrated(from:)` so cold launches read yesterday's state; `recordSession` flushes through the store after the StreakManager actor returns. **Warm broken-streak messaging** lands via `StreakRescueOverlay` (AppFeature/Engagement/) gated on the pure `StreakRescue.from(lastRecordedAt:priorStreak:)` derivation (≥ 2 calendar-day gap with a prior streak ≥ 1 surfaces "The microbiome missed you" copy; long-streak / short-streak / fresh variants in `bodyCopy`). Streak-freeze mercy-day wiring continues to come from ForgeKit's actor; the kid's `availableFreezes` defaults to 2 + persists per session.
 - [ ] **DDA engine** — Invisible difficulty adjustment across microbiome puzzles + immune game wave count
 - [x] **Session targeting** — `SessionTargetService` + `SessionTargetMachine` track the 10-15 min target window per ForgeKit's portfolio default; `phase` returns `.focused` / `.inTarget` / `.overTarget`. UI consumer `SessionNudgeOverlay` (AppFeature/Engagement/) surfaces a trauma-safe gentle stretch suggestion at the in-target boundary (once per session) and a softer pause suggestion past the upper bound; refresh cadence via `TimelineView(.periodic(by: 30))` so the service stays pure
 - [ ] **Variable rewards** — ~1 in 5 sessions: rare microbe sighting / hidden codex entry / special Vee reaction
