@@ -54,11 +54,11 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### 12-Character Microbe Cast
 
-- [ ] Define 12 named microbes (4 beneficial + 4 neutral + 4 opportunistic/pathogenic per DN cluster balance — see `@Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md`)
-- [ ] Bundle character JSON metadata in `Resources/Cast/cast.json`
-- [ ] Bundle character portrait WebPs in `Resources/Cast/<slug>.webp` (12 portraits; await hub distribution)
-- [ ] Wire `ForgeIllustrations.IllustrationRegistry` registration
-- [ ] Implement per-character voice lines per DN voice register card
+- [x] Define 12 named microbes (Lacto / Yeast / Photo / Net / Spore / Guard canonical DN cast + Bifido / Akker / Strep / Coli / Rhino / Deino codex-supporting)
+- [x] Bundle character JSON metadata in `Services/Resources/microbes.json` (v2 schema includes voiceLines)
+- [ ] Bundle character portrait WebPs in `Resources/Cast/<slug>.webp` (12 portraits; await hub distribution per `.claude/rules/forgekit.md` § Asset generation ownership)
+- [ ] Wire `ForgeIllustrations.IllustrationRegistry` registration (awaits portrait pack)
+- [x] Implement per-character voice lines per DN voice register card — `voiceLines: [String]` on `MicrobeCharacter`; `VeeMentor.voiceLine(for:rotation:)` rotates lines deterministically; backward-compatible Decoder default for v1 catalogs
 
 ### SwiftUI Views
 

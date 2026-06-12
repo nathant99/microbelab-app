@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "generatedAt": "2026-06-11",
-  "notes": "12-microbe Phase 1 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Remaining 6 are codex-supporting microbes (beneficial-first framing per CLAUDE.md trauma-informed posture). Names checked against labsmith REGISTRY_PORTFOLIO_CHARACTER_NAMES.md — supporting microbes use scientific-genus-flavored slugs only.",
+  "version": 2,
+  "generatedAt": "2026-06-12",
+  "notes": "12-microbe Phase 1 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Remaining 6 are codex-supporting microbes (beneficial-first framing per CLAUDE.md trauma-informed posture). Names checked against labsmith REGISTRY_PORTFOLIO_CHARACTER_NAMES.md. v2 adds per-character voiceLines (3-5 sample dialogue lines per DN-S voice-register card).",
   "microbes": [
     {
       "id": "9DB2A1F0-1111-4001-8000-000000000001",
@@ -13,7 +13,12 @@
       "growthRate": { "onFiber": 0.6, "onSugar": 0.2, "onBalanced": 0.5, "onNone": -0.1 },
       "catchphrase": "Friend in your food. Friend in your gut.",
       "factCard": "Lactobacillus species ferment milk into yogurt and live in your large intestine, where they often help with digestion.",
-      "firstKit": 1
+      "firstKit": 1,
+      "voiceLines": [
+        "Have you ever tasted yogurt? That's a little bit of me.",
+        "I get along with most of my neighbors down here.",
+        "Fiber is good — but balanced is good too."
+      ]
     },
     {
       "id": "9DB2A1F0-1111-4002-8000-000000000002",
@@ -25,7 +30,12 @@
       "growthRate": { "onFiber": 0.2, "onSugar": 0.7, "onBalanced": 0.4, "onNone": -0.2 },
       "catchphrase": "I make air inside bread.",
       "factCard": "Saccharomyces cerevisiae turn sugars into carbon dioxide bubbles — that's what makes bread dough rise.",
-      "firstKit": 2
+      "firstKit": 2,
+      "voiceLines": [
+        "Give me a little sugar and I'll show you something neat.",
+        "Bubbles are just air I've made for you.",
+        "Bread, beer, kefir — same family, different parties."
+      ]
     },
     {
       "id": "9DB2A1F0-1111-4003-8000-000000000003",
@@ -37,7 +47,12 @@
       "growthRate": { "onFiber": 0.3, "onSugar": 0.3, "onBalanced": 0.4, "onNone": 0.5 },
       "catchphrase": "Sunlight. Then air. Then everything else.",
       "factCard": "Cyanobacteria use sunlight to make their own food and release oxygen. They helped create the oxygen in Earth's atmosphere.",
-      "firstKit": 3
+      "firstKit": 3,
+      "voiceLines": [
+        "Long before there were trees, there was me.",
+        "Sunlight in — oxygen out. That's my whole job.",
+        "If you can breathe, you can thank a few billion of us."
+      ]
     },
     {
       "id": "9DB2A1F0-1111-4004-8000-000000000004",
@@ -49,7 +64,12 @@
       "growthRate": { "onFiber": 0.5, "onSugar": 0.1, "onBalanced": 0.3, "onNone": 0.2 },
       "catchphrase": "Forests talk through me.",
       "factCard": "Mycorrhizal fungi link tree roots underground, often helping plants share water and nutrients across long distances.",
-      "firstKit": 4
+      "firstKit": 4,
+      "voiceLines": [
+        "Trees share through me — water, sugar, news of insects.",
+        "Below the forest is another forest.",
+        "Patience is a tool. Use it more often than you think you should."
+      ]
     },
     {
       "id": "9DB2A1F0-1111-4005-8000-000000000005",
@@ -61,7 +81,12 @@
       "growthRate": { "onFiber": 0.1, "onSugar": 0.5, "onBalanced": 0.3, "onNone": -0.3 },
       "catchphrase": "Some friends. Some not. All real.",
       "factCard": "Some bacteria can cause illness when they grow too large in number, but most of them live with us peacefully.",
-      "firstKit": 5
+      "firstKit": 5,
+      "voiceLines": [
+        "I'm not the bad guy of the story.",
+        "Most of my family is fine company. A few of us are not.",
+        "Names like 'pathogen' are shortcuts — look closer before you decide."
+      ]
     },
     {
       "id": "9DB2A1F0-1111-4006-8000-000000000006",
@@ -73,7 +98,12 @@
       "growthRate": { "onFiber": 0.4, "onSugar": 0.4, "onBalanced": 0.4, "onNone": 0.4 },
       "catchphrase": "I check IDs. Patient and careful.",
       "factCard": "Your immune cells — like macrophages and B-cells — patiently check every microbe they meet and learn which ones to trust.",
-      "firstKit": 6
+      "firstKit": 6,
+      "voiceLines": [
+        "I work slowly because I want to get it right.",
+        "Most of who I meet, I wave through with a smile.",
+        "Your body knows what's family. I help it remember."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-4007-8000-000000000007",
@@ -85,7 +115,12 @@
       "growthRate": { "onFiber": 0.7, "onSugar": 0.0, "onBalanced": 0.4, "onNone": -0.2 },
       "catchphrase": "Fiber is my favorite snack.",
       "factCard": "Bifidobacterium species feast on the fiber in fruits and vegetables — one of the gut's most helpful families.",
-      "firstKit": 1
+      "firstKit": 1,
+      "voiceLines": [
+        "Anything fibrous, I love. Apples, beans, broccoli.",
+        "We were here before you started eating solid food.",
+        "Sugar alone isn't enough for me — I need real fiber."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-4008-8000-000000000008",
@@ -97,7 +132,12 @@
       "growthRate": { "onFiber": 0.5, "onSugar": 0.1, "onBalanced": 0.4, "onNone": 0.0 },
       "catchphrase": "I patch the gut wall.",
       "factCard": "Akkermansia muciniphila feeds on the gut's mucus layer and helps keep the intestinal wall strong.",
-      "firstKit": 2
+      "firstKit": 2,
+      "voiceLines": [
+        "Mucus isn't gross — it's how I work.",
+        "Strong walls keep everything where it belongs.",
+        "I'm small but I do a lot of repair."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-4009-8000-000000000009",
@@ -109,7 +149,12 @@
       "growthRate": { "onFiber": 0.2, "onSugar": 0.6, "onBalanced": 0.3, "onNone": 0.0 },
       "catchphrase": "Mouth-dweller, mostly chill.",
       "factCard": "Many Streptococcus species live quietly in the mouth and throat — a few can cause illness, but most are part of normal mouth life.",
-      "firstKit": 5
+      "firstKit": 5,
+      "voiceLines": [
+        "I'm usually invisible to you. That's the goal.",
+        "We get loud sometimes, but most of us prefer quiet.",
+        "Brush your teeth — it makes both our lives easier."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-400A-8000-00000000000A",
@@ -121,7 +166,12 @@
       "growthRate": { "onFiber": 0.4, "onSugar": 0.4, "onBalanced": 0.4, "onNone": -0.1 },
       "catchphrase": "Most of us help. A few don't.",
       "factCard": "Most Escherichia coli strains live peacefully in your gut and help make vitamin K. Only a few specific strains can make people sick.",
-      "firstKit": 4
+      "firstKit": 4,
+      "voiceLines": [
+        "We make vitamin K. You needed it for your bones today.",
+        "When the news says 'E. coli,' that's a few cousins of mine — not all of us.",
+        "I'm one of the most-studied microbes on Earth."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-400B-8000-00000000000B",
@@ -133,7 +183,12 @@
       "growthRate": { "onFiber": 0.0, "onSugar": 0.2, "onBalanced": 0.1, "onNone": 0.3 },
       "catchphrase": "I am very small. I prefer noses.",
       "factCard": "Rhinoviruses are tiny viruses that often cause the common cold. They are the most common reason kids sniffle in winter.",
-      "firstKit": 5
+      "firstKit": 5,
+      "voiceLines": [
+        "I'm only here for a few days, usually.",
+        "Cold weather doesn't make me stronger — people just stay closer together.",
+        "Wash your hands. It really does send me away."
+      ]
     },
     {
       "id": "9DB2A1F0-2222-400C-8000-00000000000C",
@@ -145,7 +200,12 @@
       "growthRate": { "onFiber": 0.3, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.4 },
       "catchphrase": "I survive what nothing else can.",
       "factCard": "Deinococcus radiodurans is an extremophile that survives radiation, cold, and dehydration that would defeat most life on Earth.",
-      "firstKit": 3
+      "firstKit": 3,
+      "voiceLines": [
+        "Tough doesn't mean unfriendly.",
+        "Dry me out — I'll wait. Days, years.",
+        "Scientists keep poking at me to learn how I bounce back."
+      ]
     }
   ]
 }

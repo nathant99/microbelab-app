@@ -55,6 +55,16 @@ public final class VeeMentor {
         microbe(forSlug: slug)?.factCard
     }
 
+    /// Surface one of the microbe's authored voice lines per the DN-S voice
+    /// register card. Rotation is deterministic-by-index so a kid revisiting
+    /// the codex sees fresh lines without the mentor sounding scripted.
+    public func voiceLine(for slug: String, rotation: Int) -> String? {
+        guard let microbe = microbe(forSlug: slug) else { return nil }
+        guard !microbe.voiceLines.isEmpty else { return microbe.catchphrase }
+        let index = abs(rotation) % microbe.voiceLines.count
+        return microbe.voiceLines[index]
+    }
+
     // MARK: - Static fallbacks for every @Generable
 
     /// Curriculum-safe static `MicrobeFact` — always available, never blocks.

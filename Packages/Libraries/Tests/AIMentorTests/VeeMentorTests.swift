@@ -73,4 +73,34 @@ struct VeeMentorTests {
             #expect(!hyp.hypothesis.isEmpty)
         }
     }
+
+    @Test func voiceLineFallsBackToCatchphraseWhenNoLinesAuthored() {
+        // The fixture above doesn't set voiceLines — mentor must fall back
+        // to the catchphrase.
+        let mentor = fixture()
+        let line = mentor.voiceLine(for: "lacto", rotation: 0)
+        #expect(line == "Friend in your food. Friend in your gut.")
+    }
+
+    @Test func voiceLineRotatesAcrossAuthoredLines() {
+        let microbe = MicrobeCharacter(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000010")!,
+            slug: "voicy",
+            displayName: "Voicy",
+            kingdom: .bacteria,
+            role: .beneficial,
+            preferredEnvironment: .colon,
+            growthRate: GrowthRate(onFiber: 0.5, onSugar: 0.1, onBalanced: 0.3, onNone: 0.0),
+            catchphrase: "Hi",
+            factCard: "Authored fact",
+            firstKit: 1,
+            voiceLines: ["line A", "line B", "line C"]
+        )
+        let mentor = VeeMentor(microbes: [microbe])
+        #expect(mentor.voiceLine(for: "voicy", rotation: 0) == "line A")
+        #expect(mentor.voiceLine(for: "voicy", rotation: 1) == "line B")
+        #expect(mentor.voiceLine(for: "voicy", rotation: 2) == "line C")
+        // Rotation wraps cleanly.
+        #expect(mentor.voiceLine(for: "voicy", rotation: 3) == "line A")
+    }
 }
