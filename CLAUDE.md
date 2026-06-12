@@ -67,7 +67,8 @@ The local Swift Package at `Packages/Libraries/` follows the portfolio standard 
 | Target | Subdirectories | Convention |
 |---|---|---|
 | `AppFeature` | `Onboarding/`, `Profile/`, `Engagement/` | One subdir per cross-cutting feature surface — pages / sheets / overlays |
-| `Models` / `Services` / `SharedUI` / `GameEngine` / `AIMentor` | flat | Files at target root; promote to subdirs when count > ~12 OR a logical cluster emerges |
+| `Services` | `Engagement/` (`GamificationService` + `LastActiveStore` + `SessionCountStore` + `SessionTargetService` + `StreakStore` + `VariableRewardSelector`) | Engagement-foundation stores cluster under one subdir; root holds `AppSettings` / `MicrobeCatalogService` / `OnboardingStore` / `QuestionKitService` / `DebugLog` + `Resources/` |
+| `Models` / `SharedUI` / `GameEngine` / `AIMentor` | flat | Files at target root; promote to subdirs when count > ~12 OR a logical cluster emerges |
 
 When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.
 
@@ -76,6 +77,8 @@ When introducing a new feature surface that owns ≥ 3 files (view + machine + s
 The `*.xcworkspace` / `*.xcodeproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved` files at the top of this file remain off-limits to the agent. **`git add` + `git commit` on Xcode-regenerated diffs IS fine** — only authoring/editing from disk is prohibited. Verify SPM-only changes with `swift build --package-path Packages/Libraries` (NEVER `xcodebuild` from inside the Xcode-hosted agent — it terminates the session).
 
 Any change that requires a managed file (new test target wiring, new app capability, new asset catalog entry, new scheme) ships via `Docs/HANDOFF_TO_USER_<TOPIC>.md` instead of an attempted direct edit.
+
+Engagement-foundation work landing in the same round (Session nudge / Progressive disclosure / Streak persistence + rescue / Variable rewards — PRs #35 / #36 / #37 / #38) stayed entirely inside `Packages/Libraries/Sources/` + `Docs/` — no managed-file edits required. The same discipline applies for follow-up engagement work; if a new XCUITest launch-argument needs scheme wiring, ship the change via a `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
 
 ## Reference Documents
 
