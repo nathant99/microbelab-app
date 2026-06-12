@@ -62,15 +62,15 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### SwiftUI Views
 
-- [ ] Create 4-tab `TabView` (Explore / Adventure / Progress / Profile) per portfolio convention
-- [ ] Build `ExploreView` wrapping `MicroscopeScene` via `SpriteView`
-- [ ] Build `MicrobeCodexView` (codex of discovered microbes; cards with portraits + facts)
-- [ ] Build `MicrobiomeView` wrapping simulator with feeding-mode + antibiotic controls
-- [ ] Build `ImmuneGameView` wrapping `MacrophagePacmanScene`
-- [ ] Build `ProgressView` with XP / streak / badge / codex grid
-- [ ] Build `ProfileView` with `ForgeAvatar.AvatarStudioView(.lite)`
-- [ ] Build `SettingsView` with parental gate
-- [ ] Build `QuizView` for question kits
+- [x] Create 5-tab `TabView` (Explore / Codex / Microbiome / Progress / Profile) shell + bundled-catalog bootstrap
+- [x] Build `ExploreView` wrapping `MicroscopeScene` via `SpriteView` (tier-badge HUD + mentor bubble)
+- [x] Build `MicrobeCodexView` (12-microbe grid; locked entries show "???" until discovered)
+- [x] Build `MicrobiomeView` wrapping simulator with feeding-mode + antibiotic controls
+- [ ] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` (next PR)
+- [x] Build `ProgressTabView` with XP / streak / codex grid
+- [x] Build `ProfileView` placeholder (`ForgeAvatar.AvatarStudioView(.lite)` wiring lands next PR)
+- [ ] Build `SettingsView` with parental gate (next PR)
+- [ ] Build `QuizView` for question kits (next PR)
 
 ### AI Mentor (Vee — Socratic)
 
