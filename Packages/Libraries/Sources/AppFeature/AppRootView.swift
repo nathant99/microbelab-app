@@ -14,14 +14,22 @@ import AIMentor
 public struct AppRootView: View {
     @State private var catalog: MicrobeCatalogService?
     @State private var loadError: String?
-    @State private var gamification = GamificationService()
+    @State private var streakStore = StreakStore()
+    @State private var gamification: GamificationService
     @State private var onboarding = OnboardingStore()
     @State private var lastActive = LastActiveStore()
     @State private var sessionCount = SessionCountStore()
     @State private var sessionTarget = SessionTargetService()
     @State private var welcomeBackDaysAway: Int?
+    @State private var streakRescue: StreakRescue = .none
 
-    public init() {}
+    public init() {
+        // GamificationService hydrates from StreakStore at init so day-1 of
+        // a streak doesn't read as "fresh install" after the first session.
+        let store = StreakStore()
+        _streakStore = State(initialValue: store)
+        _gamification = State(initialValue: GamificationService.hydrated(from: store))
+    }
 
     public var body: some View {
         Group {
@@ -33,21 +41,32 @@ public struct AppRootView: View {
                 tabShell(catalog: catalog)
                     .overlay(alignment: .top) {
                         // Session-target nudge pins to the top so the kid sees
-                        // it without losing the current tab. Welcome-back
-                        // overlay covers the screen + suppresses the nudge.
-                        if welcomeBackDaysAway == nil {
+                        // it without losing the current tab. Either centered
+                        // overlay (welcome-back or streak-rescue) suppresses
+                        // the nudge.
+                        if welcomeBackDaysAway == nil && streakRescue == .none {
                             SessionNudgeOverlay(service: sessionTarget)
                         }
                     }
                     .overlay(alignment: .center) {
+                        // Mutual exclusivity: welcome-back takes priority over
+                        // streak-rescue (long-absence framing wins when both
+                        // would fire). Both have warm-acknowledgment copy so
+                        // showing only one keeps the cold-launch surface calm.
                         if let days = welcomeBackDaysAway {
                             WelcomeBackOverlay(daysAway: days) {
                                 welcomeBackDaysAway = nil
                             }
                             .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        } else if case .lapsed(let prior) = streakRescue {
+                            StreakRescueOverlay(priorStreak: prior) {
+                                streakRescue = .none
+                            }
+                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
                         }
                     }
                     .animation(.easeInOut(duration: 0.25), value: welcomeBackDaysAway)
+                    .animation(.easeInOut(duration: 0.25), value: streakRescue)
             } else if let loadError {
                 catalogLoadFailure(loadError)
             } else {
@@ -56,6 +75,7 @@ public struct AppRootView: View {
         }
         .task {
             evaluateWelcomeBack()
+            evaluateStreakRescue()
             loadCatalog()
             lastActive.recordSessionStart()
             // Increment AFTER welcome-back evaluation so the days-away
@@ -64,7 +84,26 @@ public struct AppRootView: View {
             // sessions keeps progressive disclosure honest.
             if onboarding.hasCompletedOnboarding {
                 sessionCount.incrementForSessionStart()
+                // Record the session AFTER counter bump so the StreakManager
+                // sees the actual play session, not a launch into onboarding.
+                await gamification.recordSession()
             }
+        }
+    }
+
+    /// Compute streak-rescue state BEFORE the new session is recorded so the
+    /// "missed you" overlay quotes the streak the kid earned LAST time, not
+    /// the one about to start. Reads from `StreakStore` directly — the
+    /// hydrated `GamificationService` already has these values but reading
+    /// from the store keeps the rescue derivation purely time-based.
+    private func evaluateStreakRescue() {
+        guard onboarding.hasCompletedOnboarding else { return }
+        streakRescue = StreakRescue.from(
+            lastRecordedAt: streakStore.lastRecordedAt,
+            priorStreak: streakStore.currentStreak
+        )
+        if case .lapsed(let prior) = streakRescue {
+            DebugLog.lifecycle("AppRootView — streak rescue surfaced; priorStreak=\(prior)")
         }
     }
 

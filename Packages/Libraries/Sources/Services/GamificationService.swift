@@ -103,24 +103,41 @@ public final class GamificationService {
     public let xpEngine: XPEngine
     public let achievementEngine: AchievementEngine
     public let streakManager: StreakManager
+    /// Optional persistence sink. When present, `recordSession` writes the
+    /// post-update counters back so cold-launch reads see the latest state.
+    private let streakStore: StreakStore?
 
     public init(
         totalXP: Int = 0,
         earnedAchievementSlugs: Set<String> = [],
         currentStreak: Int = 0,
         longestStreak: Int = 0,
-        availableFreezes: Int = 2
+        availableFreezes: Int = 2,
+        streakStore: StreakStore? = nil
     ) {
         self.totalXP = totalXP
         self.earnedAchievementSlugs = earnedAchievementSlugs
         self.currentStreak = currentStreak
         self.longestStreak = longestStreak
+        self.streakStore = streakStore
         self.xpEngine = XPEngine()
         self.achievementEngine = AchievementEngine()
         self.streakManager = StreakManager(
             currentStreak: currentStreak,
             longestStreak: longestStreak,
             availableFreezes: availableFreezes
+        )
+    }
+
+    /// Hydrate from a persisted `StreakStore`. The store is read at app boot
+    /// so the GamificationService surface reflects yesterday's state on
+    /// today's cold launch.
+    public static func hydrated(from store: StreakStore) -> GamificationService {
+        GamificationService(
+            currentStreak: store.currentStreak,
+            longestStreak: store.longestStreak,
+            availableFreezes: store.availableFreezes,
+            streakStore: store
         )
     }
 
@@ -162,11 +179,20 @@ public final class GamificationService {
         return newlyEarned
     }
 
-    /// Mark a session as recorded — drives the streak surface.
+    /// Mark a session as recorded — drives the streak surface. Persists the
+    /// new counters to the injected `StreakStore` when present so cold-launch
+    /// reads see the up-to-date state.
     public func recordSession(date: Date = .now) async {
         let result = await streakManager.recordSession(date: date)
         currentStreak = await streakManager.currentStreak
         longestStreak = await streakManager.longestStreak
+        let availableFreezes = await streakManager.availableFreezes
+        streakStore?.save(
+            currentStreak: currentStreak,
+            longestStreak: longestStreak,
+            availableFreezes: availableFreezes,
+            recordedAt: date
+        )
         DebugLog.state("GamificationService streak update: \(result); current=\(currentStreak) longest=\(longestStreak)")
     }
 }

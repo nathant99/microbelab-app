@@ -43,4 +43,32 @@ struct GamificationServiceTests {
     @Test func phase1SetHasTenAchievements() {
         #expect(MicrobeLabAchievements.phase1.count == 10)
     }
+
+    @Test func hydratedFromStreakStoreReadsPersistedCounters() {
+        // swiftlint:disable:next force_unwrapping
+        let defaults = UserDefaults(suiteName: "\(#file).hydration")!
+        defaults.removePersistentDomain(forName: "\(#file).hydration")
+        let store = StreakStore(defaults: defaults, keyPrefix: "hydration")
+        store.save(currentStreak: 9, longestStreak: 14, availableFreezes: 1, recordedAt: .now)
+
+        let service = GamificationService.hydrated(from: store)
+        #expect(service.currentStreak == 9)
+        #expect(service.longestStreak == 14)
+    }
+
+    @Test func recordSessionPersistsToInjectedStore() async {
+        // swiftlint:disable:next force_unwrapping
+        let defaults = UserDefaults(suiteName: "\(#file).persist")!
+        defaults.removePersistentDomain(forName: "\(#file).persist")
+        let store = StreakStore(defaults: defaults, keyPrefix: "persist")
+
+        let service = GamificationService.hydrated(from: store)
+        let now = Date.now
+        await service.recordSession(date: now)
+
+        // First-ever recordSession bumps current to 1; the store reads back
+        // the same value because the service flushes after the async update.
+        #expect(store.currentStreak == 1)
+        #expect(store.lastRecordedAt != nil)
+    }
 }
