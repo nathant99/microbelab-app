@@ -128,7 +128,11 @@ public struct AppRootView: View {
         let disclosure = TabDisclosure.from(sessionCount: sessionCount.sessionCount)
         return TabView {
             Tab("Explore", systemImage: "microscope") {
-                ExploreView(catalog: catalog, mentor: mentor)
+                ExploreView(
+                    catalog: catalog,
+                    mentor: mentor,
+                    sessionCount: sessionCount.sessionCount
+                )
             }
             Tab("Codex", systemImage: "book") {
                 MicrobeCodexView(catalog: catalog, gamification: gamification)
