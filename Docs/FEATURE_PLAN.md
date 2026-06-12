@@ -13,7 +13,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Add ForgeKit dependency (remote GitHub URL, `from: "0.99.0"`)
 - [x] Create stub source files for all targets
 - [x] Verify build succeeds with zero warnings (via `swift build` — no Xcode reload)
-- [ ] Add `Packages/Libraries` to workspace (user GUI step per `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 1)
+- [x] Add `Packages/Libraries` to workspace (PR #14 — workspace + test plan now wire the 4 SPM test targets)
 
 ### Data Layer
 

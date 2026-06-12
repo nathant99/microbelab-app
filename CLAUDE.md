@@ -36,7 +36,10 @@ Portfolio-wide tech stack rules live in `@.claude/rules/forgekit.md` + `@.claude
 ## Commands
 
 ```bash
-# Build (iOS Simulator)
+# SPM-only build (no Xcode reload — preferred for in-IDE agent verification)
+swift build --package-path Packages/Libraries
+
+# Full app build (iOS Simulator) — use MCP `BuildProject` when Xcode is open
 xcodebuild -workspace MicrobeLab.xcworkspace -scheme MicrobeLab \
   -destination 'platform=iOS Simulator,name=iPhone 17' build
 
@@ -45,7 +48,13 @@ xcodebuild test -workspace MicrobeLab.xcworkspace -scheme MicrobeLab \
   -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
 
-Prefer MCP `BuildProject` / `RunSomeTests` over `xcodebuild` when Xcode is open (per `@.claude/rules/workflow.md` § "MCP-First Testing Workflow").
+When this repo's Coding Assistant session is operating from inside Xcode, prefer in this order:
+
+1. **`swift build --package-path Packages/Libraries`** for SPM-only changes (terminal-only, no workspace reload — safest path for the in-IDE agent)
+2. **MCP `BuildProject` / `RunSomeTests`** when broader build coverage (app shell + Xcode-resolved targets) is needed
+3. **`xcodebuild`** only when MCP isn't available — it triggers a workspace reload and can terminate the agent session mid-task
+
+See `@.claude/rules/xcode-agent-safety.md` for the full classification of Xcode-managed files the agent must never author from disk, and `@.claude/rules/workflow.md` § "MCP-First Testing Workflow" for testing flow details.
 
 ## App-Specific Conventions
 
