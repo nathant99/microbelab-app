@@ -41,6 +41,11 @@ public struct AppRootView: View {
     // entire catalog indexed (codex already shows all 12 cards from
     // launch); locked entries gate the fact card behind discovery.
     @State private var spotlight = MicrobeSpotlightIndex()
+    // Persistent ring buffer of microbes the kid has recently "met" so the
+    // mentor (Cilia) can surface callbacks ("Saw Lacto yesterday — they're
+    // still here when you're ready"). Closes the Character-personality
+    // FEATURE_PLAN item.
+    @State private var recall = MentorRecallStore()
     // Auto-surface session-summary on app background (PR #61). Pure
     // in-memory — the welcome-back overlay covers the "kid left for 3+
     // days" case via LastActiveStore. Per Docs/FEATURE_PLAN.md § Parent
@@ -371,7 +376,8 @@ public struct AppRootView: View {
                     catalog: catalog,
                     mentor: mentor,
                     sessionCount: sessionCount.sessionCount,
-                    analytics: analytics
+                    analytics: analytics,
+                    recall: recall
                 )
             }
             Tab("Codex", systemImage: "book") {

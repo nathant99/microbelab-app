@@ -65,6 +65,30 @@ public final class VeeMentor {
         return microbe.voiceLines[index]
     }
 
+    /// Warm callback line referencing a microbe the kid has met before. The
+    /// `daysSinceLastSeen` is the trauma-safe pivot: same-day reads as
+    /// "still hanging around", multi-day reads as "still here when you're
+    /// ready" — never "you abandoned us" or loss-aversion framing.
+    ///
+    /// Returns `nil` when the slug isn't in the catalog so the caller can
+    /// fall back to the default mentor copy without surfacing a broken
+    /// callback. Per `Docs/FEATURE_PLAN.md` § Delight & Polish → "Character
+    /// personality" item.
+    public func recallCue(for slug: String, daysSinceLastSeen: Int) -> String? {
+        guard let microbe = microbe(forSlug: slug) else { return nil }
+        let name = microbe.displayName
+        switch max(0, daysSinceLastSeen) {
+        case 0:
+            return "\(name) is still hanging around from earlier today. Want another look?"
+        case 1:
+            return "Saw \(name) yesterday — they're still here when you're ready."
+        case 2...6:
+            return "\(name) showed up a few days back. They've been quiet, but they're still around."
+        default:
+            return "Last time you stopped by, \(name) was around. They're still hanging in."
+        }
+    }
+
     // MARK: - Static fallbacks for every @Generable
 
     /// Curriculum-safe static `MicrobeFact` — always available, never blocks.
