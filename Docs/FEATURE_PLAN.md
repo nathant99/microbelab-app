@@ -70,7 +70,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Build `ProgressTabView` with XP / streak / codex grid
 - [x] Build `ProfileView` placeholder (`ForgeAvatar.AvatarStudioView(.lite)` wiring lands next PR)
 - [x] Build `SettingsView` with parental gate (`AppSettings` + `AppSettingsStore` in Services; `ParentalGateView` math gate; sensory toggles kid-accessible, content gate + session cap parent-gated)
-- [ ] Build `QuizView` for question kits (next PR)
+- [x] Build `QuizView` for question kits — wired from MicrobeCodexView toolbar Menu; `QuestionKit` + `Question` in Models; `QuestionKitService` loader; `QuizMachine` in SharedUI; kit 01 (microbiology basics, 5 questions) bundled
 
 ### AI Mentor (Vee — Socratic)
 
@@ -87,7 +87,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [ ] Integrate ForgeGamification `XPEngine` for leveling
 - [ ] Integrate `StreakManager` for daily engagement
 - [ ] Integrate `AchievementEngine` with first 10 Phase-1 achievements
-- [ ] Wire question kits 01-04 via `Bundle.module` (microbiology basics / microbiome / immune defense / beneficial microbes)
+- [ ] Wire question kits 01-04 via `Bundle.module` (microbiology basics / microbiome / immune defense / beneficial microbes) — kit 01 shipped; 02-04 follow-up PRs
 - [ ] Implement XP awards for: first microbe discovered, microbiome stable for 5 ticks, immune wave cleared, etc.
 
 ### Adventure Mode
