@@ -4,13 +4,22 @@ import Services
 import SharedUI
 
 /// Codex tab. Renders the 12-microbe grid; locked entries show "???" until
-/// the kid discovers them via the microscope loop.
+/// the kid discovers them via the microscope loop. Hosts a NavigationStack
+/// so the toolbar surfaces a quiz-kits entry point.
 public struct MicrobeCodexView: View {
     private let catalog: MicrobeCatalogService
+    private let kitService: QuestionKitService
     @State private var discoveredIDs: Set<UUID>
+    @State private var availableKits: [QuestionKit] = []
+    @State private var presentedKit: QuestionKit?
 
-    public init(catalog: MicrobeCatalogService, discoveredIDs: Set<UUID> = []) {
+    public init(
+        catalog: MicrobeCatalogService,
+        kitService: QuestionKitService = QuestionKitService(),
+        discoveredIDs: Set<UUID> = []
+    ) {
         self.catalog = catalog
+        self.kitService = kitService
         _discoveredIDs = State(initialValue: discoveredIDs)
     }
 
@@ -25,7 +34,46 @@ public struct MicrobeCodexView: View {
                 .padding()
             }
             .navigationTitle(Text(verbatim: "Codex"))
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    quizMenu
+                }
+            }
+            .onAppear {
+                if availableKits.isEmpty {
+                    availableKits = kitService.loadAllPhase1Kits()
+                }
+            }
+            .sheet(item: $presentedKit) { kit in
+                NavigationStack {
+                    QuizView(kit: kit)
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Done") { presentedKit = nil }
+                            }
+                        }
+                }
+            }
         }
+    }
+
+    private var quizMenu: some View {
+        Menu {
+            if availableKits.isEmpty {
+                Text("No kits available")
+            } else {
+                ForEach(availableKits) { kit in
+                    Button {
+                        presentedKit = kit
+                    } label: {
+                        Label("Kit \(kit.kitNumber): \(kit.title)", systemImage: "questionmark.circle")
+                    }
+                }
+            }
+        } label: {
+            Label("Quizzes", systemImage: "questionmark.circle")
+        }
+        .accessibilityHint("Browse question kits")
     }
 
     private var gridColumns: [GridItem] {

@@ -1,0 +1,74 @@
+{
+  "id": "9DB2A1F0-FFFF-4001-A000-000000000001",
+  "slug": "microbiology-basics",
+  "title": "Microbiology Basics",
+  "summary": "First-look questions about the tiny lives sharing our world.",
+  "kitNumber": 1,
+  "questions": [
+    {
+      "id": "AAAAA001-0000-4001-8000-000000000001",
+      "prompt": "Most microbes living in and on the human body are…",
+      "choices": [
+        "Helpful or harmless",
+        "Always dangerous",
+        "Always pathogenic",
+        "Only useful for medicine"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most microbes are beneficial or neutral. Only a small fraction can make people sick.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    },
+    {
+      "id": "AAAAA001-0000-4001-8000-000000000002",
+      "prompt": "Which microbe kingdom includes Lactobacillus and other gut helpers?",
+      "choices": [
+        "Bacteria",
+        "Virus",
+        "Fungi",
+        "Protist"
+      ],
+      "correctIndex": 0,
+      "explanation": "Lactobacillus species are bacteria — they're single-celled and often help with digestion.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    },
+    {
+      "id": "AAAAA001-0000-4001-8000-000000000003",
+      "prompt": "Yeast in bread dough turns sugar into…",
+      "choices": [
+        "Carbon dioxide bubbles",
+        "Iron and calcium",
+        "Water and oil",
+        "Salt"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yeast ferments sugars and releases carbon dioxide, which is what makes bread dough rise.",
+      "curriculumStandard": "NGSS MS-LS1-2"
+    },
+    {
+      "id": "AAAAA001-0000-4001-8000-000000000004",
+      "prompt": "To see most bacteria, you usually need a…",
+      "choices": [
+        "Light microscope (around 100×)",
+        "Naked eye",
+        "Magnifying glass",
+        "Telescope"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most bacteria are too small for the naked eye but visible at light-microscope tier — around 100× magnification.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    },
+    {
+      "id": "AAAAA001-0000-4001-8000-000000000005",
+      "prompt": "Bifidobacteria in the colon prefer to eat…",
+      "choices": [
+        "Fiber from fruits and vegetables",
+        "Plain water only",
+        "Iron filings",
+        "Wood and rocks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bifidobacteria feast on dietary fiber — that's why fiber-rich meals tend to support a thriving microbiome.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    }
+  ]
+}
