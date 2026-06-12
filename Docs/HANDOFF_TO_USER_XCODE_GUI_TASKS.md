@@ -1,11 +1,24 @@
 ---
 status: open
 last-updated: 2026-06-12
+last-reinforced: 2026-06-12 (user-direct: workspace + scheme + test plan files called out by name)
 ---
 
 # Handoff to User — Xcode GUI Tasks
 
-Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` must never write Xcode-managed files (workspace / scheme / pbxproj / testplan / Info.plist / entitlements / xcasset Contents.json). Staging + committing those files when Xcode regenerates them IS fine. This doc lists the GUI steps you'll need to do as work lands.
+Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — second pass, user-direct)" must never write the following Xcode-managed files from disk:
+
+- `MicrobeLab.xcworkspace/contents.xcworkspacedata` (workspace membership)
+- `MicrobeLab.xcodeproj/project.pbxproj` (project membership)
+- `*.xcscheme` (anywhere — scheme JSON)
+- `MicrobeLab.xctestplan` (test plan JSON)
+- `MicrobeLab/Info.plist` (target capabilities)
+- `*.entitlements` (capabilities)
+- `*.xcassets/Contents.json` (asset catalog roots + per-imageset JSON)
+- `xcuserdata/` (per-user Xcode state)
+- `Package.resolved` (SPM resolution; Xcode re-resolves on workspace open)
+
+**Staging + committing those files when Xcode regenerates them IS fine.** The prohibition is exclusively on authoring/editing the file content from disk. This doc lists the GUI steps you'll need to do as work lands.
 
 ## 1. ✅ Add `Packages/Libraries` to the workspace — DONE (PR #14)
 

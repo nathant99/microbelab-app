@@ -72,13 +72,20 @@ The local Swift Package at `Packages/Libraries/` follows the portfolio standard 
 
 When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.
 
-## Xcode-managed file safety (reinforced 2026-06-12)
+## Xcode-managed file safety (reinforced 2026-06-12 — second pass, user-direct)
 
-The `*.xcworkspace` / `*.xcodeproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved` files at the top of this file remain off-limits to the agent. **`git add` + `git commit` on Xcode-regenerated diffs IS fine** — only authoring/editing from disk is prohibited. Verify SPM-only changes with `swift build --package-path Packages/Libraries` (NEVER `xcodebuild` from inside the Xcode-hosted agent — it terminates the session).
+**Critical** (verbatim user-direct, 2026-06-12): *"do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* The named files at the top of this file remain off-limits to the agent for authoring/editing from disk. Specifically called out by name in today's reinforcement:
 
-Any change that requires a managed file (new test target wiring, new app capability, new asset catalog entry, new scheme) ships via `Docs/HANDOFF_TO_USER_<TOPIC>.md` instead of an attempted direct edit.
+- `MicrobeLab.xcworkspace/contents.xcworkspacedata` — Xcode workspace membership; editing forces workspace reload, can terminate the agent session
+- `MicrobeLab.xcodeproj/project.pbxproj` — project membership; system hook blocks edits while Xcode is open
+- `*.xcscheme` (anywhere) — scheme JSON; Xcode caches in memory and overwrites disk edits on save
+- `MicrobeLab.xctestplan` — Xcode-managed test plan JSON; route changes through Product → Scheme → Edit Scheme → Test → Test Plans GUI
 
-Engagement-foundation work landing in the same round (Session nudge / Progressive disclosure / Streak persistence + rescue / Variable rewards — PRs #35 / #36 / #37 / #38) stayed entirely inside `Packages/Libraries/Sources/` + `Docs/` — no managed-file edits required. The same discipline applies for follow-up engagement work; if a new XCUITest launch-argument needs scheme wiring, ship the change via a `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
+**`git add` + `git commit` on Xcode-regenerated diffs IS fine** — only authoring/editing the file content from disk is prohibited. Verify SPM-only changes with `swift build --package-path Packages/Libraries` (NEVER `xcodebuild` from inside the Xcode-hosted agent — it terminates the session). Use MCP `BuildProject` when broader build coverage is required.
+
+Any change that requires a managed file (new test target wiring, new app capability, new asset catalog entry, new scheme) ships via `Docs/HANDOFF_TO_USER_<TOPIC>.md` instead of an attempted direct edit. The canonical handoff doc at `@Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` aggregates open GUI tasks.
+
+Engagement-foundation work landing in the same round (Session nudge / Progressive disclosure / Streak persistence + rescue / Variable rewards / SPM folder refresh — PRs #35 / #36 / #37 / #38 / #40) stayed entirely inside `Packages/Libraries/Sources/` + `Docs/` — no managed-file edits required. The same discipline applies for follow-up engagement + onboarding work; if a new XCUITest launch-argument needs scheme wiring, ship the change via a `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps.
 
 ## Reference Documents
 
