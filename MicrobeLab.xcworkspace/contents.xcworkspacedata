@@ -7,4 +7,7 @@
    <FileRef
       location = "group:MicrobeLab.xctestplan">
    </FileRef>
+   <FileRef
+      location = "group:Packages/Libraries">
+   </FileRef>
 </Workspace>

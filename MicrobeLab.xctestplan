@@ -32,6 +32,34 @@
         "identifier" : "FBEC76062FDBB0D0001015F9",
         "name" : "MicrobeLabUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/..\/Packages\/Libraries",
+        "identifier" : "AIMentorTests",
+        "name" : "AIMentorTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/..\/Packages\/Libraries",
+        "identifier" : "GameEngineTests",
+        "name" : "GameEngineTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/..\/Packages\/Libraries",
+        "identifier" : "ModelsTests",
+        "name" : "ModelsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/..\/Packages\/Libraries",
+        "identifier" : "ServicesTests",
+        "name" : "ServicesTests"
+      }
     }
   ],
   "version" : 1

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FBAE42512FDBD363009985A2 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = FBAE42502FDBD363009985A2 /* AppFeature */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FBEC75FE2FDBB0D0001015F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBAE42512FDBD363009985A2 /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +77,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FBAE424F2FDBD363009985A2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FBEC75E72FDBB0D0001015F9 = {
 			isa = PBXGroup;
 			children = (
 				FBEC75F22FDBB0D0001015F9 /* MicrobeLab */,
 				FBEC76002FDBB0D0001015F9 /* MicrobeLabTests */,
 				FBEC760A2FDBB0D0001015F9 /* MicrobeLabUITests */,
+				FBAE424F2FDBD363009985A2 /* Frameworks */,
 				FBEC75F12FDBB0D0001015F9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +125,7 @@
 			);
 			name = MicrobeLab;
 			packageProductDependencies = (
+				FBAE42502FDBD363009985A2 /* AppFeature */,
 			);
 			productName = MicrobeLab;
 			productReference = FBEC75F02FDBB0D0001015F9 /* MicrobeLab.app */;
@@ -615,6 +629,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBAE42502FDBD363009985A2 /* AppFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FBEC75E82FDBB0D0001015F9 /* Project object */;
 }
