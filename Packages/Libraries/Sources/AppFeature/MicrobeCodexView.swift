@@ -9,6 +9,7 @@ import SharedUI
 public struct MicrobeCodexView: View {
     private let catalog: MicrobeCatalogService
     private let kitService: QuestionKitService
+    private let gamification: GamificationService?
     @State private var discoveredIDs: Set<UUID>
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
@@ -16,10 +17,12 @@ public struct MicrobeCodexView: View {
     public init(
         catalog: MicrobeCatalogService,
         kitService: QuestionKitService = QuestionKitService(),
-        discoveredIDs: Set<UUID> = []
+        discoveredIDs: Set<UUID> = [],
+        gamification: GamificationService? = nil
     ) {
         self.catalog = catalog
         self.kitService = kitService
+        self.gamification = gamification
         _discoveredIDs = State(initialValue: discoveredIDs)
     }
 
@@ -46,7 +49,7 @@ public struct MicrobeCodexView: View {
             }
             .sheet(item: $presentedKit) { kit in
                 NavigationStack {
-                    QuizView(kit: kit)
+                    QuizView(kit: kit, gamification: gamification)
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Done") { presentedKit = nil }

@@ -14,6 +14,7 @@ import AIMentor
 public struct AppRootView: View {
     @State private var catalog: MicrobeCatalogService?
     @State private var loadError: String?
+    @State private var gamification = GamificationService()
 
     public init() {}
 
@@ -40,7 +41,7 @@ public struct AppRootView: View {
                 ExploreView(catalog: catalog, mentor: mentor)
             }
             Tab("Codex", systemImage: "book") {
-                MicrobeCodexView(catalog: catalog)
+                MicrobeCodexView(catalog: catalog, gamification: gamification)
             }
             Tab("Microbiome", systemImage: "leaf") {
                 MicrobiomeView(simulator: simulator)
@@ -48,7 +49,8 @@ public struct AppRootView: View {
             Tab("Progress", systemImage: "chart.bar") {
                 ProgressTabView(
                     progress: PlayerProgressData.empty(),
-                    totalMicrobes: catalog.microbes.count
+                    totalMicrobes: catalog.microbes.count,
+                    gamification: gamification
                 )
             }
             Tab("Profile", systemImage: "person") {

@@ -9,10 +9,13 @@ import SharedUI
 /// `AnyView` / no parameterless `.animation()`.
 public struct QuizView: View {
     let kit: QuestionKit
+    let gamification: GamificationService?
     @State private var machine: QuizMachine
+    @State private var hasAwardedCompletionXP = false
 
-    public init(kit: QuestionKit) {
+    public init(kit: QuestionKit, gamification: GamificationService? = nil) {
         self.kit = kit
+        self.gamification = gamification
         _machine = State(initialValue: QuizMachine(totalQuestions: kit.questions.count))
     }
 
@@ -32,6 +35,20 @@ public struct QuizView: View {
         #endif
         .onAppear {
             DebugLog.lifecycle("QuizView onAppear; kit=\(kit.slug) questions=\(kit.questions.count)")
+        }
+        .onChange(of: machine.isComplete) { _, newValue in
+            guard newValue, !hasAwardedCompletionXP, let gamification else { return }
+            hasAwardedCompletionXP = true
+            let baseXP = 10 * machine.correctCount
+            gamification.awardXP(baseXP, reason: "quiz kit \(kit.slug)")
+            let allCorrect = machine.correctCount == kit.questions.count
+            gamification.evaluateAchievements { definition in
+                switch definition.id {
+                case MicrobeLabAchievements.firstQuiz.id: return true
+                case MicrobeLabAchievements.quizPerfect.id: return allCorrect
+                default: return false
+                }
+            }
         }
     }
 
