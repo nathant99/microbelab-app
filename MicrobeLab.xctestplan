@@ -60,6 +60,13 @@
         "identifier" : "ServicesTests",
         "name" : "ServicesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/..\/Packages\/Libraries",
+        "identifier" : "SharedUITests",
+        "name" : "SharedUITests"
+      }
     }
   ],
   "version" : 1
