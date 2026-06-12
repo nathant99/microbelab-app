@@ -16,6 +16,9 @@ public struct AppRootView: View {
     @State private var loadError: String?
     @State private var gamification = GamificationService()
     @State private var onboarding = OnboardingStore()
+    @State private var lastActive = LastActiveStore()
+    @State private var sessionTarget = SessionTargetService()
+    @State private var welcomeBackDaysAway: Int?
 
     public init() {}
 
@@ -27,6 +30,15 @@ public struct AppRootView: View {
                 }
             } else if let catalog {
                 tabShell(catalog: catalog)
+                    .overlay(alignment: .center) {
+                        if let days = welcomeBackDaysAway {
+                            WelcomeBackOverlay(daysAway: days) {
+                                welcomeBackDaysAway = nil
+                            }
+                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        }
+                    }
+                    .animation(.easeInOut(duration: 0.25), value: welcomeBackDaysAway)
             } else if let loadError {
                 catalogLoadFailure(loadError)
             } else {
@@ -34,7 +46,21 @@ public struct AppRootView: View {
             }
         }
         .task {
+            evaluateWelcomeBack()
             loadCatalog()
+            lastActive.recordSessionStart()
+        }
+    }
+
+    /// Compute days-away BEFORE stamping the new session start. The store's
+    /// `shouldShowWelcomeBack` returns false on first ever install (no
+    /// `lastActiveAt`) so onboarding flows are unaffected.
+    private func evaluateWelcomeBack() {
+        guard onboarding.hasCompletedOnboarding else { return }
+        let days = lastActive.daysSinceLastActive() ?? 0
+        if days >= 3 {
+            welcomeBackDaysAway = days
+            DebugLog.lifecycle("AppRootView — welcome-back surfaced; daysAway=\(days)")
         }
     }
 
