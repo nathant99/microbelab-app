@@ -30,9 +30,14 @@ public struct ExploreView: View {
         SpriteView(scene: scene, options: [.allowsTransparency])
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, spacing: 8) {
-                tierBadgeRow
-                    .padding(.horizontal)
-                    .padding(.top, 4)
+                MicroscopeHUD(currentTier: currentTier) { tier in
+                    scene.snapToTier(tier)
+                    currentTier = scene.machine.currentTier
+                    refreshMentorCue(for: scene.machine.currentTier)
+                    DebugLog.state("ExploreView snap to \(tier)")
+                }
+                .padding(.horizontal)
+                .padding(.top, 4)
             }
             .safeAreaInset(edge: .bottom, spacing: 8) {
                 MentorBubble(message: mentorMessage)
@@ -44,15 +49,10 @@ public struct ExploreView: View {
             }
     }
 
-    private var tierBadgeRow: some View {
-        HStack(spacing: 6) {
-            ForEach(ZoomTier.allCases, id: \.self) { tier in
-                TierBadge(tier: tier, isActive: tier == currentTier) {
-                    scene.snapToTier(tier)
-                    currentTier = scene.machine.currentTier
-                    DebugLog.state("ExploreView snap to \(tier)")
-                }
-            }
-        }
+    /// Pull a static mentor cue for the new tier. Async generated cues land
+    /// once the AI surface is wired to the speech-bubble (separate PR).
+    private func refreshMentorCue(for tier: ZoomTier) {
+        let cue = mentor.fallbackZoomCue(for: tier)
+        mentorMessage = "\(cue.reaction) \(cue.lookForHint)"
     }
 }
