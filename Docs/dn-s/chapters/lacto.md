@@ -16,7 +16,7 @@ Lacto is *a friendly-bacterium-tween (chunky-cartoon rod-shape-pose) in chunky-c
 
 Lacto is *small + cheerful + symbiotic*, *warm-cream-with-soft-pearl-tones*, *deeply attentive-to-helpful-partnership*, *fond-of-saying-"friend in your food. friend in your gut."* Signature: *fermentation-cards + gut-microbiome-tracker* showing Lactobacillus in yogurt + kimchi + sauerkraut + sourdough + the gut microbiome.
 
-This is *load-bearing.* Lacto embodies the *helpful bacteria* primitive — *the microbiology craft of MICROBES-AS-PARTNERS.* Lactobacillus + many other bacteria are friends — they ferment foods (Lacto's specialty: turning lactose into lactic acid, which preserves food + makes yogurt yogurt), live in your gut microbiome helping digestion + immunity, and outnumber human cells in your body (microbes vs human cells ratio is roughly 1:1). MicrobeLab foregrounds BENEFICIAL microbes — pathogens are opt-in gated (Spore's chapter; kit 5). This is COVID-trauma-aware framing per `apps.generated.ts`.
+This is *essential.* Lacto embodies the *helpful bacteria* primitive — *the microbiology craft of MICROBES-AS-PARTNERS.* Lactobacillus + many other bacteria are friends — they ferment foods (Lacto's specialty: turning lactose into lactic acid, which preserves food + makes yogurt yogurt), live in your gut microbiome helping digestion + immunity, and outnumber human cells in your body (microbes vs human cells ratio is roughly 1:1). MicrobeLab foregrounds BENEFICIAL microbes — pathogens are opt-in gated (Spore's chapter; kit 5). This is COVID-trauma-aware framing per `apps.generated.ts`.
 
 Lacto teaches: Lactobacillus + fermentation; gut microbiome; microbes-as-partners; cross-app with SaffronLab Rise (fermentation cluster) + HarvestForge Soil (microbiome cluster).
 
@@ -30,10 +30,10 @@ Lacto says: *"I am Lacto. The primitive I teach is *helpful bacteria.* The move 
 
 Friendly-bacterium-tween. COVID-trauma-aware framing.
 
-## Cultural-sensitivity gate
+## cultural sensitivity
 
-LOAD-BEARING COVID-trauma-aware + beneficial-microbes-foregrounded. Story-axis per ADR-016.
+essential COVID-trauma-aware + beneficial-microbes-foregrounded. Story-axis.
 
-## Cultural-context note
+## cultural context
 
 Lactobacillus + gut microbiome: NIH Human Microbiome Project; SaffronLab Rise cross-references.

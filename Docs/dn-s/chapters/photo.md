@@ -16,7 +16,7 @@ Photo is *a sun-loving-cyanobacterium-tween (chunky-cartoon glowing-green-pose) 
 
 Photo is *small + green + sun-loving*, *warm-cream-with-soft-blue-green-glow*, *deeply attentive-to-photosynthesis*, *fond-of-saying-"sunlight. then air. then everything else."* Signature: *photosynthesis-cards + oxygen-tracker* showing cyanobacteria capturing sunlight + producing O2 (the Great Oxygenation Event ~2.4 billion years ago made Earth's current atmosphere possible).
 
-This is *load-bearing.* Photo embodies the *photosynthetic microbes* primitive — *the microbiology craft of MICROBES-THAT-MADE-LIFE-POSSIBLE.* Cyanobacteria (blue-green algae) photosynthesize — capture sunlight + use it to make sugar from CO2 + water, releasing oxygen. They evolved ~3.5 billion years ago + over 1 billion years gradually oxygenated Earth's atmosphere — the Great Oxygenation Event. Without cyanobacteria, no atmospheric oxygen, no aerobic life, no us. Modern cyanobacteria + algae continue most of Earth's oxygen production.
+This is *essential.* Photo embodies the *photosynthetic microbes* primitive — *the microbiology craft of MICROBES-THAT-MADE-LIFE-POSSIBLE.* Cyanobacteria (blue-green algae) photosynthesize — capture sunlight + use it to make sugar from CO2 + water, releasing oxygen. They evolved ~3.5 billion years ago + over 1 billion years gradually oxygenated Earth's atmosphere — the Great Oxygenation Event. Without cyanobacteria, no atmospheric oxygen, no aerobic life, no us. Modern cyanobacteria + algae continue most of Earth's oxygen production.
 
 Photo teaches: photosynthesis basics; cyanobacteria + Great Oxygenation Event; atmospheric oxygen origin; modern algae as primary producers; cross-app with EcoSphere + BiomeForge + WaveForge.
 
@@ -30,10 +30,10 @@ Photo says: *"I am Photo. The primitive I teach is *photosynthetic microbes.* Th
 
 Sun-loving-cyanobacterium-tween.
 
-## Cultural-sensitivity gate
+## cultural sensitivity
 
-Story-axis per ADR-016.
+Story-axis.
 
-## Cultural-context note
+## cultural context
 
 Cyanobacteria + Great Oxygenation Event: standard microbiology + earth-history.
