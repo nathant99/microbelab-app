@@ -1,18 +1,19 @@
 # Implementation Handoff — MicrobeLab
 
-**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #56 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
+**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #61 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
 
-**Latest round (2026-06-12, PRs #52 → #56, single-session auto-cycle)**: 5-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`). Each PR landed end-to-end before the next branched. Rollup:
+**Latest round (2026-06-12, PRs #58 → #61, single-session auto-cycle)**: 4-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`) paired with an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive. Each PR landed end-to-end before the next branched. Rollup:
 
 | PR | Theme |
 |---|---|
-| #52 | Xcode-managed file safety — fourth-pass reinforcement (CLAUDE.md / `xcode-agent-safety.md` / `HANDOFF_TO_USER_XCODE_GUI_TASKS.md`). Codified the auto-cycle interaction: auto-cycle approval does NOT extend to managed files. |
-| #53 | ForgeCelebration coordinator — wired at `AppRootView` with `.celebrationOverlay(coordinator)` on the tab shell; passed down to `MicrobeCodexView` → `QuizView` and `MicrobiomeView` → `ImmuneGameView`. Proportional tier matrix (per-wave `.medium`, full immune run `.epic`, quiz perfect `.epic`, quiz near-perfect `.major`, quiz partial `.small`, microbiome achievement `.major`). Closes FEATURE_PLAN.md § Delight & Polish → Celebration system. |
-| #54 | ForgeAccessibility daily-cap pipeline — `DailyTimeCoordinator` (Services/Engagement/, MainActor `@Observable` wrapper around the `SessionTimerService` actor). `DailyCapOverlay` (AppFeature/Engagement/) is the centered trauma-safe wrap-up surface. Scene-phase-driven start/end/pause/resume; cap-change rebuilds the config; `unlimited` collapses to 24h so the timer never trips. Closes FEATURE_PLAN.md § Parental controls. |
-| #55 | Declared Age Range API gate scaffold — `Services/AgeAssuranceService.swift` (MainActor `@Observable`), `AgeAssuranceCapability.isDeclaredAgeRangeAvailable` entitlement probe, `requestSystemVerification(...)` stub (no-op until COPPA consent + retention surface ships). Settings → About surfaces a passive readout. Entitlement provisioning routed through `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6b. |
-| #56 | OSSignposter perf probes — `PerfSignpost` (Models/) wraps `OSSignposter` with 3 channels (`zoom` / `simulator` / `immune`). Wired into the hot loops; zero-overhead in release builds. Open Instruments → Points of Interest → filter `com.microbelab.app` to verify FEATURE_PLAN.md exit-criteria budgets. |
+| #58 | Xcode-managed file safety — **fifth-pass** reinforcement (CLAUDE.md / `xcode-agent-safety.md` / `HANDOFF_TO_USER_XCODE_GUI_TASKS.md`). Codifies the five-pass invariant (when a single safety rule is restated five times in one day it becomes a pre-flight check, not a guideline) + the maximize-ForgeKit-integration interaction note (ForgeKit SPM-only wiring stays safe; modules needing entitlements still route through `HANDOFF_TO_USER_XCODE_GUI_TASKS.md`). |
+| #59 | ForgePedagogy hint scaffolding in QuizView — first kid-facing consumer of the previously-declared `ForgePedagogy` ForgeKit module. `QuestionHintStrategy` (SharedUI/, pure `nonisolated` value-type) derives per-tier hint text from a `Question`: vague leans on the curriculum-standard tag; medium returns the first sentence of the explanation with the correct-choice phrase elided; specific returns the full explanation. `QuizMachine` extended with `requestedHintTier` + `hintsUsedCount` + `nextRequestableHintTier` + `requestNextHint()`. `QuizView` adds a "Hint" button next to "Check" + an inline yellow-tinted hint card + a trauma-informed completion summary ("Asked for help on N — that's how learning works"). New `SharedUITests` SPM target ships 11 `@Test` covering the progression + per-tier text invariants (Xcode scheme-wiring step queued in `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6). |
+| #60 | ForgeKnowledgeGraph cross-microbe ecology surfacing — `MicrobeKnowledgeGraph` (Services/, pure `nonisolated` value-type wrapper) builds a shared-habitat graph from the bundled catalog: every pair of microbes with the same `preferredEnvironment` gets a symmetric pair of `.recommended` edges. `MicrobeCodexCard` gains an optional `livesNearDisplayNames` param; discovered cards render a small "Lives near: A, B" caption. `MicrobeCodexView` builds the graph once on appear + threads neighbors through, filtering to the kid's discovered set so the codex NEVER hints at undiscovered microbes (trauma-informed posture). 9 `@Test` units in `ServicesTests/MicrobeKnowledgeGraphTests` pin construction + ordering + limit + exclude-self + unknown-slug. |
+| #61 | Auto-surface SessionSummarySheet on app background — closes the FEATURE_PLAN.md § Parent Integration → "Session closer" follow-up. `AppRootView` stamps `sessionStartedAt` + `sessionStartXP` on cold launch + every `.background → .active` resume; on `.background` the productivity gate (`captureSessionSummaryIfProductive`) requires elapsed ≥ 60s AND XP earned > 0; the next `.active` surfaces `pendingSessionSummary` via `.sheet(isPresented:)` UNLESS the daily-cap / welcome-back / streak-rescue overlays hold centered-overlay precedence. Trauma-informed: short backgrounds (notification check) NEVER fire the summary; quiet sessions (0 XP) NEVER fire it. |
 
-Net additions: 4 new Services modules (DailyTimeCoordinator / AgeAssuranceService) + 1 new Models module (PerfSignpost) + 2 new AppFeature overlays (DailyCapOverlay) + ~22 new unit tests across 4 test targets. Build green at each merge.
+Net additions: 1 new Services module (`MicrobeKnowledgeGraph`) + 1 new SharedUI module (`QuestionHintStrategy`) + 1 new SharedUITests SPM test target (scheme wiring queued in handoff doc) + 20 new unit tests (11 `QuizMachineHintTests` + 9 `MicrobeKnowledgeGraphTests`) + 2 ForgeKit modules promoted from declared-but-unused → actively consumed (`ForgePedagogy` → SharedUI; `ForgeKnowledgeGraph` → Services). Build green at each merge.
+
+**Previous round (2026-06-12, PRs #52 → #56, fourth-pass safety + Phase-1 polish)**: 5-PR sweep — Xcode-managed file safety 4th-pass + ForgeCelebration coordinator + DailyTimeCoordinator + Declared Age Range API gate scaffold + OSSignposter perf probes. See git log for the full per-PR notes; cross-references preserved in CLAUDE.md + FEATURE_PLAN.md.
 
 **Pre-2026-06-12 PR #51**: Read-only accessibility audit (`Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md`) — covered every SwiftUI surface shipped through PR #50, verdict PASS WITH GAPS (Dynamic Type + color contrast portfolio-wide PASS; 3 prioritized gaps remain).
 
@@ -27,7 +28,7 @@ Net additions: 4 new Services modules (DailyTimeCoordinator / AgeAssuranceServic
 3. **This repo's CLAUDE.md** — portfolio tech stack + reference doc index + Xcode-managed file constraints
 4. **Portfolio patterns**: `labsmith/Docs/PORTFOLIO_PATTERNS.md` § Implementation Prep
 
-## ForgeKit Integration Status (post-2026-06-12 sweep)
+## ForgeKit Integration Status (post-2026-06-12 maximize-integration sweep)
 
 Modules now actively consumed (vs the `Package.swift` declared list):
 
@@ -42,14 +43,14 @@ Modules now actively consumed (vs the `Package.swift` declared list):
 | `ForgeAvatar` | AppFeature (`AvatarStudioSheet` hosts `AvatarStudioView(.lite)`) | Avatar studio + ForgeID seeding |
 | `ForgeSync` | AppFeature (`AvatarStudioSheet` / `ProfileView` read/write the canonical avatar via `AppGroupStore`) | Cross-portfolio identity |
 | `ForgeGameEngine` | GameEngine (SpriteKit scenes import for base helpers) | LOD swap infrastructure pending portrait pack |
+| `ForgePedagogy` | SharedUI (`QuestionHintStrategy` derives per-tier hint text; `QuizMachine` exposes `HintTier`-driven progression) | Hint scaffolding in QuizView (PR #59) |
+| `ForgeKnowledgeGraph` | Services (`MicrobeKnowledgeGraph` wraps `KnowledgeGraph` with shared-habitat edges; `MicrobeCodexView` surfaces "Lives near" hints) | Cross-microbe ecology surfacing (PR #60) |
 
 Still declared but unused in Swift code (deps stay in `Package.swift` so future wiring is friction-free):
 
 - `ForgeAdventure` — awaits the Life Zone hub-contribution wiring (FEATURE_PLAN.md § Adventure Mode)
 - `ForgeNavigation` — TabView's native iOS 26 chrome covers Phase 1; lift when nav grids land
 - `ForgeAnalytics` — privacy-first on-device only; wires when MicrobeLab needs cross-session event totals
-- `ForgeKnowledgeGraph` — cross-microbe ecology surfacing; Phase 2+
-- `ForgePedagogy` — hint scaffolding; Phase 2+
 
 ## What's Shipped (Phase 1)
 
