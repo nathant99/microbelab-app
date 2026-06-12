@@ -1,6 +1,8 @@
 # Implementation Handoff — MicrobeLab
 
-**Status**: Phase 1 in flight. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #23 (2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked or covered by follow-up rounds (see § Outstanding).
+**Status**: Phase 1 in flight. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #26 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked or covered by follow-up rounds (see § Outstanding).
+
+**Latest round (2026-06-12, PRs #25 + #26)**: Mentor (Cilia) cue refreshes on `MicrobiomeView` feeding-mode change + every-5th-tick milestone + on `ImmuneGameView` wave-clear / run-complete. Phase-1 achievements `fiberPioneer` / `sugarTrial` / `microbiomeSteady` / `immuneRookie` / `immuneRunner` auto-evaluate as the kid hits criteria; XP awards flow through `GamificationService.evaluateAchievements`. Doc-path drift (`Libraries/Package.swift` → `Packages/Libraries/Package.swift`) corrected across CLAUDE.md + TECHNICAL_DESIGN.md + FEATURE_PLAN.md + APP_SPECIFIC_NOTES.md. Pre-existing `MacrophagePacmanSceneTests.spawnIsReproducibleAcrossSeeds()` failure (UUID-identity drift) fixed by comparing the deterministic `(kind, position, velocity)` projection.
 
 ## Read First
 
