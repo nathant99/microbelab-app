@@ -1,12 +1,12 @@
 ---
 status: open
 last-updated: 2026-06-12
-last-reinforced: 2026-06-12 (user-direct **fourth pass** — paired with the standing auto-cycle directive for multi-commit work. The repetition cadence is the signal: treat as THE most load-bearing safety rule. Auto-cycle does NOT extend to Xcode-managed files.)
+last-reinforced: 2026-06-12 (user-direct **fifth pass** — paired with the standing auto-cycle directive for multi-commit work AND an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive in the same round. Five restatements in one calendar day codifies the **five-pass invariant**: this rule is now a pre-flight check, not a guideline. The maximize-integration directive does NOT extend to managed-file edits — see CLAUDE.md § Xcode-managed file safety for the canonical statement.)
 ---
 
 # Handoff to User — Xcode GUI Tasks
 
-Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — fourth pass, user-direct, auto-cycle round)" must never write the following Xcode-managed files from disk:
+Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — **fifth pass**, user-direct, auto-cycle round)" must never write the following Xcode-managed files from disk:
 
 - `MicrobeLab.xcworkspace/contents.xcworkspacedata` (workspace membership)
 - `MicrobeLab.xcodeproj/project.pbxproj` (project membership)
