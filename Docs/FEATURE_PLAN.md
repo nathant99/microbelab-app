@@ -8,40 +8,42 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Scaffolding
 
-- [ ] Create Xcode project with thin app shell (`MicrobeLab/MicrobeLabApp.swift`)
-- [ ] Create `Libraries/Package.swift` with 6 targets (Models, Services, SharedUI, GameEngine, AIMentor, AppFeature)
-- [ ] Add ForgeKit dependency (remote GitHub URL, `from: "0.99.0"`)
-- [ ] Create stub source files for all targets
-- [ ] Verify build succeeds with zero warnings
-- [ ] Create `.xcworkspace` with Libraries as workspace member
+- [x] Create Xcode project with thin app shell (`MicrobeLab/MicrobeLabApp.swift`)
+- [x] Create `Packages/Libraries/Package.swift` with 6 targets (Models, Services, SharedUI, GameEngine, AIMentor, AppFeature)
+- [x] Add ForgeKit dependency (remote GitHub URL, `from: "0.99.0"`)
+- [x] Create stub source files for all targets
+- [x] Verify build succeeds with zero warnings (via `swift build` — no Xcode reload)
+- [ ] Add `Packages/Libraries` to workspace (user GUI step per `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 1)
 
 ### Data Layer
 
-- [ ] Define SwiftData models: `MicrobeRecord`, `MicrobiomeSession`, `EncounterLog`, `PlayerProgress`, `JournalEntry`
-- [ ] Create `VersionedSchema` (V1) with all models
+- [x] Define value types: `MicrobeCharacter`, `MicrobiomeState`, `ZoomTier`, `GutSlot`, `FeedingMode`, `AntibioticState`, `GrowthRate`
+- [x] Define SwiftData models: `PersistentMicrobeSession`, `PlayerProgress`
+- [ ] Define remaining SwiftData models: `EncounterLog`, `JournalEntry` (next PR)
+- [ ] Create `VersionedSchema` (V1) with all models (next PR — start early)
 - [ ] Create `SchemaMigrationPlan` (V1 only — start early)
-- [ ] Bundle 12 microbe character catalog as JSON in `Services/Resources/`
-- [ ] Create `MicrobeCatalogService` to load + query microbe data
-- [ ] Create value-type cache structs for all `@Model` types
+- [x] Bundle 12 microbe character catalog as JSON in `Services/Resources/microbes.json`
+- [x] Create `MicrobeCatalogService` to load + query microbe data
+- [ ] Create remaining value-type cache structs for all `@Model` types (next PR)
 
 ### Microscope Engine
 
-- [ ] Implement `ZoomTier` enum + transition rules (1× → 100× → 1000× → 10000×)
+- [x] Implement `ZoomTier` enum + transition rules (1× → 100× → 1000× → 10000×)
 - [ ] Implement `MicroscopeScene` (SpriteKit) with SK camera + LOD sprite atlas
 - [ ] Implement pinch-to-zoom gesture handler + tier boundary snap
 - [ ] Implement LOD sprite swap at tier boundaries (per `.claude/rules/spritekit.md` lazy visual setup)
-- [ ] Implement `ZoomMachine` view-local state machine
+- [x] Implement `ZoomMachine` view-local state machine
 - [ ] Implement microscope HUD overlay (tier badge + zoom level)
 
 ### Microbiome Simulator
 
-- [ ] Implement `MicrobiomeState` value type (populations + feeding mode + antibiotic state + tick count)
-- [ ] Implement `FeedingMode` enum (fiber / sugar / balanced / none) + per-microbe growth-rate effects
-- [ ] Implement `AntibioticState` enum (none / active / recovering) + recovery-curve mechanics
-- [ ] Implement `MicrobiomeSimulator` per-tick update logic
-- [ ] Implement `GutSlot` ecology zones (oralCavity / stomach / smallIntestine / largeIntestine / colon)
-- [ ] Implement `SimulationMachine` view-local state machine
-- [ ] Implement deterministic seedable RNG for reproducible test states
+- [x] Implement `MicrobiomeState` value type (populations + feeding mode + antibiotic state + tick count)
+- [x] Implement `FeedingMode` enum (fiber / sugar / balanced / none) + per-microbe growth-rate effects
+- [x] Implement `AntibioticState` enum (none / active / recovering) + recovery-curve mechanics
+- [x] Implement `MicrobiomeSimulator` per-tick update logic
+- [x] Implement `GutSlot` ecology zones (oralCavity / stomach / smallIntestine / largeIntestine / colon + skin + soil)
+- [x] Implement `SimulationMachine` view-local state machine
+- [ ] Implement deterministic seedable RNG for reproducible test states (next PR — simulator is currently deterministic-by-value without RNG)
 
 ### Immune Response Engine (innate path)
 

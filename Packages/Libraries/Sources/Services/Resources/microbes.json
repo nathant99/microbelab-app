@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-11",
+  "notes": "12-microbe Phase 1 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Remaining 6 are codex-supporting microbes (beneficial-first framing per CLAUDE.md trauma-informed posture). Names checked against labsmith REGISTRY_PORTFOLIO_CHARACTER_NAMES.md — supporting microbes use scientific-genus-flavored slugs only.",
+  "microbes": [
+    {
+      "id": "9DB2A1F0-1111-4001-8000-000000000001",
+      "slug": "lacto",
+      "displayName": "Lacto",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "largeIntestine",
+      "growthRate": { "onFiber": 0.6, "onSugar": 0.2, "onBalanced": 0.5, "onNone": -0.1 },
+      "catchphrase": "Friend in your food. Friend in your gut.",
+      "factCard": "Lactobacillus species ferment milk into yogurt and live in your large intestine, where they often help with digestion.",
+      "firstKit": 1
+    },
+    {
+      "id": "9DB2A1F0-1111-4002-8000-000000000002",
+      "slug": "yeast",
+      "displayName": "Yeast",
+      "kingdom": "fungi",
+      "role": "beneficial",
+      "preferredEnvironment": "smallIntestine",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.7, "onBalanced": 0.4, "onNone": -0.2 },
+      "catchphrase": "I make air inside bread.",
+      "factCard": "Saccharomyces cerevisiae turn sugars into carbon dioxide bubbles — that's what makes bread dough rise.",
+      "firstKit": 2
+    },
+    {
+      "id": "9DB2A1F0-1111-4003-8000-000000000003",
+      "slug": "photo",
+      "displayName": "Photo",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.3, "onSugar": 0.3, "onBalanced": 0.4, "onNone": 0.5 },
+      "catchphrase": "Sunlight. Then air. Then everything else.",
+      "factCard": "Cyanobacteria use sunlight to make their own food and release oxygen. They helped create the oxygen in Earth's atmosphere.",
+      "firstKit": 3
+    },
+    {
+      "id": "9DB2A1F0-1111-4004-8000-000000000004",
+      "slug": "net",
+      "displayName": "Net",
+      "kingdom": "fungi",
+      "role": "beneficial",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.5, "onSugar": 0.1, "onBalanced": 0.3, "onNone": 0.2 },
+      "catchphrase": "Forests talk through me.",
+      "factCard": "Mycorrhizal fungi link tree roots underground, often helping plants share water and nutrients across long distances.",
+      "firstKit": 4
+    },
+    {
+      "id": "9DB2A1F0-1111-4005-8000-000000000005",
+      "slug": "spore",
+      "displayName": "Spore",
+      "kingdom": "bacteria",
+      "role": "opportunistic",
+      "preferredEnvironment": "smallIntestine",
+      "growthRate": { "onFiber": 0.1, "onSugar": 0.5, "onBalanced": 0.3, "onNone": -0.3 },
+      "catchphrase": "Some friends. Some not. All real.",
+      "factCard": "Some bacteria can cause illness when they grow too large in number, but most of them live with us peacefully.",
+      "firstKit": 5
+    },
+    {
+      "id": "9DB2A1F0-1111-4006-8000-000000000006",
+      "slug": "guard",
+      "displayName": "Guard",
+      "kingdom": "protist",
+      "role": "beneficial",
+      "preferredEnvironment": "skin",
+      "growthRate": { "onFiber": 0.4, "onSugar": 0.4, "onBalanced": 0.4, "onNone": 0.4 },
+      "catchphrase": "I check IDs. Patient and careful.",
+      "factCard": "Your immune cells — like macrophages and B-cells — patiently check every microbe they meet and learn which ones to trust.",
+      "firstKit": 6
+    },
+    {
+      "id": "9DB2A1F0-2222-4007-8000-000000000007",
+      "slug": "bifido",
+      "displayName": "Bifido",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "colon",
+      "growthRate": { "onFiber": 0.7, "onSugar": 0.0, "onBalanced": 0.4, "onNone": -0.2 },
+      "catchphrase": "Fiber is my favorite snack.",
+      "factCard": "Bifidobacterium species feast on the fiber in fruits and vegetables — one of the gut's most helpful families.",
+      "firstKit": 1
+    },
+    {
+      "id": "9DB2A1F0-2222-4008-8000-000000000008",
+      "slug": "akker",
+      "displayName": "Akker",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "colon",
+      "growthRate": { "onFiber": 0.5, "onSugar": 0.1, "onBalanced": 0.4, "onNone": 0.0 },
+      "catchphrase": "I patch the gut wall.",
+      "factCard": "Akkermansia muciniphila feeds on the gut's mucus layer and helps keep the intestinal wall strong.",
+      "firstKit": 2
+    },
+    {
+      "id": "9DB2A1F0-2222-4009-8000-000000000009",
+      "slug": "strep",
+      "displayName": "Strep",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "oralCavity",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.6, "onBalanced": 0.3, "onNone": 0.0 },
+      "catchphrase": "Mouth-dweller, mostly chill.",
+      "factCard": "Many Streptococcus species live quietly in the mouth and throat — a few can cause illness, but most are part of normal mouth life.",
+      "firstKit": 5
+    },
+    {
+      "id": "9DB2A1F0-2222-400A-8000-00000000000A",
+      "slug": "ecoli",
+      "displayName": "Coli",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "largeIntestine",
+      "growthRate": { "onFiber": 0.4, "onSugar": 0.4, "onBalanced": 0.4, "onNone": -0.1 },
+      "catchphrase": "Most of us help. A few don't.",
+      "factCard": "Most Escherichia coli strains live peacefully in your gut and help make vitamin K. Only a few specific strains can make people sick.",
+      "firstKit": 4
+    },
+    {
+      "id": "9DB2A1F0-2222-400B-8000-00000000000B",
+      "slug": "rhino",
+      "displayName": "Rhino",
+      "kingdom": "virus",
+      "role": "opportunistic",
+      "preferredEnvironment": "oralCavity",
+      "growthRate": { "onFiber": 0.0, "onSugar": 0.2, "onBalanced": 0.1, "onNone": 0.3 },
+      "catchphrase": "I am very small. I prefer noses.",
+      "factCard": "Rhinoviruses are tiny viruses that often cause the common cold. They are the most common reason kids sniffle in winter.",
+      "firstKit": 5
+    },
+    {
+      "id": "9DB2A1F0-2222-400C-8000-00000000000C",
+      "slug": "deino",
+      "displayName": "Deino",
+      "kingdom": "archaea",
+      "role": "neutral",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.3, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.4 },
+      "catchphrase": "I survive what nothing else can.",
+      "factCard": "Deinococcus radiodurans is an extremophile that survives radiation, cold, and dehydration that would defeat most life on Earth.",
+      "firstKit": 3
+    }
+  ]
+}
