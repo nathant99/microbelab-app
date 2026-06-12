@@ -14,6 +14,18 @@ import Services
 /// service's derived `currentNudge` every 30 s.
 struct SessionNudgeOverlay: View {
     let service: SessionTargetService
+    let reduceMotion: Bool
+    let reduceTransparency: Bool
+
+    init(
+        service: SessionTargetService,
+        reduceMotion: Bool = false,
+        reduceTransparency: Bool = false
+    ) {
+        self.service = service
+        self.reduceMotion = reduceMotion
+        self.reduceTransparency = reduceTransparency
+    }
 
     var body: some View {
         // 30 s refresh keeps the view responsive without burning energy on
@@ -24,13 +36,25 @@ struct SessionNudgeOverlay: View {
                 EmptyView()
             case .gentleStretchSuggestion:
                 gentleBanner
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .transition(nudgeTransition)
             case .suggestPause:
                 pauseBanner
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .transition(nudgeTransition)
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: service.currentNudge)
+        .animation(nudgeAnimation, value: service.currentNudge)
+    }
+
+    /// Reduce-Motion drops the slide-from-top morph (vestibular trigger);
+    /// opacity still cross-fades so the kid sees the banner change.
+    private var nudgeTransition: AnyTransition {
+        reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity)
+    }
+
+    /// Reduce-Motion replaces the spring-y easeInOut with an instant
+    /// transition (animation collapses to zero duration).
+    private var nudgeAnimation: Animation? {
+        reduceMotion ? nil : .easeInOut(duration: 0.25)
     }
 
     private var gentleBanner: some View {
@@ -97,10 +121,21 @@ struct SessionNudgeOverlay: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(cardBackground)
         .padding(.horizontal)
         .padding(.top, 4)
         .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var cardBackground: some View {
+        if reduceTransparency {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.primary.opacity(0.10))
+        } else {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(.regularMaterial)
+        }
     }
 
     private func dismissGentle() {

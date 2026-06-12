@@ -10,7 +10,18 @@ import SwiftUI
 /// ("missed you") deliberately frames absence as wonder, not failure.
 struct WelcomeBackOverlay: View {
     let daysAway: Int
+    let reduceTransparency: Bool
     let onContinue: () -> Void
+
+    init(
+        daysAway: Int,
+        reduceTransparency: Bool = false,
+        onContinue: @escaping () -> Void
+    ) {
+        self.daysAway = daysAway
+        self.reduceTransparency = reduceTransparency
+        self.onContinue = onContinue
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -38,10 +49,21 @@ struct WelcomeBackOverlay: View {
             .accessibilityHint("Dismisses the welcome back card")
         }
         .padding(.vertical, 24)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .background(cardBackground)
         .padding()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("WelcomeBackOverlay")
+    }
+
+    @ViewBuilder
+    private var cardBackground: some View {
+        if reduceTransparency {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(Color.primary.opacity(0.10))
+        } else {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(.regularMaterial)
+        }
     }
 
     private var welcomeBodyCopy: String {

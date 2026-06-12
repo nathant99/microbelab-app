@@ -26,6 +26,9 @@ public struct AppRootView: View {
     @State private var welcomeBackDaysAway: Int?
     @State private var streakRescue: StreakRescue = .none
 
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var systemReduceTransparency
+
     public init() {
         // GamificationService hydrates from StreakStore at init so day-1 of
         // a streak doesn't read as "fresh install" after the first session.
@@ -51,6 +54,7 @@ public struct AppRootView: View {
                     onboarding.markCompleted()
                 }
             } else if let catalog {
+                let prefs = effectiveA11yPreferences
                 tabShell(catalog: catalog)
                     .overlay(alignment: .top) {
                         // Session-target nudge pins to the top so the kid sees
@@ -58,7 +62,11 @@ public struct AppRootView: View {
                         // overlay (welcome-back or streak-rescue) suppresses
                         // the nudge.
                         if welcomeBackDaysAway == nil && streakRescue == .none {
-                            SessionNudgeOverlay(service: sessionTarget)
+                            SessionNudgeOverlay(
+                                service: sessionTarget,
+                                reduceMotion: prefs.reduceMotion,
+                                reduceTransparency: prefs.reduceTransparency
+                            )
                         }
                     }
                     .overlay(alignment: .center) {
@@ -67,19 +75,25 @@ public struct AppRootView: View {
                         // would fire). Both have warm-acknowledgment copy so
                         // showing only one keeps the cold-launch surface calm.
                         if let days = welcomeBackDaysAway {
-                            WelcomeBackOverlay(daysAway: days) {
+                            WelcomeBackOverlay(
+                                daysAway: days,
+                                reduceTransparency: prefs.reduceTransparency
+                            ) {
                                 welcomeBackDaysAway = nil
                             }
-                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                            .transition(overlayTransition(reduceMotion: prefs.reduceMotion))
                         } else if case .lapsed(let prior) = streakRescue {
-                            StreakRescueOverlay(priorStreak: prior) {
+                            StreakRescueOverlay(
+                                priorStreak: prior,
+                                reduceTransparency: prefs.reduceTransparency
+                            ) {
                                 streakRescue = .none
                             }
-                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                            .transition(overlayTransition(reduceMotion: prefs.reduceMotion))
                         }
                     }
-                    .animation(.easeInOut(duration: 0.25), value: welcomeBackDaysAway)
-                    .animation(.easeInOut(duration: 0.25), value: streakRescue)
+                    .animation(overlayAnimation(reduceMotion: prefs.reduceMotion), value: welcomeBackDaysAway)
+                    .animation(overlayAnimation(reduceMotion: prefs.reduceMotion), value: streakRescue)
             } else if let loadError {
                 catalogLoadFailure(loadError)
             } else {
@@ -106,6 +120,30 @@ public struct AppRootView: View {
                 await gamification.recordSession()
             }
         }
+    }
+
+    /// Combine the system accessibility env values with the parent-gated
+    /// `forceReduceMotion` + `forceReduceTransparency` toggles via the pure
+    /// `A11yPreferences.resolved` helper. Per
+    /// `Docs/FEATURE_PLAN.md` § Accessibility & Trauma-Informed Polish.
+    private var effectiveA11yPreferences: A11yPreferences {
+        .resolved(
+            systemReduceMotion: systemReduceMotion,
+            systemReduceTransparency: systemReduceTransparency,
+            settings: settingsStore.settings
+        )
+    }
+
+    /// Reduce-Motion drops the scale morph (vestibular trigger); opacity
+    /// still cross-fades so the kid sees the overlay change.
+    private func overlayTransition(reduceMotion: Bool) -> AnyTransition {
+        reduceMotion ? .opacity : .opacity.combined(with: .scale(scale: 0.95))
+    }
+
+    /// Reduce-Motion collapses the animation to instant so the value-change
+    /// driver doesn't introduce a spring-y morph.
+    private func overlayAnimation(reduceMotion: Bool) -> Animation? {
+        reduceMotion ? nil : .easeInOut(duration: 0.25)
     }
 
     /// Compute streak-rescue state BEFORE the new session is recorded so the
