@@ -34,6 +34,13 @@ public struct AppRootView: View {
     // local. Sessions track the kid's play span; events surface engagement
     // milestones (zoom-tier reached, immune wave cleared, etc.).
     @State private var analytics = AnalyticsService()
+    // On-device Spotlight index for the 12-microbe codex. Per
+    // .claude/rules/forgekit.md § ForgeSpotlight — the index stays
+    // on-device (`CSSearchableIndex`), surfacing parent + kid search via
+    // iOS Spotlight. Trauma-informed posture mirrors MicrobeCodexView:
+    // entire catalog indexed (codex already shows all 12 cards from
+    // launch); locked entries gate the fact card behind discovery.
+    @State private var spotlight = MicrobeSpotlightIndex()
     // Auto-surface session-summary on app background (PR #61). Pure
     // in-memory — the welcome-back overlay covers the "kid left for 3+
     // days" case via LastActiveStore. Per Docs/FEATURE_PLAN.md § Parent
@@ -429,6 +436,10 @@ public struct AppRootView: View {
         case .success(let service):
             catalog = service
             DebugLog.startup("AppRootView catalog loaded: \(service.microbes.count) microbes")
+            // Spotlight index runs once per cold launch; ForgeSpotlight
+            // dedupes by `spotlightID` so repeated launches are no-ops.
+            let microbes = service.microbes
+            Task { await spotlight.indexCatalog(microbes) }
         case .failure(let error):
             loadError = String(describing: error)
             DebugLog.error("AppRootView catalog load failed", error: error)
