@@ -51,6 +51,21 @@ nonisolated struct QuestionKitServiceTests {
         }
     }
 
+    @Test func loadsKit03ImmuneDefenseFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "immune-defense")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 3)
+        #expect(kit.slug == "immune-defense")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
     @Test func everyPhase1KitNumberMatchesCanonicalOrder() {
         let service = QuestionKitService()
         let kits = service.loadAllPhase1Kits()

@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4003-A000-000000000003",
+  "slug": "immune-defense",
+  "title": "Your Quiet Helpers",
+  "summary": "How innate-immunity cells calmly check, learn from, and clear pathogens — framed as protection, not war.",
+  "kitNumber": 3,
+  "questions": [
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000001",
+      "prompt": "Macrophages are immune cells that work mostly by…",
+      "choices": [
+        "Surrounding and engulfing microbes the body decides to clear",
+        "Making the heart beat faster",
+        "Producing red blood cells",
+        "Storing fat"
+      ],
+      "correctIndex": 0,
+      "explanation": "Macrophages are big patrol cells — they engulf microbes and debris through a process called phagocytosis.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000002",
+      "prompt": "Innate immunity is best described as the body's…",
+      "choices": [
+        "First, quick, general response that you're born with",
+        "Slow custom response that learns over months",
+        "Way to make new red blood cells",
+        "Way to digest fiber"
+      ],
+      "correctIndex": 0,
+      "explanation": "Innate immunity is the fast, general first response — you have it from birth, and it doesn't need to learn each microbe individually.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000003",
+      "prompt": "Skin is part of your immune defense because it…",
+      "choices": [
+        "Forms a calm physical barrier most microbes can't cross",
+        "Senses temperature only",
+        "Stores extra blood",
+        "Sends signals to your stomach"
+      ],
+      "correctIndex": 0,
+      "explanation": "Skin is the body's first barrier — most microbes never get past intact skin.",
+      "curriculumStandard": "NHES 1"
+    },
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000004",
+      "prompt": "Most encounters between your immune cells and microbes end with…",
+      "choices": [
+        "The immune cell deciding the microbe is safe and letting it pass",
+        "An infection every time",
+        "A high fever",
+        "Permanent damage"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most microbes the immune system meets are harmless — it learns to wave them through. Only a small fraction trigger a full response.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000005",
+      "prompt": "Washing your hands helps your immune system because it…",
+      "choices": [
+        "Removes microbes before they ever reach the body's barriers",
+        "Makes your skin thicker",
+        "Adds new white blood cells",
+        "Cools your body down"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hand-washing physically removes microbes from your hands so they never get a chance to enter your eyes, nose, or mouth.",
+      "curriculumStandard": "NHES 7"
+    },
+    {
+      "id": "AAAAA003-0000-4003-8000-000000000006",
+      "prompt": "Inflammation around a small cut usually means…",
+      "choices": [
+        "Immune cells are arriving to clean up and help repair",
+        "The injury is permanent",
+        "The skin will never heal",
+        "Bones are breaking"
+      ],
+      "correctIndex": 0,
+      "explanation": "Redness, warmth, and a little swelling are signs that blood flow and immune cells are flowing to the area to clean up and help repair.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    }
+  ]
+}
