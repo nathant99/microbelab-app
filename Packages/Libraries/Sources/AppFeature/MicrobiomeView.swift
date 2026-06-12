@@ -5,6 +5,7 @@ import Services
 import SharedUI
 import GameEngine
 import AIMentor
+import ForgeCelebration
 
 /// Microbiome puzzle tab. Wraps `MicrobiomePuzzleScene` + feeding-mode picker
 /// + antibiotic shock affordance. Hosts a NavigationStack so the innate-
@@ -32,12 +33,14 @@ public struct MicrobiomeView: View {
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
     private let difficulty: DifficultyAdjuster
+    private let celebration: CelebrationCoordinator?
 
     public init(
         simulator: MicrobiomeSimulator,
         mentor: VeeMentor? = nil,
         gamification: GamificationService? = nil,
-        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard)
+        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
+        celebration: CelebrationCoordinator? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -47,6 +50,7 @@ public struct MicrobiomeView: View {
         self.mentor = mentor
         self.gamification = gamification
         self.difficulty = difficulty
+        self.celebration = celebration
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -92,7 +96,8 @@ public struct MicrobiomeView: View {
                 ImmuneGameView(
                     mentor: mentor,
                     gamification: gamification,
-                    difficulty: difficulty
+                    difficulty: difficulty,
+                    celebration: celebration
                 )
                     .navigationTitle("Defense")
                     #if os(iOS)
@@ -168,7 +173,9 @@ public struct MicrobiomeView: View {
     /// Evaluate Phase-1 microbiome achievements against the running criteria.
     /// `GamificationService.evaluateAchievements` is idempotent — re-entering
     /// the criteria closure with the same flags is safe; the engine only
-    /// emits an unlock the first time.
+    /// emits an unlock the first time. Proportional celebrations fire per
+    /// newly-unlocked achievement: medium tier matches the "your microbiome
+    /// stayed steady" register without crowding the mentor bubble.
     private func evaluateAchievements() {
         guard let gamification else { return }
         let newlyEarned = gamification.evaluateAchievements { definition in
@@ -181,6 +188,7 @@ public struct MicrobiomeView: View {
         }
         for definition in newlyEarned {
             DebugLog.state("MicrobiomeView achievement \(definition.id) earned (+\(definition.xpValue) XP)")
+            celebration?.badgeEarned(title: definition.title)
         }
     }
 }

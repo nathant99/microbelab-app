@@ -5,6 +5,7 @@ import Services
 import SharedUI
 import GameEngine
 import AIMentor
+import ForgeCelebration
 
 /// Innate-immunity minigame tab. Wraps `MacrophagePacmanScene` + score HUD
 /// + wave-progress chip + trauma-informed off-ramp on first launch.
@@ -33,12 +34,14 @@ public struct ImmuneGameView: View {
 
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
+    private let celebration: CelebrationCoordinator?
 
     public init(
         showWarningInitially: Bool = true,
         mentor: VeeMentor? = nil,
         gamification: GamificationService? = nil,
-        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard)
+        difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
+        celebration: CelebrationCoordinator? = nil
     ) {
         let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
         let initial = MacrophagePacmanScene(
@@ -52,6 +55,7 @@ public struct ImmuneGameView: View {
         _mentorMessage = State(initialValue: nil)
         self.mentor = mentor
         self.gamification = gamification
+        self.celebration = celebration
     }
 
     public var body: some View {
@@ -206,12 +210,20 @@ public struct ImmuneGameView: View {
     /// message celebrates the clear; mid-run, it acknowledges the next wave
     /// without raising the stakes. Static authored content per
     /// `.claude/rules/ai-content.md` — never AI-generated for celebrations.
+    ///
+    /// Pairs with ForgeCelebration: per-wave clear fires a medium tier
+    /// (subtle), full run fires an epic tier (full-screen). The mentor
+    /// bubble carries the educational meta-voice; the celebration overlay
+    /// carries the visual + haptic juice. Both can coexist because
+    /// `CelebrationOverlayModifier` renders in the view's own overlay
+    /// envelope while `MentorBubble` renders inline.
     private func surfaceWaveClearCue(finished: Bool) {
-        guard mentor != nil else { return }
         if finished {
             mentorMessage = "All waves cleared. Your body's quiet helpers had your back."
+            celebration?.celebrate(.epic, message: "Defense run complete", emoji: "🛡️", slug: "game-complete")
         } else {
             mentorMessage = "Wave clear. The next group is on its way — take a breath."
+            celebration?.celebrate(.medium, message: "Wave clear", emoji: "✨")
         }
     }
 

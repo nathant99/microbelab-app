@@ -2,6 +2,7 @@ import SwiftUI
 import Models
 import Services
 import SharedUI
+import ForgeCelebration
 
 /// Multiple-choice quiz surface for a `QuestionKit`. Per
 /// `.claude/rules/state-machines.md` § `*Machine` Structs, view-local state
@@ -10,12 +11,18 @@ import SharedUI
 public struct QuizView: View {
     let kit: QuestionKit
     let gamification: GamificationService?
+    let celebration: CelebrationCoordinator?
     @State private var machine: QuizMachine
     @State private var hasAwardedCompletionXP = false
 
-    public init(kit: QuestionKit, gamification: GamificationService? = nil) {
+    public init(
+        kit: QuestionKit,
+        gamification: GamificationService? = nil,
+        celebration: CelebrationCoordinator? = nil
+    ) {
         self.kit = kit
         self.gamification = gamification
+        self.celebration = celebration
         _machine = State(initialValue: QuizMachine(totalQuestions: kit.questions.count))
     }
 
@@ -37,16 +44,34 @@ public struct QuizView: View {
             DebugLog.lifecycle("QuizView onAppear; kit=\(kit.slug) questions=\(kit.questions.count)")
         }
         .onChange(of: machine.isComplete) { _, newValue in
-            guard newValue, !hasAwardedCompletionXP, let gamification else { return }
+            guard newValue, !hasAwardedCompletionXP else { return }
             hasAwardedCompletionXP = true
-            let baseXP = 10 * machine.correctCount
-            gamification.awardXP(baseXP, reason: "quiz kit \(kit.slug)")
             let allCorrect = machine.correctCount == kit.questions.count
-            gamification.evaluateAchievements { definition in
-                switch definition.id {
-                case MicrobeLabAchievements.firstQuiz.id: return true
-                case MicrobeLabAchievements.quizPerfect.id: return allCorrect
-                default: return false
+            if let gamification {
+                let baseXP = 10 * machine.correctCount
+                gamification.awardXP(baseXP, reason: "quiz kit \(kit.slug)")
+                gamification.evaluateAchievements { definition in
+                    switch definition.id {
+                    case MicrobeLabAchievements.firstQuiz.id: return true
+                    case MicrobeLabAchievements.quizPerfect.id: return allCorrect
+                    default: return false
+                    }
+                }
+            }
+            // Proportional celebration per Docs/FEATURE_PLAN.md § Delight &
+            // Polish — perfect kit gets an epic tier (full-screen Lottie
+            // fallback to emoji + headline); a "got most of them" finish gets
+            // a major; a low score lands a small acknowledgement so the kid
+            // never sees a flatline. ForgeCelebration's cooldown +
+            // tier-precedence rules keep this from stacking with the
+            // immune-game wave-clear.
+            if let celebration {
+                if allCorrect {
+                    celebration.perfectRound(count: kit.questions.count)
+                } else if machine.correctCount >= kit.questions.count - 1 {
+                    celebration.celebrate(.major, message: "Nice work — \(machine.correctCount) of \(kit.questions.count)", emoji: "🎉")
+                } else {
+                    celebration.celebrate(.small, message: "Kit complete", emoji: "✓")
                 }
             }
         }
