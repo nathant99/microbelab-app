@@ -14,7 +14,8 @@ public nonisolated struct QuestionKitService: Sendable {
     /// — used by the UI to drive the kit-progress strip.
     public static let phase1KitSlugs: [String] = [
         "microbiology-basics",
-        "microbiome"
+        "microbiome",
+        "immune-defense"
     ]
 
     public init() {}
