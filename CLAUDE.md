@@ -67,7 +67,7 @@ The local Swift Package at `Packages/Libraries/` follows the portfolio standard 
 | Target | Subdirectories | Convention |
 |---|---|---|
 | `AppFeature` | `Onboarding/`, `Profile/` (`ProfileView` + `AvatarStudioSheet`), `Settings/` (`SettingsView` + `ParentalGateView`), `Engagement/` | One subdir per cross-cutting feature surface — pages / sheets / overlays. Tab views without supplementary files (Explore / Codex / Microbiome / Progress / Immune / Quiz) stay at root |
-| `Services` | `Engagement/` (`GamificationService` + `LastActiveStore` + `SessionCountStore` + `SessionTargetService` + `StreakStore` + `VariableRewardSelector`) | Engagement-foundation stores cluster under one subdir; root holds `AppSettings` / `MicrobeCatalogService` / `OnboardingStore` / `QuestionKitService` / `DebugLog` + `Resources/` |
+| `Services` | `Engagement/` (`DifficultyAdjuster` + `GamificationService` + `LastActiveStore` + `RetentionMetricsStore` + `SessionCountStore` + `SessionTargetService` + `StreakStore` + `VariableRewardSelector`) | Engagement-foundation stores + DDA cluster under one subdir; root holds `AppSettings` / `MicrobeCatalogService` / `OnboardingStore` / `ParentHandoffStore` / `QuestionKitService` / `DebugLog` + `Resources/` |
 | `Models` / `SharedUI` / `GameEngine` / `AIMentor` | flat | Files at target root; promote to subdirs when count > ~12 OR a logical cluster emerges |
 
 When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.

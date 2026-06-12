@@ -143,6 +143,13 @@ public struct AppRootView: View {
         // the kid has launched enough sessions. Reduces day-1 decision
         // fatigue + lands the aha moment inside the microscope loop.
         let disclosure = TabDisclosure.from(sessionCount: sessionCount.sessionCount)
+        // Invisible difficulty adjustment per Docs/FEATURE_PLAN.md
+        // § Engagement Foundation. Bands shift at session boundaries; the
+        // parent-gated `simplifyChallenge` toggle pins to .introductory.
+        let difficulty = DifficultyAdjuster.from(
+            sessionCount: sessionCount.sessionCount,
+            simplifyChallenge: settingsStore.settings.simplifyChallenge
+        )
         return TabView {
             Tab("Explore", systemImage: "microscope") {
                 ExploreView(
@@ -156,7 +163,12 @@ public struct AppRootView: View {
             }
             if disclosure.showsMicrobiome {
                 Tab("Microbiome", systemImage: "leaf") {
-                    MicrobiomeView(simulator: simulator, mentor: mentor, gamification: gamification)
+                    MicrobiomeView(
+                        simulator: simulator,
+                        mentor: mentor,
+                        gamification: gamification,
+                        difficulty: difficulty
+                    )
                 }
             }
             if disclosure.showsProgress {
