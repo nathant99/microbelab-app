@@ -4,6 +4,7 @@ import Models
 import Services
 import SharedUI
 import GameEngine
+import AIMentor
 
 /// Innate-immunity minigame tab. Wraps `MacrophagePacmanScene` + score HUD
 /// + wave-progress chip + trauma-informed off-ramp on first launch.
@@ -12,6 +13,9 @@ import GameEngine
 /// minigame surfaces a pre-content warning + skip-with-summary affordance
 /// for kids with medical anxiety. The mentor (Cilia) acknowledges
 /// difficulty calmly via the speech bubble at the bottom.
+///
+/// Surfaces a `MentorBubble` cue on wave-clear (the milestone event in
+/// `Docs/FEATURE_PLAN.md` line 91).
 public struct ImmuneGameView: View {
     @State private var scene: MacrophagePacmanScene
     @State private var score: Int = 0
@@ -20,12 +24,17 @@ public struct ImmuneGameView: View {
     @State private var isComplete: Bool = false
     @State private var hasAcknowledgedWarning: Bool
     @State private var showWarning: Bool
+    @State private var mentorMessage: String?
 
-    public init(showWarningInitially: Bool = true) {
+    private let mentor: VeeMentor?
+
+    public init(showWarningInitially: Bool = true, mentor: VeeMentor? = nil) {
         let initial = MacrophagePacmanScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initial)
         _hasAcknowledgedWarning = State(initialValue: !showWarningInitially)
         _showWarning = State(initialValue: showWarningInitially)
+        _mentorMessage = State(initialValue: nil)
+        self.mentor = mentor
     }
 
     public var body: some View {
@@ -91,6 +100,11 @@ public struct ImmuneGameView: View {
                         .padding(.horizontal)
                         .padding(.top, 4)
                 }
+            if let mentorMessage {
+                MentorBubble(message: mentorMessage)
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+            }
             controlBar
                 .padding()
                 .background(.thinMaterial)
@@ -139,6 +153,7 @@ public struct ImmuneGameView: View {
                         let finished = scene.clearWave()
                         wave = scene.wave
                         isComplete = finished
+                        surfaceWaveClearCue(finished: finished)
                         if !finished {
                             scene.spawnCurrentWave()
                             pathogensRemaining = scene.pathogens.count
@@ -154,6 +169,7 @@ public struct ImmuneGameView: View {
                     wave = 1
                     pathogensRemaining = 0
                     isComplete = false
+                    mentorMessage = nil
                     scene.spawnCurrentWave()
                     pathogensRemaining = scene.pathogens.count
                     DebugLog.state("ImmuneGameView reset")
@@ -161,6 +177,19 @@ public struct ImmuneGameView: View {
                 .buttonStyle(.glass)
             }
             .accessibilityHint(isComplete ? "Minigame complete — tap Reset to play again" : "Tap Step to advance pathogens and consume nearby ones")
+        }
+    }
+
+    /// Surface a wave-clear mentor cue. When the whole minigame is done, the
+    /// message celebrates the clear; mid-run, it acknowledges the next wave
+    /// without raising the stakes. Static authored content per
+    /// `.claude/rules/ai-content.md` — never AI-generated for celebrations.
+    private func surfaceWaveClearCue(finished: Bool) {
+        guard mentor != nil else { return }
+        if finished {
+            mentorMessage = "All waves cleared. Your body's quiet helpers had your back."
+        } else {
+            mentorMessage = "Wave clear. The next group is on its way — take a breath."
         }
     }
 }

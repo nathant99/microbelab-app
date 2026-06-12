@@ -79,8 +79,8 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Implement `ZoomCue` `@Generable` for tier-transition Socratic prompts
 - [x] Implement `EcologyHypothesis` `@Generable` for microbiome puzzle scaffolding
 - [x] Implement static fallbacks for every `@Generable` per `.claude/rules/foundationmodels.md`
-- [ ] Create mentor speech-bubble UI component
-- [ ] Wire mentor to events: microscope tier-up, microbiome milestone, immune wave-clear
+- [x] Create mentor speech-bubble UI component — `SharedUI.MentorBubble` with thinMaterial backdrop + combined accessibility label
+- [x] Wire mentor to events: microscope tier-up, microbiome milestone, immune wave-clear — `ExploreView` refreshes cue on tier snap; `MicrobiomeView` refreshes on feeding-mode change + every 5th tick milestone; `ImmuneGameView` surfaces a wave-clear cue on bubble (run-end + per-wave variants)
 
 ### Gamification
 
@@ -93,7 +93,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 ### Adventure Mode
 
 - [ ] Wire Level 1 config from `spark-anvil-hub/Resources/HubContributions/microbelab.json` (Life Zone contribution)
-- [ ] Implement `MicrobeLabHubContribution` Level 2 Swift overlay in `Libraries/Sources/AppFeature/HubContribution/`
+- [ ] Implement `MicrobeLabHubContribution` Level 2 Swift overlay in `Packages/Libraries/Sources/AppFeature/HubContribution/`
 - [ ] Register mode-cards in `AdventureView`
 - [ ] Wire `ForgeProgressionManager` gating across mode-cards
 

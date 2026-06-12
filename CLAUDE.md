@@ -28,7 +28,7 @@ Microbiology adventure for tweens with microscope-zoom-as-core-loop, microbiome 
 - **Persistence**: SwiftData
 - **Testing**: Swift Testing (`@Test`, `#expect`)
 - **Min Target**: iOS 26 / Xcode 26
-- **Architecture**: App shell + local Swift Package (`Libraries/Package.swift`)
+- **Architecture**: App shell + local Swift Package (`Packages/Libraries/Package.swift`)
 - **Framework**: ForgeKit (pinned via `.package(url:, from: "0.99.0")`)
 
 Portfolio-wide tech stack rules live in `@.claude/rules/forgekit.md` + `@.claude/rules/concurrency.md` + `@.claude/rules/swiftui.md` + `@.claude/rules/swiftdata.md` + `@.claude/rules/spritekit.md` + `@.claude/rules/foundationmodels.md`. All auto-load with this file.

@@ -118,7 +118,7 @@ See @Docs/FEATURE_PLAN.md for the full phased roadmap.
 
 ## Adventure Mode Integration
 
-Contributes to **Life Zone** in AdventureHub (TBD — coordinate with bioforge / creaturecare / wildlens cluster). Level 1 config (canonical JSON) lives at `labsmith/Resources/HubContributions/microbelab.json`; Level 2 Swift overlay (this repo) lives at `Libraries/Sources/AppFeature/HubContribution/MicrobeLabHubContribution.swift` per `Docs/AMENDMENTS_ADVENTUREHUB_SOURCE_OWNED_UI.md`.
+Contributes to **Life Zone** in AdventureHub (TBD — coordinate with bioforge / creaturecare / wildlens cluster). Level 1 config (canonical JSON) lives at `labsmith/Resources/HubContributions/microbelab.json`; Level 2 Swift overlay (this repo) lives at `Packages/Libraries/Sources/AppFeature/HubContribution/MicrobeLabHubContribution.swift` per `Docs/AMENDMENTS_ADVENTUREHUB_SOURCE_OWNED_UI.md`.
 
 ## Home Screen & Navigation
 
