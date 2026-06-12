@@ -66,7 +66,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Build `ExploreView` wrapping `MicroscopeScene` via `SpriteView` (tier-badge HUD + mentor bubble)
 - [x] Build `MicrobeCodexView` (12-microbe grid; locked entries show "???" until discovered)
 - [x] Build `MicrobiomeView` wrapping simulator with feeding-mode + antibiotic controls
-- [ ] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` (next PR)
+- [x] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` — reached via NavigationStack toolbar in MicrobiomeView; ships trauma-safe off-ramp + score HUD
 - [x] Build `ProgressTabView` with XP / streak / codex grid
 - [x] Build `ProfileView` placeholder (`ForgeAvatar.AvatarStudioView(.lite)` wiring lands next PR)
 - [ ] Build `SettingsView` with parental gate (next PR)
