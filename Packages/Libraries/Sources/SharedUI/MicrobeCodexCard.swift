@@ -11,10 +11,21 @@ import Models
 public struct MicrobeCodexCard: View {
     public let microbe: MicrobeCharacter
     public let isDiscovered: Bool
+    /// Display names of ecology neighbors surfaced via the
+    /// `MicrobeKnowledgeGraph`. When `isDiscovered` AND non-empty, the card
+    /// renders a small "Lives near: A, B" caption below the catchphrase.
+    /// Kept optional so existing callers + tests don't need to thread the
+    /// graph through.
+    public let livesNearDisplayNames: [String]
 
-    public init(microbe: MicrobeCharacter, isDiscovered: Bool) {
+    public init(
+        microbe: MicrobeCharacter,
+        isDiscovered: Bool,
+        livesNearDisplayNames: [String] = []
+    ) {
         self.microbe = microbe
         self.isDiscovered = isDiscovered
+        self.livesNearDisplayNames = livesNearDisplayNames
     }
 
     public var body: some View {
@@ -30,12 +41,34 @@ public struct MicrobeCodexCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
+            if isDiscovered, !livesNearDisplayNames.isEmpty {
+                livesNearLine
+            }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(microbe.displayName), \(microbe.role.rawValue) microbe")
+        .accessibilityLabel(accessibilityLabelText)
         .accessibilityHint(isDiscovered ? "Tap to view codex entry" : "Not yet discovered — zoom in to find me")
+    }
+
+    private var livesNearLine: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Image(systemName: "link")
+                .imageScale(.small)
+                .foregroundStyle(.tint)
+            Text(verbatim: "Lives near: \(livesNearDisplayNames.joined(separator: ", "))")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+    }
+
+    private var accessibilityLabelText: String {
+        let base = "\(microbe.displayName), \(microbe.role.rawValue) microbe"
+        guard isDiscovered, !livesNearDisplayNames.isEmpty else { return base }
+        return "\(base). Lives near \(livesNearDisplayNames.joined(separator: ", "))"
     }
 
     private var portraitPlaceholder: some View {

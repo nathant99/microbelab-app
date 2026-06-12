@@ -68,7 +68,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 - [x] Create 5-tab `TabView` (Explore / Codex / Microbiome / Progress / Profile) shell + bundled-catalog bootstrap
 - [x] Build `ExploreView` wrapping `MicroscopeScene` via `SpriteView` (tier-badge HUD + mentor bubble)
-- [x] Build `MicrobeCodexView` (12-microbe grid; locked entries show "???" until discovered)
+- [x] Build `MicrobeCodexView` (12-microbe grid; locked entries show "???" until discovered) — **ecology surfacing landed PR #60**: `MicrobeKnowledgeGraph` (Services/) wraps `ForgeKnowledgeGraph.KnowledgeGraph` with shared-habitat edges (symmetric, `.recommended` strength) derived from `MicrobeCharacter.preferredEnvironment`. The view builds the graph once on appear; each discovered card surfaces up to 2 already-discovered ecology neighbors via a small "Lives near: X, Y" caption. Trauma-informed posture: neighbors are filtered to the kid's discovered set so the codex never hints at undiscovered microbes (no shame-mining "you haven't met X yet" framing). 9 unit tests pin graph construction + neighbor ordering + limit + exclude-self + unknown-slug handling.
 - [x] Build `MicrobiomeView` wrapping simulator with feeding-mode + antibiotic controls
 - [x] Build `ImmuneGameView` wrapping `MacrophagePacmanScene` — reached via NavigationStack toolbar in MicrobiomeView; ships trauma-safe off-ramp + score HUD
 - [x] Build `ProgressTabView` with XP / streak / codex grid
