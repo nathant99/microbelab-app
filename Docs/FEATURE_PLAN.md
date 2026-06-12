@@ -88,7 +88,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Integrate `StreakManager` for daily engagement (`recordSession()` async surface; `currentStreak` / `longestStreak` mirrored to the `@Observable`)
 - [x] Integrate `AchievementEngine` with first 10 Phase-1 achievements (`MicrobeLabAchievements.phase1` set defined; `evaluateAchievements(with:)` grants + auto-XP-awards)
 - [ ] Wire question kits 01-04 via `Bundle.module` (microbiology basics / microbiome / immune defense / beneficial microbes) — kit 01 shipped; 02-04 follow-up PRs
-- [ ] Implement XP awards for: first microbe discovered, microbiome stable for 5 ticks, immune wave cleared, etc. — quiz-completion XP + first-quiz / quiz-perfect achievements wired; remaining hooks follow
+- [x] Implement XP awards for: first microbe discovered, microbiome stable for 5 ticks, immune wave cleared, etc. — quiz-completion XP + first-quiz / quiz-perfect achievements wired; microbiome (`fiberPioneer` / `sugarTrial` / `microbiomeSteady`) + immune (`immuneRookie` / `immuneRunner`) achievements now auto-evaluate via `MicrobiomeView` + `ImmuneGameView` calling `GamificationService.evaluateAchievements`, which auto-awards XP per achievement definition
 
 ### Adventure Mode
 
@@ -107,9 +107,9 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Quality
 
-- [ ] Unit tests for microbiome simulator (feeding modes / antibiotic shock / recovery curve)
-- [ ] Unit tests for zoom-tier transitions
-- [ ] Unit tests for cast catalog loading + integrity
+- [x] Unit tests for microbiome simulator (feeding modes / antibiotic shock / recovery curve) — `MicrobiomeSimulatorTests` + `MicrobiomeStateTests` + `SimulationMachineTests`
+- [x] Unit tests for zoom-tier transitions — `ZoomMachineTests` + `ZoomTierTests` + `MicroscopeSceneTests`
+- [x] Unit tests for cast catalog loading + integrity — `MicrobeCatalogServiceTests` (bundled-load + canonical DN cast presence + beneficial-microbe foregrounding + unique-slug guard + voice-line integrity)
 - [ ] UI tests for microscope + codex flow
 - [ ] UI tests for microbiome puzzle
 - [ ] Accessibility audit (VoiceOver / Dynamic Type / color contrast)

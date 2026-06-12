@@ -44,7 +44,7 @@ public struct AppRootView: View {
                 MicrobeCodexView(catalog: catalog, gamification: gamification)
             }
             Tab("Microbiome", systemImage: "leaf") {
-                MicrobiomeView(simulator: simulator, mentor: mentor)
+                MicrobiomeView(simulator: simulator, mentor: mentor, gamification: gamification)
             }
             Tab("Progress", systemImage: "chart.bar") {
                 ProgressTabView(

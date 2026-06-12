@@ -15,7 +15,8 @@ import AIMentor
 /// difficulty calmly via the speech bubble at the bottom.
 ///
 /// Surfaces a `MentorBubble` cue on wave-clear (the milestone event in
-/// `Docs/FEATURE_PLAN.md` line 91).
+/// `Docs/FEATURE_PLAN.md` line 91) and awards `immuneRookie` / `immuneRunner`
+/// achievements.
 public struct ImmuneGameView: View {
     @State private var scene: MacrophagePacmanScene
     @State private var score: Int = 0
@@ -26,15 +27,25 @@ public struct ImmuneGameView: View {
     @State private var showWarning: Bool
     @State private var mentorMessage: String?
 
-    private let mentor: VeeMentor?
+    // Achievement-criteria tracking.
+    @State private var hasClearedFirstWave = false
+    @State private var hasClearedAllWaves = false
 
-    public init(showWarningInitially: Bool = true, mentor: VeeMentor? = nil) {
+    private let mentor: VeeMentor?
+    private let gamification: GamificationService?
+
+    public init(
+        showWarningInitially: Bool = true,
+        mentor: VeeMentor? = nil,
+        gamification: GamificationService? = nil
+    ) {
         let initial = MacrophagePacmanScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initial)
         _hasAcknowledgedWarning = State(initialValue: !showWarningInitially)
         _showWarning = State(initialValue: showWarningInitially)
         _mentorMessage = State(initialValue: nil)
         self.mentor = mentor
+        self.gamification = gamification
     }
 
     public var body: some View {
@@ -153,7 +164,12 @@ public struct ImmuneGameView: View {
                         let finished = scene.clearWave()
                         wave = scene.wave
                         isComplete = finished
+                        hasClearedFirstWave = true
+                        if finished {
+                            hasClearedAllWaves = true
+                        }
                         surfaceWaveClearCue(finished: finished)
+                        evaluateAchievements()
                         if !finished {
                             scene.spawnCurrentWave()
                             pathogensRemaining = scene.pathogens.count
@@ -190,6 +206,22 @@ public struct ImmuneGameView: View {
             mentorMessage = "All waves cleared. Your body's quiet helpers had your back."
         } else {
             mentorMessage = "Wave clear. The next group is on its way — take a breath."
+        }
+    }
+
+    /// Evaluate Phase-1 immune-defense achievements. Idempotent — the
+    /// `AchievementEngine` only unlocks each ID once.
+    private func evaluateAchievements() {
+        guard let gamification else { return }
+        let newlyEarned = gamification.evaluateAchievements { definition in
+            switch definition.id {
+            case MicrobeLabAchievements.immuneRookie.id: return hasClearedFirstWave
+            case MicrobeLabAchievements.immuneRunner.id: return hasClearedAllWaves
+            default: return false
+            }
+        }
+        for definition in newlyEarned {
+            DebugLog.state("ImmuneGameView achievement \(definition.id) earned (+\(definition.xpValue) XP)")
         }
     }
 }
