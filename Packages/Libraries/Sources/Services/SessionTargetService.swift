@@ -16,6 +16,16 @@ public nonisolated struct SessionTargetMachine: Sendable, Equatable {
         case overTarget
     }
 
+    /// Surface that consumer UI renders. `.none` keeps the chrome quiet; the
+    /// other two cases correspond directly to the two trauma-safe nudges the
+    /// engagement-foundation surface advertises (gentle in-target stretch
+    /// suggestion + softer over-target pause suggestion).
+    public enum Nudge: Sendable, Equatable {
+        case none
+        case gentleStretchSuggestion
+        case suggestPause
+    }
+
     /// Portfolio-canonical target window per `ForgeGamification.GamificationConfig.sessionTargetMinutes`.
     public static let targetRange: ClosedRange<Int> = 10...15
 
@@ -36,6 +46,21 @@ public nonisolated struct SessionTargetMachine: Sendable, Equatable {
         if minutes < Self.targetRange.lowerBound { return .focused }
         if minutes <= Self.targetRange.upperBound { return .inTarget }
         return .overTarget
+    }
+
+    /// Pure derivation from phase + dismissal state. The gentle in-target
+    /// nudge fires once per session; the over-target nudge keeps surfacing
+    /// until the kid resets or backgrounds the app, since the engagement
+    /// rule there is "remind, don't lecture".
+    public func currentNudge(now: Date = .now) -> Nudge {
+        switch phase(now: now) {
+        case .focused:
+            return .none
+        case .inTarget:
+            return hasShownGentleNudge ? .none : .gentleStretchSuggestion
+        case .overTarget:
+            return .suggestPause
+        }
     }
 
     public mutating func markGentleNudgeShown() {
@@ -68,6 +93,13 @@ public final class SessionTargetService {
 
     public var phase: SessionTargetMachine.Phase {
         machine.phase()
+    }
+
+    /// Derived UI surface — view code reads this and renders accordingly.
+    /// Refresh cadence is the view's responsibility (TimelineView, periodic
+    /// `.task`, etc.); the service stays pure.
+    public var currentNudge: SessionTargetMachine.Nudge {
+        machine.currentNudge()
     }
 
     public var hasShownGentleNudge: Bool {

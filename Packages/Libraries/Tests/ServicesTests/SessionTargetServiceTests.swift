@@ -49,6 +49,28 @@ struct SessionTargetMachineTests {
         machine.markGentleNudgeShown()
         #expect(machine.hasShownGentleNudge == true)
     }
+
+    @Test func focusedPhaseHasNoNudge() {
+        let machine = SessionTargetMachine(startedAt: minutesAgo(5))
+        #expect(machine.currentNudge() == .none)
+    }
+
+    @Test func inTargetPhaseFiresGentleNudgeOnce() {
+        var machine = SessionTargetMachine(startedAt: minutesAgo(12))
+        #expect(machine.currentNudge() == .gentleStretchSuggestion)
+        machine.markGentleNudgeShown()
+        #expect(machine.currentNudge() == .none)
+    }
+
+    @Test func overTargetPhaseAlwaysSuggestsPause() {
+        var machine = SessionTargetMachine(startedAt: minutesAgo(22))
+        #expect(machine.currentNudge() == .suggestPause)
+        // Over-target nudge intentionally re-fires until the kid resets the
+        // session — "remind, don't lecture" trumps the once-per-session rule
+        // that gates the gentle in-target nudge.
+        machine.markGentleNudgeShown()
+        #expect(machine.currentNudge() == .suggestPause)
+    }
 }
 
 @Suite("SessionTargetService")
@@ -72,5 +94,18 @@ struct SessionTargetServiceTests {
         service.reset()
         #expect(service.hasShownGentleNudge == false)
         #expect(service.phase == .focused)
+    }
+
+    @Test func currentNudgeMirrorsMachineDerivation() {
+        let focused = SessionTargetService()
+        #expect(focused.currentNudge == .none)
+
+        let inTarget = SessionTargetService(startedAt: Date.now.addingTimeInterval(-12 * 60))
+        #expect(inTarget.currentNudge == .gentleStretchSuggestion)
+        inTarget.markGentleNudgeShown()
+        #expect(inTarget.currentNudge == .none)
+
+        let overTarget = SessionTargetService(startedAt: Date.now.addingTimeInterval(-22 * 60))
+        #expect(overTarget.currentNudge == .suggestPause)
     }
 }

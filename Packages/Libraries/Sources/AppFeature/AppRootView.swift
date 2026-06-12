@@ -30,6 +30,14 @@ public struct AppRootView: View {
                 }
             } else if let catalog {
                 tabShell(catalog: catalog)
+                    .overlay(alignment: .top) {
+                        // Session-target nudge pins to the top so the kid sees
+                        // it without losing the current tab. Welcome-back
+                        // overlay covers the screen + suppresses the nudge.
+                        if welcomeBackDaysAway == nil {
+                            SessionNudgeOverlay(service: sessionTarget)
+                        }
+                    }
                     .overlay(alignment: .center) {
                         if let days = welcomeBackDaysAway {
                             WelcomeBackOverlay(daysAway: days) {
