@@ -47,8 +47,8 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 ### Immune Response Engine (innate path)
 
 - [x] Implement `MacrophagePacmanScene` skeleton (SpriteKit) — Pac-Man-style consume-pathogen loop
-- [ ] Implement pathogen spawn + wave progression (sprite layer)
-- [ ] Implement macrophage movement + boundary handling
+- [x] Implement pathogen spawn + wave progression (pure-value logic in `MacrophagePacmanScene` + `PathogenState` / `PathogenKind` in Models)
+- [x] Implement macrophage movement + boundary handling (`moveMacrophage(by:)` clamps to scene bounds; `consumePathogensInRadius()` awards points)
 - [x] Implement scoring + 5-wave Phase-1 progression (logic-level: `recordConsume(_:)` + `clearWave()`)
 - [x] Wire scene into `GameEngine` target with lazy visual setup
 
