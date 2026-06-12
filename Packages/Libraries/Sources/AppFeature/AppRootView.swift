@@ -5,27 +5,106 @@ import SharedUI
 import GameEngine
 import AIMentor
 
-/// Phase 1 placeholder root view. Real 4-tab `TabView` (Explore / Adventure /
-/// Progress / Profile) lands in a follow-up PR per FEATURE_PLAN § SwiftUI Views.
+/// 4-tab `TabView` shell per portfolio convention + `Docs/TECHNICAL_DESIGN.md`
+/// § Home Screen & Navigation.
 ///
-/// Exposed `public` so the app shell (`Apps/MicrobeLab/MicrobeLab/MicrobeLabApp.swift`)
-/// can swap from `ContentView` once the workspace adds Packages/Libraries.
-/// See `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 1-2 for the GUI steps.
+/// Bootstraps the cast catalog from the bundled JSON. On load failure the
+/// shell falls back to a diagnostic view so the kid never sees a blank
+/// screen + the issue gets surfaced via `DebugLog.error`.
 public struct AppRootView: View {
+    @State private var catalog: MicrobeCatalogService?
+    @State private var loadError: String?
+
     public init() {}
 
     public var body: some View {
-        VStack(spacing: 16) {
+        Group {
+            if let catalog {
+                tabShell(catalog: catalog)
+            } else if let loadError {
+                catalogLoadFailure(loadError)
+            } else {
+                loadingView
+            }
+        }
+        .task {
+            loadCatalog()
+        }
+    }
+
+    private func tabShell(catalog: MicrobeCatalogService) -> some View {
+        let mentor = VeeMentor(microbes: catalog.microbes)
+        let simulator = MicrobiomeSimulator(microbes: catalog.microbes)
+        return TabView {
+            Tab("Explore", systemImage: "microscope") {
+                ExploreView(catalog: catalog, mentor: mentor)
+            }
+            Tab("Codex", systemImage: "book") {
+                MicrobeCodexView(catalog: catalog)
+            }
+            Tab("Microbiome", systemImage: "leaf") {
+                MicrobiomeView(simulator: simulator)
+            }
+            Tab("Progress", systemImage: "chart.bar") {
+                ProgressTabView(
+                    progress: PlayerProgressData.empty(),
+                    totalMicrobes: catalog.microbes.count
+                )
+            }
+            Tab("Profile", systemImage: "person") {
+                ProfileView()
+            }
+        }
+    }
+
+    private var loadingView: some View {
+        VStack(spacing: 12) {
             Image(systemName: "microscope")
                 .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text(verbatim: "MicrobeLab")
-                .font(.largeTitle.bold())
-            Text("Phase 1 scaffolding shipped. Microscope coming next.")
-                .multilineTextAlignment(.center)
+            Text("Warming up the microscope…")
+                .font(.callout)
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private func catalogLoadFailure(_ message: String) -> some View {
+        VStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .foregroundStyle(.orange)
+                .font(.largeTitle)
+            Text("Couldn't load the microbe catalog")
+                .font(.headline)
+            Text(message)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }
-        .padding()
+    }
+
+    private func loadCatalog() {
+        switch MicrobeCatalogService.loadBundled() {
+        case .success(let service):
+            catalog = service
+            DebugLog.startup("AppRootView catalog loaded: \(service.microbes.count) microbes")
+        case .failure(let error):
+            loadError = String(describing: error)
+            DebugLog.error("AppRootView catalog load failed", error: error)
+        }
+    }
+}
+
+private extension PlayerProgressData {
+    static func empty() -> PlayerProgressData {
+        PlayerProgressData(
+            id: UUID(),
+            displayName: "Explorer",
+            totalXP: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            lastActiveDate: nil,
+            discoveredMicrobeIDs: [],
+            earnedAchievementSlugs: []
+        )
     }
 }
