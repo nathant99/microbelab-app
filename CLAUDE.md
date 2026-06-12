@@ -72,9 +72,11 @@ The local Swift Package at `Packages/Libraries/` follows the portfolio standard 
 
 When introducing a new feature surface that owns ≥ 3 files (view + machine + service), create a subdirectory rather than inflating the root file list. Reorganization is FREE in SPM — no Xcode project membership to update.
 
-## Xcode-managed file safety (reinforced 2026-06-12 — third pass, user-direct)
+## Xcode-managed file safety (reinforced 2026-06-12 — fourth pass, user-direct, auto-cycle round)
 
-**Critical** (verbatim user-direct, 2026-06-12 — repeated across three reinforcement passes the same day): *"do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* The fact that the user has now re-stated this rule three times in a single day is itself the signal: this is THE most load-bearing safety rule for the in-IDE agent. Treat any future ambiguity around an `.xcworkspace` / `.xcscheme` / `.xctestplan` / `.pbxproj` / `Info.plist` / `.entitlements` / asset-catalog `Contents.json` / `Package.resolved` / `xcuserdata/` edit as a STOP and route through `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps — never attempt the edit.
+**Critical** (verbatim user-direct, 2026-06-12 — repeated across **four** reinforcement passes the same day, this time paired with the standing auto-cycle directive `branch → commit → push → gh pr create → gh pr merge → verify` for multi-commit work): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* The user has now re-stated this rule four times in a single day. That cadence is itself the signal: this is THE most load-bearing safety rule for the in-IDE agent, and any auto-cycle multi-PR session must NOT relax it. Treat any future ambiguity around an `.xcworkspace` / `.xcscheme` / `.xctestplan` / `.pbxproj` / `Info.plist` / `.entitlements` / asset-catalog `Contents.json` / `Package.resolved` / `xcuserdata/` edit as a STOP and route through `Docs/HANDOFF_TO_USER_<TOPIC>.md` describing the Xcode GUI steps — never attempt the edit.
+
+**Auto-cycle interaction note**: when a multi-commit session is approved (PR-per-feature without per-step confirmation), the agent does NOT use auto-approval to fast-path a managed-file edit. Auto-cycle covers SPM source / docs / rules / scripts — Xcode-managed files always require a `Docs/HANDOFF_TO_USER_<TOPIC>.md` route regardless of how many round trips the auto-cycle has approved.
 
 The named files at the top of this file remain off-limits to the agent for authoring/editing from disk. Specifically called out by name in today's reinforcement:
 
