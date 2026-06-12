@@ -106,7 +106,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Create 5-step onboarding flow (welcome, first zoom-in, meet first microbe, first observation, first quiz) — `MicrobeLabOnboardingFlow` wraps `ForgeUI.ForgeOnboardingFlow`; `OnboardingMachine` value-type state + `OnboardingStore` UserDefaults persistence; gated at `AppRootView` before the tab shell
 - [x] Implement aha moment: first microscope zoom reveals a character introducing themselves — onboarding step 3 introduces Lacto verbatim ("one of trillions of tiny lives that help you digest food"); `ExploreView` mentor-bubble cue refreshes on tier snap (the in-app aha continues after onboarding completes)
 - [x] Implement progressive disclosure (Session 1: microscope + codex only) — `SessionCountStore` (UserDefaults monotonic counter) + `TabDisclosure` (pure mapping: count < 2 → Explore + Codex; 2-3 → + Microbiome; 4+ → full chrome incl. Progress + Profile); wired into `AppRootView.tabShell`; increment fires only after onboarding completes so the 5-step flow isn't counted as session #1
-- [ ] Implement parent handoff flow (30s setup)
+- [x] Implement parent handoff flow (30s setup) — `ParentHandoffFlow` (AppFeature/Onboarding/) wraps a 4-step value-type `ParentHandoffMachine` (welcome → content comfort → daily session cap → ready). Persists choices into `AppSettings` (disease-story gate + daily cap); flips `ParentHandoffStore.hasCompletedHandoff` (Services/) on completion. AppRootView gates the kid-facing `MicrobeLabOnboardingFlow` behind the parent handoff so a grown-up confirms preferences ONCE before handoff. No PII captured (binary completion flag only) per `.claude/rules/age-assurance.md` § 2026 FTC COPPA.
 - [ ] Implement Apple Declared Age Range API gate (iOS 26+)
 
 ### Quality
@@ -188,7 +188,7 @@ COPPA compliance, parental consent, age gates, and first-time experience polish.
 
 - [ ] **First 60 Seconds experience** — Vee introduction → microscope zoom-in → first microbe meet → celebration → curiosity hook
 - [ ] **Aha moment design** — The "I just saw a microbe" moment in session 1
-- [ ] **Parent handoff flow** — 30-second parent setup (age, content preferences, microbiome topic comfort) → "Ready!" transition
+- [x] **Parent handoff flow** — `ParentHandoffFlow` ships a 4-step ~30s setup (welcome → content comfort → daily session cap → ready) that persists into `AppSettings` + flips `ParentHandoffStore.hasCompletedHandoff`. AppRootView gates the kid-facing 5-step onboarding behind it so the grown-up confirms preferences ONCE before handoff. Age question stays deferred to the Apple Declared Age Range API gate item; this surface is preference-capture only — no PII persisted (binary flag).
 - [ ] **Age gate** — Apple Declared Age Range API on iOS 26+
 - [ ] **Parental consent service** — COPPA-compliant consent; annual re-consent per 2026 FTC
 - [ ] **Privacy policy** — Plain-language policy accessible from Settings and App Store listing

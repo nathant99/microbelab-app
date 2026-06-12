@@ -17,6 +17,8 @@ public struct AppRootView: View {
     @State private var streakStore = StreakStore()
     @State private var gamification: GamificationService
     @State private var onboarding = OnboardingStore()
+    @State private var parentHandoff = ParentHandoffStore()
+    @State private var settingsStore = AppSettingsStore()
     @State private var lastActive = LastActiveStore()
     @State private var sessionCount = SessionCountStore()
     @State private var sessionTarget = SessionTargetService()
@@ -33,7 +35,17 @@ public struct AppRootView: View {
 
     public var body: some View {
         Group {
-            if !onboarding.hasCompletedOnboarding {
+            if !parentHandoff.hasCompletedHandoff {
+                // Parent handoff runs FIRST so a grown-up confirms content
+                // comfort + session cap before the kid sees the microscope
+                // onboarding. Per Docs/FEATURE_PLAN.md § Onboarding & Child
+                // Safety + .claude/rules/age-assurance.md.
+                ParentHandoffFlow(
+                    store: parentHandoff,
+                    settingsStore: settingsStore,
+                    onComplete: { /* state observation reflows the Group */ }
+                )
+            } else if !onboarding.hasCompletedOnboarding {
                 MicrobeLabOnboardingFlow {
                     onboarding.markCompleted()
                 }
