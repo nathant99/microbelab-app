@@ -2,6 +2,7 @@ import SwiftUI
 import Models
 import Services
 import SharedUI
+import ForgeCelebration
 
 /// Codex tab. Renders the 12-microbe grid; locked entries show "???" until
 /// the kid discovers them via the microscope loop. Hosts a NavigationStack
@@ -10,6 +11,7 @@ public struct MicrobeCodexView: View {
     private let catalog: MicrobeCatalogService
     private let kitService: QuestionKitService
     private let gamification: GamificationService?
+    private let celebration: CelebrationCoordinator?
     @State private var discoveredIDs: Set<UUID>
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
@@ -18,11 +20,13 @@ public struct MicrobeCodexView: View {
         catalog: MicrobeCatalogService,
         kitService: QuestionKitService = QuestionKitService(),
         discoveredIDs: Set<UUID> = [],
-        gamification: GamificationService? = nil
+        gamification: GamificationService? = nil,
+        celebration: CelebrationCoordinator? = nil
     ) {
         self.catalog = catalog
         self.kitService = kitService
         self.gamification = gamification
+        self.celebration = celebration
         _discoveredIDs = State(initialValue: discoveredIDs)
     }
 
@@ -49,7 +53,7 @@ public struct MicrobeCodexView: View {
             }
             .sheet(item: $presentedKit) { kit in
                 NavigationStack {
-                    QuizView(kit: kit, gamification: gamification)
+                    QuizView(kit: kit, gamification: gamification, celebration: celebration)
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Done") { presentedKit = nil }

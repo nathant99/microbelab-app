@@ -4,6 +4,7 @@ import Services
 import SharedUI
 import GameEngine
 import AIMentor
+import ForgeCelebration
 
 /// 4-tab `TabView` shell per portfolio convention + `Docs/TECHNICAL_DESIGN.md`
 /// § Home Screen & Navigation.
@@ -25,6 +26,7 @@ public struct AppRootView: View {
     @State private var sessionTarget = SessionTargetService()
     @State private var welcomeBackDaysAway: Int?
     @State private var streakRescue: StreakRescue = .none
+    @State private var celebration = CelebrationCoordinator()
 
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.accessibilityReduceTransparency) private var systemReduceTransparency
@@ -56,6 +58,7 @@ public struct AppRootView: View {
             } else if let catalog {
                 let prefs = effectiveA11yPreferences
                 tabShell(catalog: catalog)
+                    .celebrationOverlay(celebration)
                     .overlay(alignment: .top) {
                         // Session-target nudge pins to the top so the kid sees
                         // it without losing the current tab. Either centered
@@ -197,7 +200,7 @@ public struct AppRootView: View {
                 )
             }
             Tab("Codex", systemImage: "book") {
-                MicrobeCodexView(catalog: catalog, gamification: gamification)
+                MicrobeCodexView(catalog: catalog, gamification: gamification, celebration: celebration)
             }
             if disclosure.showsMicrobiome {
                 Tab("Microbiome", systemImage: "leaf") {
@@ -205,7 +208,8 @@ public struct AppRootView: View {
                         simulator: simulator,
                         mentor: mentor,
                         gamification: gamification,
-                        difficulty: difficulty
+                        difficulty: difficulty,
+                        celebration: celebration
                     )
                 }
             }
