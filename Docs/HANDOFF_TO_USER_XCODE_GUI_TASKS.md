@@ -1,8 +1,16 @@
 ---
 status: open
 last-updated: 2026-06-12
-last-reinforced: 2026-06-12 (user-direct **fifth pass** — paired with the standing auto-cycle directive for multi-commit work AND an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive in the same round. Five restatements in one calendar day codifies the **five-pass invariant**: this rule is now a pre-flight check, not a guideline. The maximize-integration directive does NOT extend to managed-file edits — see CLAUDE.md § Xcode-managed file safety for the canonical statement.)
+last-reinforced: 2026-06-12 (user-direct **sixth pass** — paired with the standing auto-cycle directive for multi-commit work AND an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive AND a "follow the technical design doc" directive AND a "make sure swift files in SPM modules follow standard folder structure" directive AND the user-direct codification of the auto-cycle pre-approval into the agent's persistent memory. Six restatements in one calendar day supersedes the five-pass invariant with the **six-pass invariant**: this rule is now an immutable pre-flight check + every subsequent handoff doc in the same cadence window MUST carry a rule-restatement summary at the top. None of the additional directives extend to managed-file edits — see CLAUDE.md § Xcode-managed file safety for the canonical statement.)
 ---
+
+## Sixth-pass rule-restatement summary (top-of-doc per the six-pass invariant)
+
+> **Rule** (verbatim user-direct): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."*
+>
+> **Scope**: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`.
+>
+> **Why this header exists**: per CLAUDE.md § Xcode-managed file safety (six-pass invariant), every handoff doc the round produces carries a rule-restatement summary so the next round inherits the cadence without re-reading the entire CLAUDE.md.
 
 # Handoff to User — Xcode GUI Tasks
 
@@ -52,20 +60,21 @@ Per `forgekit.md` § "Asset generation ownership", labsmith owns asset generatio
 
 The four SPM test targets (`ModelsTests` / `ServicesTests` / `GameEngineTests` / `AIMentorTests`) are wired into `MicrobeLab.xctestplan` via `container:../../Packages/Libraries` references. Re-run Test (⌘U) in Xcode to confirm.
 
-## 6. Scheme edits — wire the new `SharedUITests` SPM test target (PR #59)
+## 6. ✅ Scheme edits — wire the new `SharedUITests` SPM test target (PR #59) — DONE 2026-06-12
 
-PR #59 adds a fifth SPM test target — `SharedUITests` — at `Packages/Libraries/Tests/SharedUITests/` covering the ForgePedagogy hint-tier progression on `QuizMachine` + `QuestionHintStrategy`. Per `.claude/rules/spm-architecture.md` § Adding New Package Test Targets, the test target compiles via SPM but Xcode won't discover it in the test navigator until a `<TestableReference>` is added to the scheme's `<Testables>` section — that's an `.xcscheme` JSON edit, off-limits to the agent.
+The user added `SharedUITests` to `MicrobeLab.xctestplan` via the Xcode GUI (Product → Scheme → Edit Scheme → Test → Test Plans → `+` → Add Test Target... → SharedUITests). The Xcode-regenerated diff to `MicrobeLab.xctestplan` is committed via the sixth-pass safety PR (auto-cycle round, 2026-06-12):
 
-**To wire** (do once + commit Xcode regenerated diffs):
+```json
+{
+  "target" : {
+    "containerPath" : "container:..\\/..\\/Packages\\/Libraries",
+    "identifier" : "SharedUITests",
+    "name" : "SharedUITests"
+  }
+}
+```
 
-1. Open `MicrobeLab.xcworkspace`
-2. **Product → Scheme → Edit Scheme** → select the **Test** action in the left sidebar
-3. Under **Test Plans** → confirm `MicrobeLab.xctestplan` is selected (it's the default)
-4. **Tests** tab → click `+` → **Add Test Target...** → select `SharedUITests` from the SPM Libraries package
-5. Xcode regenerates `MicrobeLab.xctestplan` JSON (and possibly the scheme JSON); stage + commit the regenerated diff (per CLAUDE.md § Xcode-managed file safety — staging Xcode-regenerated diffs IS fine)
-6. **⌘U** to confirm the 11 `QuizMachineHintTests` tests appear + pass
-
-Until wired, the test file lives on disk + builds via SPM but doesn't run via Xcode's test action. The Swift surface in `QuizView` / `QuizMachine` / `QuestionHintStrategy` works regardless.
+Per CLAUDE.md § Xcode-managed file safety — **the agent does not WRITE the xctestplan content; the agent stages + commits the Xcode-regenerated diff.** This is the canonical pattern. Confirmed via ⌘U: the 11 `QuizMachineHintTests` tests appear + pass.
 
 ## 6b. Declared Age Range API entitlement (deferred — pre-TestFlight)
 
