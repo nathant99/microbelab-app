@@ -199,7 +199,7 @@ COPPA compliance, parental consent, age gates, and first-time experience polish.
 
 - [ ] **Streak system** — Daily activity with streak freeze (one mercy day per week), warm broken-streak messaging ("The microbiome missed you!")
 - [ ] **DDA engine** — Invisible difficulty adjustment across microbiome puzzles + immune game wave count
-- [x] **Session targeting** — `SessionTargetService` + `SessionTargetMachine` track the 10-15 min target window per ForgeKit's portfolio default; `phase` returns `.focused` / `.inTarget` / `.overTarget` for the gentle-ending nudge surface (UI consumer lands per-tab in follow-up)
+- [x] **Session targeting** — `SessionTargetService` + `SessionTargetMachine` track the 10-15 min target window per ForgeKit's portfolio default; `phase` returns `.focused` / `.inTarget` / `.overTarget`. UI consumer `SessionNudgeOverlay` (AppFeature/Engagement/) surfaces a trauma-safe gentle stretch suggestion at the in-target boundary (once per session) and a softer pause suggestion past the upper bound; refresh cadence via `TimelineView(.periodic(by: 30))` so the service stays pure
 - [ ] **Variable rewards** — ~1 in 5 sessions: rare microbe sighting / hidden codex entry / special Vee reaction
 - [x] **Return loop** — Welcome-back flow for 3+ day lapsed users: `LastActiveStore` UserDefaults-persists last-session timestamp; `AppRootView` surfaces `WelcomeBackOverlay` (warm greeting, trauma-safe copy) when `daysSinceLastActive ≥ 3`. Recap surface deferred to follow-up.
 - [ ] **Retention metrics baseline** — D1 / D7 / D30 (on-device, privacy-first)
