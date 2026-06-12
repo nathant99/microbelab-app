@@ -35,4 +35,40 @@ nonisolated struct QuestionKitServiceTests {
         let kits = service.loadAllPhase1Kits()
         #expect(kits.count == QuestionKitService.phase1KitSlugs.count)
     }
+
+    @Test func loadsKit02MicrobiomeFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "microbiome")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 2)
+        #expect(kit.slug == "microbiome")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
+    @Test func everyPhase1KitNumberMatchesCanonicalOrder() {
+        let service = QuestionKitService()
+        let kits = service.loadAllPhase1Kits()
+        // Canonical: kitNumber == 1-based index in phase1KitSlugs.
+        for (index, kit) in kits.enumerated() {
+            #expect(kit.kitNumber == index + 1, "kit \(kit.slug) kitNumber=\(kit.kitNumber) but expected \(index + 1)")
+        }
+    }
+
+    @Test func questionIDsAreUniqueAcrossPhase1Kits() {
+        let service = QuestionKitService()
+        let kits = service.loadAllPhase1Kits()
+        var seen = Set<UUID>()
+        for kit in kits {
+            for question in kit.questions {
+                #expect(!seen.contains(question.id), "Duplicate question id \(question.id) in kit \(kit.slug)")
+                seen.insert(question.id)
+            }
+        }
+    }
 }

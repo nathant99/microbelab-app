@@ -13,7 +13,8 @@ public nonisolated struct QuestionKitService: Sendable {
     /// Slugs of every kit bundled at app boot. Order is canonical kit order
     /// — used by the UI to drive the kit-progress strip.
     public static let phase1KitSlugs: [String] = [
-        "microbiology-basics"
+        "microbiology-basics",
+        "microbiome"
     ]
 
     public init() {}
