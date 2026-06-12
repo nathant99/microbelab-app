@@ -15,12 +15,17 @@ public struct AppRootView: View {
     @State private var catalog: MicrobeCatalogService?
     @State private var loadError: String?
     @State private var gamification = GamificationService()
+    @State private var onboarding = OnboardingStore()
 
     public init() {}
 
     public var body: some View {
         Group {
-            if let catalog {
+            if !onboarding.hasCompletedOnboarding {
+                MicrobeLabOnboardingFlow {
+                    onboarding.markCompleted()
+                }
+            } else if let catalog {
                 tabShell(catalog: catalog)
             } else if let loadError {
                 catalogLoadFailure(loadError)

@@ -112,6 +112,7 @@ let package = Package(
                 .product(name: "ForgeKnowledgeGraph", package: "forgekit"),
                 .product(name: "ForgePedagogy", package: "forgekit"),
                 .product(name: "ForgeModels", package: "forgekit"),
+                .product(name: "ForgeUI", package: "forgekit"),
             ],
             swiftSettings: defaultSwiftSettings
         ),

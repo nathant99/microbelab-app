@@ -99,8 +99,8 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Onboarding
 
-- [ ] Create 5-step onboarding flow (welcome, first zoom-in, meet first microbe, first observation, first quiz)
-- [ ] Implement aha moment: first microscope zoom reveals a character introducing themselves
+- [x] Create 5-step onboarding flow (welcome, first zoom-in, meet first microbe, first observation, first quiz) — `MicrobeLabOnboardingFlow` wraps `ForgeUI.ForgeOnboardingFlow`; `OnboardingMachine` value-type state + `OnboardingStore` UserDefaults persistence; gated at `AppRootView` before the tab shell
+- [x] Implement aha moment: first microscope zoom reveals a character introducing themselves — onboarding step 3 introduces Lacto verbatim ("one of trillions of tiny lives that help you digest food"); `ExploreView` mentor-bubble cue refreshes on tier snap (the in-app aha continues after onboarding completes)
 - [ ] Implement progressive disclosure (Session 1: microscope + codex only)
 - [ ] Implement parent handoff flow (30s setup)
 - [ ] Implement Apple Declared Age Range API gate (iOS 26+)
