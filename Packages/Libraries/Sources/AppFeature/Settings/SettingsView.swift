@@ -20,6 +20,7 @@ public struct SettingsView: View {
             sensorySection
             contentGateSection
             sessionCapSection
+            CrisisResourceCard()
             footerSection
         }
         .navigationTitle(Text(verbatim: "Settings"))
