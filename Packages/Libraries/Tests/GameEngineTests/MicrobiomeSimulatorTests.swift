@@ -105,4 +105,44 @@ nonisolated struct MicrobiomeSimulatorTests {
         #expect(stateA == stateB, "Same input sequence must produce same output")
         #expect(stateA.tickCount == 100)
     }
+
+    @Test func seededTickIsReproducible() {
+        let microbes = fixtureMicrobes()
+        let simulator = MicrobiomeSimulator(microbes: microbes)
+        let initial = MicrobiomeState(
+            populations: [microbes[0].id: 200, microbes[1].id: 200],
+            feedingMode: .balanced,
+            antibioticState: .none,
+            tickCount: 0,
+            activeSlot: .colon
+        )
+        var rngA = SeededRNG(seed: 99)
+        var rngB = SeededRNG(seed: 99)
+        var stateA = initial
+        var stateB = initial
+        for _ in 0..<100 {
+            stateA = simulator.tick(stateA, using: &rngA)
+            stateB = simulator.tick(stateB, using: &rngB)
+        }
+        #expect(stateA == stateB, "Same seed + same input must produce same trajectory")
+    }
+
+    @Test func seededTickRespectsAntibioticShock() {
+        // Jitter only modulates the natural-growth branch; antibiotic
+        // collapse + recovery curves must stay deterministic so the
+        // mechanic reads clearly.
+        let microbes = fixtureMicrobes()
+        let simulator = MicrobiomeSimulator(microbes: microbes)
+        let initial = MicrobiomeState(
+            populations: [microbes[0].id: 1_000],
+            feedingMode: .balanced,
+            antibioticState: .active(daysLeft: 3),
+            tickCount: 0,
+            activeSlot: .colon
+        )
+        var rng = SeededRNG(seed: 1)
+        let next = simulator.tick(initial, using: &rng)
+        let lacto = next.populations[microbes[0].id] ?? 0
+        #expect(lacto == 400, "Antibiotic-collapse path bypasses jitter")
+    }
 }

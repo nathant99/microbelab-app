@@ -42,7 +42,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [x] Implement `MicrobiomeSimulator` per-tick update logic
 - [x] Implement `GutSlot` ecology zones (oralCavity / stomach / smallIntestine / largeIntestine / colon + skin + soil)
 - [x] Implement `SimulationMachine` view-local state machine
-- [ ] Implement deterministic seedable RNG for reproducible test states (next PR — simulator is currently deterministic-by-value without RNG)
+- [x] Implement deterministic seedable RNG for reproducible test states (`SeededRNG` splitmix64; `tick(_:using:)` overload threads jitter)
 
 ### Immune Response Engine (innate path)
 

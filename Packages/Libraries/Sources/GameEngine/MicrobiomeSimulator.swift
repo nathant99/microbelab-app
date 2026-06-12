@@ -27,7 +27,30 @@ public nonisolated struct MicrobiomeSimulator: Sendable {
     /// Advance one tick. Antibiotic shock collapses populations across the
     /// board; recovery applies a slow restoration curve. Outside those states,
     /// per-microbe growth follows the feeding-mode modifier.
+    ///
+    /// The deterministic (no-RNG) overload is the value-equal canonical tick
+    /// used by tests that assert reproducibility from input state alone. The
+    /// `using:` overload below threads a `SeededRNG` for visible per-tick
+    /// jitter without breaking determinism — same seed + same input always
+    /// produce the same trajectory.
     public func tick(_ state: MicrobiomeState) -> MicrobiomeState {
+        var rng = SeededRNG(seed: 0)
+        return tick(state, using: &rng, applyJitter: false)
+    }
+
+    /// Advance one tick with jitter drawn from `rng`. Reproducible across runs
+    /// when the caller seeds `rng` the same way. The base curve is identical
+    /// to the no-RNG overload; jitter ±5% modulates per-microbe growth so
+    /// long-running visualisations don't stairstep.
+    public func tick(_ state: MicrobiomeState, using rng: inout SeededRNG) -> MicrobiomeState {
+        tick(state, using: &rng, applyJitter: true)
+    }
+
+    private func tick(
+        _ state: MicrobiomeState,
+        using rng: inout SeededRNG,
+        applyJitter: Bool
+    ) -> MicrobiomeState {
         var populations = state.populations
 
         for microbe in microbes {
@@ -36,11 +59,14 @@ public nonisolated struct MicrobiomeSimulator: Sendable {
 
             switch state.antibioticState {
             case .none:
-                let modifier = microbe.growthRate.modifier(for: state.feedingMode)
+                let baseModifier = microbe.growthRate.modifier(for: state.feedingMode)
+                let modifier = applyJitter
+                    ? baseModifier + rng.nextJitter(magnitude: 0.05)
+                    : baseModifier
                 let delta = Int((Double(current) * modifier).rounded())
                 // Seed-from-zero: a microbe that's never been spotted enters
                 // at a small base count when its feeding mode is favorable.
-                if current == 0, modifier > 0.2 {
+                if current == 0, baseModifier > 0.2 {
                     next = 8
                 } else {
                     next = current + delta
