@@ -16,14 +16,49 @@ public struct ExploreView: View {
 
     private let catalog: MicrobeCatalogService
     private let mentor: VeeMentor
+    private let sessionCount: Int
 
-    public init(catalog: MicrobeCatalogService, mentor: VeeMentor) {
+    public init(
+        catalog: MicrobeCatalogService,
+        mentor: VeeMentor,
+        sessionCount: Int = 0
+    ) {
         self.catalog = catalog
         self.mentor = mentor
+        self.sessionCount = sessionCount
         // The scene's size is reset by `.resizeFill` once SpriteView lays out.
         let initialScene = MicroscopeScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initialScene)
-        _mentorMessage = State(initialValue: "Pinch in to zoom. There are tiny lives waiting to be seen.")
+
+        // Variable-reward cue replaces the default cold-open mentor copy on
+        // ~1 in 5 sessions per the engagement-foundation cadence.
+        let slugs = catalog.microbes.map(\.slug).sorted()
+        if let reward = VariableRewardSelector.select(
+            forSessionCount: sessionCount,
+            microbeSlugs: slugs
+        ) {
+            _mentorMessage = State(initialValue: Self.copy(for: reward, catalog: catalog))
+        } else {
+            _mentorMessage = State(initialValue: "Pinch in to zoom. There are tiny lives waiting to be seen.")
+        }
+    }
+
+    /// Translate a `VariableReward` into the mentor-bubble copy line. Lives
+    /// here (not in Services) so the copy can quote the canonical display
+    /// name from the catalog instead of a slug.
+    nonisolated static func copy(
+        for reward: VariableReward,
+        catalog: MicrobeCatalogService
+    ) -> String {
+        switch reward {
+        case .rareMicrobeSighting(let slug):
+            let displayName = catalog.microbes
+                .first(where: { $0.slug == slug })?
+                .displayName ?? "Someone"
+            return "\(displayName) is hanging around today. See if you can spot them."
+        case .specialMentorMoment:
+            return "Quiet day under the lens. Take your time — I'm right here."
+        }
     }
 
     public var body: some View {
