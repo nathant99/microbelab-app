@@ -56,6 +56,22 @@ The four SPM test targets (`ModelsTests` / `ServicesTests` / `GameEngineTests` /
 
 The MicrobeLab scheme that Xcode auto-generated is sufficient. No agent edits needed; no GUI edits expected.
 
+## 6b. Declared Age Range API entitlement (deferred — pre-TestFlight)
+
+Per `.claude/rules/age-assurance.md` § Declared Age Range API (iOS 26+), Apple's privacy-preserving age-range API requires the `com.apple.developer.declared-age-range` entitlement. The agent cannot write `.entitlements` files from disk (per § Unsafe — DO NOT WRITE).
+
+`Services/AgeAssuranceService.swift` ships the scaffold today: the entitlement probe (`AgeAssuranceCapability.isDeclaredAgeRangeAvailable`) reads `Bundle.main`'s `Entitlements` dict and returns `false` until provisioning lands. `SettingsView` → About surfaces a passive readout ("Math gate — Apple gate pending entitlement" → flips to "Declared Age Range API ready" once you add it). ForgeKit's `ForgeSystemAgeGate` already implements the system call + math-gate fallback — once the entitlement is in place, a follow-up PR wires it into `ParentHandoffFlow`.
+
+**To provision** (do once + commit Xcode regenerated diffs):
+
+1. Open MicrobeLab.xcworkspace
+2. Select the `MicrobeLab` app target → **Signing & Capabilities**
+3. Click `+ Capability` → add **Declared Age Range** (iOS 26.2+)
+4. Xcode regenerates `MicrobeLab/MicrobeLab.entitlements` with the new key; commit the file (staging Xcode-regenerated diffs IS fine per CLAUDE.md § Xcode-managed file safety — only authoring the file content from disk is prohibited)
+5. **Critical pre-flight per `.claude/rules/age-assurance.md`** — receiving "Under 13" creates **COPPA actual knowledge**. Do NOT actually invoke `await requestAgeRange(...)` until annual re-consent + retention + COPPA records are in place. The current `AgeAssuranceService.requestSystemVerification(...)` is a stub that no-ops; replace the stub with the live call only when the consent surface ships.
+
+Until provisioned, the existing math-based `ParentalGateView` is the parent verification path. The scaffold + passive readout let future sessions see the capability state at a glance.
+
 ## 7. Verifying SPM-only changes without Xcode reload
 
 Per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md's Xcode-managed-files warning, the agent verifies SPM changes via terminal `swift build` (no Xcode reload). Local commands:

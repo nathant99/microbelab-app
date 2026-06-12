@@ -134,10 +134,36 @@ public struct SettingsView: View {
                 Label("Privacy policy", systemImage: "hand.raised")
             }
             .accessibilityHint("Opens the plain-language privacy policy")
+            ageAssuranceCapabilityRow
             Label("Acknowledgements", systemImage: "doc.text")
                 .foregroundStyle(.secondary)
                 .accessibilityHint("Placeholder — wired in a follow-up PR")
         }
+    }
+
+    /// Passive readout of the Declared Age Range entitlement state. Driven
+    /// off `AgeAssuranceCapability.isDeclaredAgeRangeAvailable`. Per
+    /// `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § Declared Age Range API
+    /// entitlement, the entitlement is added via the target's Signing &
+    /// Capabilities tab; the agent cannot write entitlements files from
+    /// disk. The row is informational only — once provisioned, a follow-up
+    /// PR wires `ForgeAccessibility.ForgeSystemAgeGate` into the parent
+    /// handoff flow.
+    @ViewBuilder
+    private var ageAssuranceCapabilityRow: some View {
+        let isCapable = AgeAssuranceCapability.isDeclaredAgeRangeAvailable
+        Label {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Age verification")
+                Text(verbatim: isCapable ? "Declared Age Range API ready" : "Math gate — Apple gate pending entitlement")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        } icon: {
+            Image(systemName: isCapable ? "checkmark.shield" : "person.crop.circle.badge.questionmark")
+                .foregroundStyle(isCapable ? .green : .secondary)
+        }
+        .accessibilityHint("Shows whether Apple's Declared Age Range API is wired for this build")
     }
 
     // MARK: - Bindings
