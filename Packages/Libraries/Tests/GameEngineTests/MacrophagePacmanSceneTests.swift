@@ -76,7 +76,17 @@ struct MacrophagePacmanSceneTests {
         let rhs = MacrophagePacmanScene(size: CGSize(width: 400, height: 600), seed: 42)
         lhs.spawnCurrentWave()
         rhs.spawnCurrentWave()
-        #expect(lhs.pathogens == rhs.pathogens)
+        // Compare deterministic state (kind/position/velocity) rather than
+        // PathogenState.id — UUID() is not seeded by SeededRNG so identity
+        // is intentionally non-deterministic across scenes.
+        let lhsProjection = lhs.pathogens.map { ($0.kind, $0.position, $0.velocity) }
+        let rhsProjection = rhs.pathogens.map { ($0.kind, $0.position, $0.velocity) }
+        #expect(lhsProjection.count == rhsProjection.count)
+        for (lp, rp) in zip(lhsProjection, rhsProjection) {
+            #expect(lp.0 == rp.0)
+            #expect(lp.1 == rp.1)
+            #expect(lp.2 == rp.2)
+        }
     }
 
     @Test func advancePathogensBouncesOffBounds() {

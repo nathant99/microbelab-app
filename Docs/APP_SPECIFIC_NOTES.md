@@ -47,7 +47,7 @@ Microbiology adventure for tweens with microscope-zoom-as-core-loop, microbiome 
 - **Testing**: Swift Testing framework (`@Test`, `#expect`)
 - **No Combine**: Async/await only
 - **Linting**: SwiftLint SUSPENDED (crashes on Xcode 26). Config retained in `.swiftlint.yml`; rules enforced manually
-- **Architecture**: App shell + local Swift Package (all code in `Libraries/Package.swift`)
+- **Architecture**: App shell + local Swift Package (all code in `Packages/Libraries/Package.swift`)
 - **Concurrency**: MainActor default, approachable concurrency enabled
 
 ## Commands
