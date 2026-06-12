@@ -66,19 +66,27 @@ public final class MicroscopeScene: SKScene {
     /// Apply a pinch delta to the machine; consumes the resulting transition
     /// for the LOD-swap animation. Pure-logic forward to `ZoomMachine`; the
     /// SwiftUI host reads `machine.currentTier` to drive HUD updates.
+    ///
+    /// Wrapped in `PerfSignpost.zoomTransition` so Instruments can verify the
+    /// FEATURE_PLAN.md exit-criteria target of < 16ms per tier transition.
+    /// Signposts are free in release builds.
     public func handlePinch(delta: Double) {
-        machine.applyPinch(delta: delta)
-        if machine.pendingTransition != nil {
-            // LOD swap hook — real sprite swap lands in a follow-up PR.
-            machine.consumeTransition()
+        PerfSignpost.zoomTransition.interval("pinch") {
+            machine.applyPinch(delta: delta)
+            if machine.pendingTransition != nil {
+                // LOD swap hook — real sprite swap lands in a follow-up PR.
+                machine.consumeTransition()
+            }
         }
     }
 
     /// Direct-tier snap (HUD tier-badge tap).
     public func snapToTier(_ tier: ZoomTier) {
-        machine.snap(to: tier)
-        if machine.pendingTransition != nil {
-            machine.consumeTransition()
+        PerfSignpost.zoomTransition.interval("snap") {
+            machine.snap(to: tier)
+            if machine.pendingTransition != nil {
+                machine.consumeTransition()
+            }
         }
     }
 

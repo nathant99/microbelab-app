@@ -55,8 +55,14 @@ public final class MicrobiomePuzzleScene: SKScene {
     /// Advance one simulator tick. Drives population deltas + state machine
     /// history. Real visual update (microbe-population sprite scaling, etc.)
     /// lands with the visual PR.
+    ///
+    /// Wrapped in `PerfSignpost.simulatorTick` so Instruments can verify the
+    /// FEATURE_PLAN.md exit-criteria target of < 8ms per tick. Signposts are
+    /// free in release builds.
     public func advanceOneTick() {
-        machine.advance(using: simulator)
+        PerfSignpost.simulatorTick.interval("advance") {
+            machine.advance(using: simulator)
+        }
     }
 
     public func setFeedingMode(_ mode: FeedingMode) {

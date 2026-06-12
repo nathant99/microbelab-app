@@ -167,23 +167,28 @@ public final class MacrophagePacmanScene: SKScene {
     /// Advance pathogen positions by `delta` seconds, bouncing off the scene
     /// bounds. Pure-value mutation — exposes a deterministic surface tests
     /// can drive without GPU.
+    ///
+    /// Wrapped in `PerfSignpost.immuneWave` so Instruments can verify the
+    /// per-tick budget; signposts are free in release builds.
     public func advancePathogens(by delta: TimeInterval) {
         guard !isComplete, delta > 0 else { return }
-        let width = Double(size.width)
-        let height = Double(size.height)
-        for index in pathogens.indices {
-            var p = pathogens[index]
-            p.position.x += p.velocity.x * delta
-            p.position.y += p.velocity.y * delta
-            if p.position.x < 0 || p.position.x > width {
-                p.velocity.x = -p.velocity.x
-                p.position.x = max(0, min(width, p.position.x))
+        PerfSignpost.immuneWave.interval("advancePathogens") {
+            let width = Double(size.width)
+            let height = Double(size.height)
+            for index in pathogens.indices {
+                var p = pathogens[index]
+                p.position.x += p.velocity.x * delta
+                p.position.y += p.velocity.y * delta
+                if p.position.x < 0 || p.position.x > width {
+                    p.velocity.x = -p.velocity.x
+                    p.position.x = max(0, min(width, p.position.x))
+                }
+                if p.position.y < 0 || p.position.y > height {
+                    p.velocity.y = -p.velocity.y
+                    p.position.y = max(0, min(height, p.position.y))
+                }
+                pathogens[index] = p
             }
-            if p.position.y < 0 || p.position.y > height {
-                p.velocity.y = -p.velocity.y
-                p.position.y = max(0, min(height, p.position.y))
-            }
-            pathogens[index] = p
         }
     }
 
