@@ -227,7 +227,7 @@ Audio/visual/haptic polish, parent-facing dashboards, and emotional design. Runs
 - [ ] **Progress dashboard** — Parent-facing standards-mapped view (NGSS MS-LS1-1 / MS-LS1-3 etc.)
 - [ ] **Parental controls** — Daily session time limits (default 30 min) + content-comfort filters (e.g., disease-story arc opt-in)
 - [ ] **Weekly summary** — Opt-in progress notification (strengths, growth areas, recommendations)
-- [ ] **Session closer** — End-of-session summary with achievements + preview of next session content
+- [x] **Session closer** — End-of-session summary surface. `SessionSummary` (Services/Engagement/) is a pure nonisolated value type that captures a frozen snapshot of session-relevant stats (currentLevel / totalXP / currentStreak / microbesDiscovered / achievementsEarned) at the moment the kid taps "Wrap up today" in the Progress tab; future-session activity doesn't retroactively change a summary the kid has seen. `SessionSummarySheet` (AppFeature/Engagement/) renders the snapshot as a `presentationDetents([.medium])` sheet with warm headline ("Quiet today — that's allowed" / "Solid session" / "You explored a lot today" branches), stats grid, and gentle next-session preview ("pick up where we left off" / "try a different feeding mode"). Trauma-informed: the sheet NEVER frames the streak as a threat or absence as failure. Wired into `ProgressTabView` via a toolbar "Wrap up today" button. 6 unit tests pin the trauma-safe copy invariants (zero-streak preview never mentions the broken streak; quiet-session headline always includes "allowed"). Auto-surfacing on app background deferred to a follow-up.
 
 ---
 
