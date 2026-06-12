@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4002-A000-000000000002",
+  "slug": "microbiome",
+  "title": "Your Microbiome",
+  "summary": "How feeding choices shape the trillions of microbes living in your gut.",
+  "kitNumber": 2,
+  "questions": [
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000001",
+      "prompt": "Bifidobacterium and many gut helpers grow best when you eat…",
+      "choices": [
+        "Plenty of fiber from fruits, vegetables, and whole grains",
+        "Only sugar",
+        "Only fat",
+        "Nothing at all for several days"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fiber feeds beneficial gut microbes — they ferment it into short-chain fatty acids the body uses for energy.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000002",
+      "prompt": "Akkermansia muciniphila lives along the gut wall and usually helps by…",
+      "choices": [
+        "Feeding on the mucus layer and helping keep the gut lining strong",
+        "Eating other microbes",
+        "Making the gut wall thinner",
+        "Producing oxygen"
+      ],
+      "correctIndex": 0,
+      "explanation": "Akkermansia feeds on the gut's mucus layer — its presence is often linked to a stronger intestinal lining.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000003",
+      "prompt": "An antibiotic can disturb the microbiome because it…",
+      "choices": [
+        "Reduces many bacteria at once, including helpful ones",
+        "Only affects viruses",
+        "Adds extra microbes to the gut",
+        "Has no effect on bacteria"
+      ],
+      "correctIndex": 0,
+      "explanation": "Antibiotics target bacteria broadly, so they can reduce helpful gut microbes alongside the harmful ones — which is why recovery diets often emphasize fiber.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000004",
+      "prompt": "Most of the microbes in a healthy human body live in the…",
+      "choices": [
+        "Large intestine and colon",
+        "Eyes",
+        "Bone marrow",
+        "Heart"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trillions of microbes live in the large intestine and colon — it's the densest microbial neighborhood in the body.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000005",
+      "prompt": "After an antibiotic course, gut populations usually recover faster when meals include…",
+      "choices": [
+        "Diverse plants and fiber-rich foods",
+        "Only one type of food",
+        "No food at all",
+        "Only sugary drinks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Diverse plants feed diverse microbes — that's the most reliable way to rebuild a thriving microbiome after a disturbance.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA002-0000-4002-8000-000000000006",
+      "prompt": "Lactobacillus species in fermented foods like yogurt and kefir are part of which kingdom?",
+      "choices": [
+        "Bacteria",
+        "Fungi",
+        "Protist",
+        "Virus"
+      ],
+      "correctIndex": 0,
+      "explanation": "Lactobacillus species are bacteria — they ferment lactose into lactic acid, which gives yogurt its tang.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    }
+  ]
+}
