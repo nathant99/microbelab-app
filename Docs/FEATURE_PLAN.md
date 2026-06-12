@@ -84,11 +84,11 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Gamification
 
-- [ ] Integrate ForgeGamification `XPEngine` for leveling
-- [ ] Integrate `StreakManager` for daily engagement
-- [ ] Integrate `AchievementEngine` with first 10 Phase-1 achievements
+- [x] Integrate ForgeGamification `XPEngine` for leveling (wrapped in `GamificationService` MainActor `@Observable`)
+- [x] Integrate `StreakManager` for daily engagement (`recordSession()` async surface; `currentStreak` / `longestStreak` mirrored to the `@Observable`)
+- [x] Integrate `AchievementEngine` with first 10 Phase-1 achievements (`MicrobeLabAchievements.phase1` set defined; `evaluateAchievements(with:)` grants + auto-XP-awards)
 - [ ] Wire question kits 01-04 via `Bundle.module` (microbiology basics / microbiome / immune defense / beneficial microbes) — kit 01 shipped; 02-04 follow-up PRs
-- [ ] Implement XP awards for: first microbe discovered, microbiome stable for 5 ticks, immune wave cleared, etc.
+- [ ] Implement XP awards for: first microbe discovered, microbiome stable for 5 ticks, immune wave cleared, etc. — quiz-completion XP + first-quiz / quiz-perfect achievements wired; remaining hooks follow
 
 ### Adventure Mode
 

@@ -50,6 +50,8 @@ let package = Package(
             dependencies: [
                 "Models",
                 .product(name: "ForgePersistence", package: "forgekit"),
+                .product(name: "ForgeGamification", package: "forgekit"),
+                .product(name: "ForgeModels", package: "forgekit"),
             ],
             resources: [
                 .process("Resources"),
@@ -109,6 +111,7 @@ let package = Package(
                 .product(name: "ForgeAvatar", package: "forgekit"),
                 .product(name: "ForgeKnowledgeGraph", package: "forgekit"),
                 .product(name: "ForgePedagogy", package: "forgekit"),
+                .product(name: "ForgeModels", package: "forgekit"),
             ],
             swiftSettings: defaultSwiftSettings
         ),

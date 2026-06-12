@@ -1,17 +1,24 @@
 import SwiftUI
 import Models
+import Services
+import ForgeModels
 
-/// Progress tab. XP / streak / discovered-microbe count. Surfaces the same
-/// data as ForgeKit's `ForgeXPBar` + `ForgeStreakBadge` but currently uses a
-/// minimal native shape so the tab compiles standalone — ForgeKit wiring
-/// lands when AvatarStudio integration arrives.
+/// Progress tab. XP / streak / discovered-microbe count + Phase 1
+/// achievement gallery. Reads directly from the injected
+/// `GamificationService` so XP awards land in the UI immediately.
 public struct ProgressTabView: View {
     public let progress: PlayerProgressData
     public let totalMicrobes: Int
+    @Bindable public var gamification: GamificationService
 
-    public init(progress: PlayerProgressData, totalMicrobes: Int) {
+    public init(
+        progress: PlayerProgressData,
+        totalMicrobes: Int,
+        gamification: GamificationService
+    ) {
         self.progress = progress
         self.totalMicrobes = totalMicrobes
+        self.gamification = gamification
     }
 
     public var body: some View {
@@ -20,6 +27,7 @@ public struct ProgressTabView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     statsCard
                     codexProgressCard
+                    achievementsCard
                 }
                 .padding()
             }
@@ -32,10 +40,13 @@ public struct ProgressTabView: View {
             Text(verbatim: progress.displayName.isEmpty ? "Explorer" : progress.displayName)
                 .font(.title2.bold())
             HStack(spacing: 24) {
-                stat(label: "XP", value: "\(progress.totalXP)")
-                stat(label: "Streak", value: "\(progress.currentStreak)d")
-                stat(label: "Longest", value: "\(progress.longestStreak)d")
+                stat(label: "Level", value: "\(gamification.currentLevel)")
+                stat(label: "XP", value: "\(gamification.totalXP)")
+                stat(label: "Streak", value: "\(gamification.currentStreak)d")
             }
+            SwiftUI.ProgressView(value: gamification.xpProgress)
+                .tint(.accentColor)
+                .accessibilityLabel("Level progress")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -57,6 +68,48 @@ public struct ProgressTabView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .background(Color.secondary.opacity(0.12), in: .rect(cornerRadius: 16))
+    }
+
+    private var achievementsCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(verbatim: "Achievements")
+                    .font(.headline)
+                Spacer()
+                Text(verbatim: "\(gamification.earnedAchievementSlugs.count) / \(MicrobeLabAchievements.phase1.count)")
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            }
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 110), spacing: 10)], spacing: 10) {
+                ForEach(MicrobeLabAchievements.phase1, id: \.id) { definition in
+                    achievementChip(definition)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color.secondary.opacity(0.12), in: .rect(cornerRadius: 16))
+    }
+
+    private func achievementChip(_ definition: ForgeModels.AchievementDefinition) -> some View {
+        let isEarned = gamification.earnedAchievementSlugs.contains(definition.id)
+        return VStack(spacing: 4) {
+            Image(systemName: definition.iconAssetName)
+                .imageScale(.large)
+                .foregroundStyle(isEarned ? .yellow : .secondary)
+            Text(verbatim: definition.title)
+                .font(.caption2.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+            Text(verbatim: "\(definition.xpValue) XP")
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(.tertiary)
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, minHeight: 80)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .opacity(isEarned ? 1.0 : 0.55)
+        .accessibilityLabel(isEarned ? "\(definition.title) earned" : "\(definition.title) locked")
     }
 
     private var codexFraction: Double {
