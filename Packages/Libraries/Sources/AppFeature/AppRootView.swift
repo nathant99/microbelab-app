@@ -21,6 +21,7 @@ public struct AppRootView: View {
     @State private var settingsStore = AppSettingsStore()
     @State private var lastActive = LastActiveStore()
     @State private var sessionCount = SessionCountStore()
+    @State private var retention = RetentionMetricsStore()
     @State private var sessionTarget = SessionTargetService()
     @State private var welcomeBackDaysAway: Int?
     @State private var streakRescue: StreakRescue = .none
@@ -96,6 +97,10 @@ public struct AppRootView: View {
             // sessions keeps progressive disclosure honest.
             if onboarding.hasCompletedOnboarding {
                 sessionCount.incrementForSessionStart()
+                // Retention runs alongside session-count for D1/D7/D30
+                // cohort signal — on-device only per Docs/FEATURE_PLAN.md
+                // § Engagement Foundation.
+                retention.recordSession()
                 // Record the session AFTER counter bump so the StreakManager
                 // sees the actual play session, not a launch into onboarding.
                 await gamification.recordSession()
