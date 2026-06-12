@@ -13,6 +13,7 @@ public struct ExploreView: View {
     @State private var scene: MicroscopeScene
     @State private var currentTier: ZoomTier = .unaided
     @State private var mentorMessage: String
+    @State private var easterEgg = EasterEggDetector()
 
     private let catalog: MicrobeCatalogService
     private let mentor: VeeMentor
@@ -67,9 +68,20 @@ public struct ExploreView: View {
             .safeAreaInset(edge: .top, spacing: 8) {
                 MicroscopeHUD(currentTier: currentTier) { tier in
                     scene.snapToTier(tier)
-                    currentTier = scene.machine.currentTier
-                    refreshMentorCue(for: scene.machine.currentTier)
-                    DebugLog.state("ExploreView snap to \(tier)")
+                    let resolved = scene.machine.currentTier
+                    currentTier = resolved
+                    // Record the visit BEFORE deciding what cue to show — the
+                    // detector is the only surface that knows whether THIS
+                    // tap was the all-tiers-reached beat.
+                    let unlocked = easterEgg.record(visit: resolved)
+                    if unlocked {
+                        surfaceCuriousExplorerCue()
+                        easterEgg.acknowledgeAllTiersReached()
+                        DebugLog.state("ExploreView easter egg unlocked at tier=\(resolved)")
+                    } else {
+                        refreshMentorCue(for: resolved)
+                    }
+                    DebugLog.state("ExploreView snap to \(tier); visitedTiers=\(easterEgg.visitedTiers.count)")
                 }
                 .padding(.horizontal)
                 .padding(.top, 4)
@@ -89,5 +101,21 @@ public struct ExploreView: View {
     private func refreshMentorCue(for tier: ZoomTier) {
         let cue = mentor.fallbackZoomCue(for: tier)
         mentorMessage = "\(cue.reaction) \(cue.lookForHint)"
+    }
+
+    /// Surface the curious-explorer easter-egg cue. Quotes a canonical
+    /// microbe display name + frames the moment as warm recognition (not
+    /// loss-aversion). The microbe pick is deterministic per session so
+    /// the slug never flickers between re-renders.
+    private func surfaceCuriousExplorerCue() {
+        let slugs = catalog.microbes.map(\.slug).sorted()
+        let pickedSlug = EasterEggDetector.curiousExplorerMicrobe(
+            forSessionCount: sessionCount,
+            microbeSlugs: slugs
+        )
+        let displayName = pickedSlug
+            .flatMap { slug in catalog.microbes.first(where: { $0.slug == slug })?.displayName }
+            ?? "a curious neighbor"
+        mentorMessage = "You walked the whole range today. \(displayName) usually only shows up for the careful ones — thanks for looking."
     }
 }

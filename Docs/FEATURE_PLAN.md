@@ -219,7 +219,7 @@ Audio/visual/haptic polish, parent-facing dashboards, and emotional design. Runs
 - [ ] **Micro-delight coverage** — All 8 types: celebration, surprise, personality, mastery, social, sensory, agency, discovery
 - [ ] **Character personality** — Vee with callbacks to player's discoveries; cast member quirks per DN voice register
 - [ ] **Mastery moments** — Distinct screen ripple + chord when child internalizes microbiome ecology
-- [ ] **Easter eggs** — Hidden rare-microbe encounters rewarding curious zoom exploration
+- [x] **Easter eggs** — Hidden rare-microbe encounters rewarding curious zoom exploration. `EasterEggDetector` (Services/Engagement/) is a pure nonisolated value type that tracks per-session zoom-tier visit history; `record(visit:)` returns `true` on the snap that completes all four tiers. `ExploreView` owns the detector as `@State`, surfaces a one-shot mentor cue ("You walked the whole range today. \(microbeName) usually only shows up for the careful ones — thanks for looking.") when the kid hits all 4 tiers, then acknowledges so it doesn't re-trigger mid-session. Microbe pick is deterministic per session via a splitmix64 mixer with a salt distinct from `VariableRewardSelector.appSalt` so the two engagement surfaces decorrelate. Trauma-informed posture: warm recognition, never loss-aversion ("you missed it"); the easter egg can re-trigger across sessions but never within one.
 - [ ] **Share-worthy moments** — Codex completion certificates; immune-game high-score trophies
 
 ### Parent Integration
