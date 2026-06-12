@@ -10,6 +10,7 @@ public struct ProgressTabView: View {
     public let progress: PlayerProgressData
     public let totalMicrobes: Int
     @Bindable public var gamification: GamificationService
+    @State private var showingSummary = false
 
     public init(
         progress: PlayerProgressData,
@@ -32,7 +33,37 @@ public struct ProgressTabView: View {
                 .padding()
             }
             .navigationTitle(Text(verbatim: "Progress"))
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingSummary = true
+                    } label: {
+                        Label("Wrap up today", systemImage: "sun.horizon")
+                    }
+                    .accessibilityHint("Open today's session summary")
+                }
+            }
+            .sheet(isPresented: $showingSummary) {
+                SessionSummarySheet(
+                    summary: currentSummary,
+                    onDismiss: { showingSummary = false }
+                )
+                .presentationDetents([.medium])
+            }
         }
+    }
+
+    /// Capture a frozen `SessionSummary` snapshot at the moment the sheet
+    /// presents. The view never re-derives mid-display so the numbers
+    /// don't shift while the kid is reading them.
+    private var currentSummary: SessionSummary {
+        SessionSummary(
+            currentLevel: gamification.currentLevel,
+            totalXP: gamification.totalXP,
+            currentStreak: gamification.currentStreak,
+            microbesDiscovered: progress.discoveredMicrobeIDs.count,
+            achievementsEarned: gamification.earnedAchievementSlugs.count
+        )
     }
 
     private var statsCard: some View {
