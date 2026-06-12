@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import ForgePedagogy
 
 /// View-local state machine for the QuizView per `.claude/rules/state-machines.md`.
 ///
@@ -17,6 +18,17 @@ public nonisolated struct QuizMachine: Sendable, Equatable {
     public var comboCount: Int
     public var maxCombo: Int
 
+    // MARK: - Scaffolding (ForgePedagogy.HintTier)
+    /// Highest hint tier requested for the CURRENT question. Cleared on
+    /// `advance()` so each question starts hint-free. `nil` means the kid
+    /// hasn't asked for a hint yet on this question.
+    public var requestedHintTier: HintTier?
+    /// Running count of questions where the kid requested ANY hint tier.
+    /// Surfaces a soft summary on the completion panel ("you asked for help
+    /// on N — that's how learning works") and is available to gamification
+    /// for follow-up curves. Trauma-informed: never framed as a penalty.
+    public var hintsUsedCount: Int
+
     public let totalQuestions: Int
 
     public init(totalQuestions: Int) {
@@ -28,10 +40,41 @@ public nonisolated struct QuizMachine: Sendable, Equatable {
         self.isComplete = totalQuestions == 0
         self.comboCount = 0
         self.maxCombo = 0
+        self.requestedHintTier = nil
+        self.hintsUsedCount = 0
     }
 
     public mutating func reset() {
         self = QuizMachine(totalQuestions: totalQuestions)
+    }
+
+    // MARK: - Hint progression
+
+    /// The next hint tier the kid can request. Returns `nil` when the kid
+    /// has already asked for `.specific` (no further escalation available)
+    /// OR the question has been revealed.
+    public var nextRequestableHintTier: HintTier? {
+        guard !revealed, !isComplete else { return nil }
+        switch requestedHintTier {
+        case nil: return .vague
+        case .vague: return .medium
+        case .medium: return .specific
+        case .specific: return nil
+        }
+    }
+
+    /// Advances `requestedHintTier` to the next tier. Bumps `hintsUsedCount`
+    /// the first time a hint is requested for the current question (subsequent
+    /// escalations on the same question don't re-bump). Returns the newly
+    /// requested tier, or `nil` if no further escalation is possible.
+    @discardableResult
+    public mutating func requestNextHint() -> HintTier? {
+        guard let next = nextRequestableHintTier else { return nil }
+        if requestedHintTier == nil {
+            hintsUsedCount += 1
+        }
+        requestedHintTier = next
+        return next
     }
 
     /// Returns the current question index clamped to the bundle bounds.
@@ -76,5 +119,8 @@ public nonisolated struct QuizMachine: Sendable, Equatable {
         }
         selectedChoiceIndex = nil
         revealed = false
+        // Clear hint-tier state for the new question. Per-question hint
+        // counter is preserved in `hintsUsedCount` for the completion panel.
+        requestedHintTier = nil
     }
 }
