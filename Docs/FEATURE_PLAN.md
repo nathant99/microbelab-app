@@ -18,22 +18,21 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 ### Data Layer
 
 - [x] Define value types: `MicrobeCharacter`, `MicrobiomeState`, `ZoomTier`, `GutSlot`, `FeedingMode`, `AntibioticState`, `GrowthRate`
-- [x] Define SwiftData models: `PersistentMicrobeSession`, `PlayerProgress`
-- [ ] Define remaining SwiftData models: `EncounterLog`, `JournalEntry` (next PR)
-- [ ] Create `VersionedSchema` (V1) with all models (next PR — start early)
-- [ ] Create `SchemaMigrationPlan` (V1 only — start early)
+- [x] Define SwiftData models: `PersistentMicrobeSession`, `PlayerProgress`, `EncounterLog`, `JournalEntry`
+- [x] Create `VersionedSchema` (V1) with all models — `SchemaV1`
+- [x] Create `SchemaMigrationPlan` (V1 only — start early) — `MicrobeLabMigrationPlan`
 - [x] Bundle 12 microbe character catalog as JSON in `Services/Resources/microbes.json`
 - [x] Create `MicrobeCatalogService` to load + query microbe data
-- [ ] Create remaining value-type cache structs for all `@Model` types (next PR)
+- [x] Create value-type cache structs (`PlayerProgressData`, `EncounterLogData`, `JournalEntryData`, `MicrobeSessionData`)
 
 ### Microscope Engine
 
 - [x] Implement `ZoomTier` enum + transition rules (1× → 100× → 1000× → 10000×)
-- [ ] Implement `MicroscopeScene` (SpriteKit) with SK camera + LOD sprite atlas
-- [ ] Implement pinch-to-zoom gesture handler + tier boundary snap
-- [ ] Implement LOD sprite swap at tier boundaries (per `.claude/rules/spritekit.md` lazy visual setup)
+- [x] Implement `MicroscopeScene` skeleton (SpriteKit) with lazy visual setup + `.resizeFill` scaleMode
+- [x] Implement pinch-to-zoom gesture handler + tier boundary snap (via `ZoomMachine` + `MicroscopeScene.handlePinch(delta:)`)
+- [ ] Implement LOD sprite atlas + per-tier sprite swap (asset-blocked on microbe portrait pack)
 - [x] Implement `ZoomMachine` view-local state machine
-- [ ] Implement microscope HUD overlay (tier badge + zoom level)
+- [ ] Implement microscope HUD overlay (tier badge + zoom level) — SwiftUI view PR next
 
 ### Microbiome Simulator
 
@@ -47,11 +46,11 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Immune Response Engine (innate path)
 
-- [ ] Implement `MacrophagePacmanScene` (SpriteKit) — Pac-Man-style consume-pathogen loop
-- [ ] Implement pathogen spawn + wave progression
+- [x] Implement `MacrophagePacmanScene` skeleton (SpriteKit) — Pac-Man-style consume-pathogen loop
+- [ ] Implement pathogen spawn + wave progression (sprite layer)
 - [ ] Implement macrophage movement + boundary handling
-- [ ] Implement scoring + 5-wave Phase-1 progression
-- [ ] Wire scene into `GameEngine` target with lazy visual setup
+- [x] Implement scoring + 5-wave Phase-1 progression (logic-level: `recordConsume(_:)` + `clearWave()`)
+- [x] Wire scene into `GameEngine` target with lazy visual setup
 
 ### 12-Character Microbe Cast
 
