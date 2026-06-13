@@ -66,6 +66,12 @@ public struct AppRootView: View {
     // ExploreView's rare-sighting / curious-explorer cues so meets the
     // kid encounters during the microscope loop reflect in the codex.
     @State private var discovery = DiscoveryStore()
+    // Persistent per-question quiz-attempt log. Closes the
+    // `Docs/FEATURE_PLAN.md` § Parent Integration → "Progress dashboard"
+    // per-standard proficiency follow-up: every QuizView reveal writes a
+    // QuestionAttempt row through to UserDefaults; the parent-facing
+    // report consumes the log via `proficiencies(matching:)`.
+    @State private var attemptStore = QuestionAttemptStore()
     // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
     // audio) feedback for correct/incorrect answers, achievement unlocks,
     // wave clears, and run-complete moments. Closes the FEATURE_PLAN
@@ -377,7 +383,8 @@ public struct AppRootView: View {
             currentStreak: gamification.currentStreak,
             longestStreak: gamification.longestStreak,
             totalXP: gamification.totalXP,
-            activeDays: retention.totalDistinctSessionDays
+            activeDays: retention.totalDistinctSessionDays,
+            standardProficiencies: attemptStore.proficiencies(matching: ProgressReportService.phase1Standards)
         )
     }
 
@@ -464,7 +471,8 @@ public struct AppRootView: View {
                     gamification: gamification,
                     celebration: celebration,
                     sensory: sensory,
-                    discovery: discovery
+                    discovery: discovery,
+                    attemptStore: attemptStore
                 )
             }
             if disclosure.showsMicrobiome {

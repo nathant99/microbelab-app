@@ -24,6 +24,11 @@ public nonisolated struct ProgressReportSnapshot: Sendable, Equatable {
     public let longestStreak: Int
     public let totalXP: Int
     public let activeDays: Int
+    /// Per-standard proficiency rows derived from the
+    /// `QuestionAttemptStore`. Empty when no quiz attempts have logged
+    /// (e.g., fresh install) — `ForgeReportGenerator.parentConferenceReport`
+    /// gracefully skips the Strengths / Growth Areas sections when empty.
+    public let standardProficiencies: [StandardProficiency]
 
     public init(
         displayName: String = "your kid",
@@ -33,7 +38,8 @@ public nonisolated struct ProgressReportSnapshot: Sendable, Equatable {
         currentStreak: Int,
         longestStreak: Int,
         totalXP: Int,
-        activeDays: Int
+        activeDays: Int,
+        standardProficiencies: [StandardProficiency] = []
     ) {
         self.displayName = displayName
         self.totalSessions = totalSessions
@@ -43,6 +49,7 @@ public nonisolated struct ProgressReportSnapshot: Sendable, Equatable {
         self.longestStreak = longestStreak
         self.totalXP = totalXP
         self.activeDays = activeDays
+        self.standardProficiencies = standardProficiencies
     }
 }
 
@@ -100,20 +107,39 @@ public nonisolated struct ProgressReportService: Sendable {
     /// Synthesizes the `ForgeReporting.StudentReportData` view of the kid's
     /// engagement. Grade defaults to `.seventh` (the middle of the NGSS MS-LS
     /// 6-8 band MicrobeLab targets).
-    public func reportData(for snapshot: ProgressReportSnapshot, grade: GradeLevel = .seventh) -> StudentReportData {
+    ///
+    /// Per-standard proficiencies derive from the optional
+    /// `QuestionAttemptStore` (Services/Engagement/) when wired — its
+    /// `proficiencies(matching:)` derivation reads the kid's per-question
+    /// answers + maps them onto the phase-1 standards list. Pre-attempt-log,
+    /// callers pass `proficiencies: []` (or omit the parameter) so
+    /// `ForgeReportGenerator` gracefully skips the Strengths / Growth Areas
+    /// sections.
+    public func reportData(
+        for snapshot: ProgressReportSnapshot,
+        grade: GradeLevel = .seventh
+    ) -> StudentReportData {
         let averageMinutes: Double = snapshot.totalSessions > 0
             ? Double(snapshot.totalDurationMinutes) / Double(snapshot.totalSessions)
             : 0
+        // Average score derives from the snapshot's per-standard proficiencies
+        // so the report's summary / recommendations reflect the kid's real
+        // accuracy when attempt logs exist. Zero when no attempts logged
+        // (avoids implying "0%" mastery on a fresh install).
+        let proficiencies = snapshot.standardProficiencies
+        let averageScore: Double = proficiencies.isEmpty
+            ? 0
+            : proficiencies.map(\.percentage).reduce(0, +) / Double(proficiencies.count)
         return StudentReportData(
             studentName: snapshot.displayName,
             gradeLevel: grade,
             totalSessions: snapshot.totalSessions,
             totalDurationMinutes: snapshot.totalDurationMinutes,
             activitiesCompleted: snapshot.activitiesCompleted,
-            averageScore: 0,
+            averageScore: averageScore,
             currentStreak: snapshot.currentStreak,
             totalXP: snapshot.totalXP,
-            standardProficiencies: [],
+            standardProficiencies: proficiencies,
             period: .allTime,
             generatedAt: .now,
             longestStreak: snapshot.longestStreak,
@@ -123,10 +149,13 @@ public nonisolated struct ProgressReportService: Sendable {
     }
 
     /// Returns the parent-conference-style report text. ForgeReportGenerator
-    /// composes summary + strengths + growth areas + recommendations; with
-    /// empty `standardProficiencies` the strengths/growth sections are
-    /// skipped and only summary + recommendations render.
-    public func parentReportText(for snapshot: ProgressReportSnapshot, grade: GradeLevel = .seventh) -> String {
+    /// composes summary + strengths + growth areas + recommendations; when
+    /// the snapshot's `standardProficiencies` is empty the strengths/growth
+    /// sections are skipped and only summary + recommendations render.
+    public func parentReportText(
+        for snapshot: ProgressReportSnapshot,
+        grade: GradeLevel = .seventh
+    ) -> String {
         let data = reportData(for: snapshot, grade: grade)
         return ForgeReportGenerator().parentConferenceReport(data)
     }

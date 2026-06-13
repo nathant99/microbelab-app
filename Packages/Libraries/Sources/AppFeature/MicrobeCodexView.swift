@@ -21,6 +21,7 @@ public struct MicrobeCodexView: View {
     private let celebration: CelebrationCoordinator?
     private let sensory: SensoryPaletteCoordinator?
     private let discovery: DiscoveryStore?
+    private let attemptStore: QuestionAttemptStore?
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
     @State private var knowledgeGraph: MicrobeKnowledgeGraph?
@@ -37,7 +38,8 @@ public struct MicrobeCodexView: View {
         gamification: GamificationService? = nil,
         celebration: CelebrationCoordinator? = nil,
         sensory: SensoryPaletteCoordinator? = nil,
-        discovery: DiscoveryStore? = nil
+        discovery: DiscoveryStore? = nil,
+        attemptStore: QuestionAttemptStore? = nil
     ) {
         self.catalog = catalog
         self.kitService = kitService
@@ -45,6 +47,7 @@ public struct MicrobeCodexView: View {
         self.celebration = celebration
         self.sensory = sensory
         self.discovery = discovery
+        self.attemptStore = attemptStore
     }
 
     public var body: some View {
@@ -91,7 +94,13 @@ public struct MicrobeCodexView: View {
             }
             .sheet(item: $presentedKit) { kit in
                 NavigationStack {
-                    QuizView(kit: kit, gamification: gamification, celebration: celebration, sensory: sensory)
+                    QuizView(
+                        kit: kit,
+                        gamification: gamification,
+                        celebration: celebration,
+                        sensory: sensory,
+                        attemptStore: attemptStore
+                    )
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Done") { presentedKit = nil }

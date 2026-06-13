@@ -14,6 +14,12 @@ public struct QuizView: View {
     let gamification: GamificationService?
     let celebration: CelebrationCoordinator?
     let sensory: SensoryPaletteCoordinator?
+    /// Persistent per-question attempt log. When wired the view records
+    /// every `.reveal(against:)` boundary so parent-facing progress
+    /// reports + future spaced-repetition surfaces can derive
+    /// per-standard proficiency from real attempts. Optional so test
+    /// fixtures + previews can omit it.
+    let attemptStore: QuestionAttemptStore?
     @State private var machine: QuizMachine
     @State private var hasAwardedCompletionXP = false
 
@@ -21,12 +27,14 @@ public struct QuizView: View {
         kit: QuestionKit,
         gamification: GamificationService? = nil,
         celebration: CelebrationCoordinator? = nil,
-        sensory: SensoryPaletteCoordinator? = nil
+        sensory: SensoryPaletteCoordinator? = nil,
+        attemptStore: QuestionAttemptStore? = nil
     ) {
         self.kit = kit
         self.gamification = gamification
         self.celebration = celebration
         self.sensory = sensory
+        self.attemptStore = attemptStore
         _machine = State(initialValue: QuizMachine(totalQuestions: kit.questions.count))
     }
 
@@ -235,6 +243,11 @@ public struct QuizView: View {
                 Button("Check") {
                     let wasCorrect = machine.reveal(against: currentQuestion)
                     DebugLog.state("QuizView reveal \(machine.currentIndex): correct=\(wasCorrect)")
+                    // Per-question attempt log — fires exactly once per
+                    // reveal boundary. The store handles FIFO eviction at
+                    // the cap so the JSON-encoded UserDefaults blob stays
+                    // bounded.
+                    attemptStore?.recordAttempt(question: currentQuestion, kitSlug: kit.slug, wasCorrect: wasCorrect)
                     // Juice layer haptic + (future) audio per
                     // Docs/FEATURE_PLAN.md § Delight & Polish — fires on every
                     // reveal. Trauma-informed: the incorrect haptic is the
