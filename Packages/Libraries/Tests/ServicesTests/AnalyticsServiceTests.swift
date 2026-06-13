@@ -114,6 +114,27 @@ struct AnalyticsServiceTests {
         #expect(runComplete.properties.isEmpty)
     }
 
+    @Test func trackAppPhaseReachedRecordsPhaseSlug() async {
+        // Closes the ForgeNavigation wire-up loop on the analytics axis —
+        // AppRootView fires this event on every phase transition so the
+        // on-device event log carries a single canonical phase identifier
+        // (parent_handoff → kid_onboarding → loading_catalog → tab_shell).
+        let service = AnalyticsService()
+        await service.startSession()
+        await service.track(.appPhaseReached(phaseSlug: "tab_shell"))
+        let names = await service.recordedEventNames()
+        #expect(names.contains("app_phase_reached"))
+    }
+
+    @Test func appPhaseReachedPropertyBagCarriesPhaseSlug() {
+        // PII-safe: the property bag is the phase slug only, never the
+        // kid's progress count or identifier.
+        let event = MicrobeLabAnalyticsEvent.appPhaseReached(phaseSlug: "kid_onboarding")
+        #expect(event.name == "app_phase_reached")
+        #expect(event.properties["phase_slug"] == "kid_onboarding")
+        #expect(event.properties.count == 1)
+    }
+
     @Test func zoomTierSlugIsStableAcrossAllCases() {
         // Stability invariant — slugs are persisted in the on-device analytics
         // store + may surface in parent-facing dashboards. Renaming a slug is

@@ -81,6 +81,11 @@ public struct AppRootView: View {
     @State private var sessionStartedAt: Date?
     @State private var sessionStartXP: Int?
     @State private var sessionStartMicrobeCount: Int?
+    /// Tracks the most-recently observed phase so transitions can fire
+    /// the `app_phase_reached` analytics event + a DebugLog.lifecycle
+    /// line exactly once per change. `nil` on cold launch — the first
+    /// observation emits the entry phase.
+    @State private var lastObservedPhase: MicrobeLabPhase?
     @Environment(\.scenePhase) private var scenePhase
 
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
@@ -97,6 +102,19 @@ public struct AppRootView: View {
         let settings = AppSettingsStore()
         _settingsStore = State(initialValue: settings)
         _dailyTime = State(initialValue: DailyTimeCoordinator(cap: settings.settings.dailySessionCap))
+    }
+
+    /// Current `MicrobeLabPhase` derived from the store states the
+    /// conditional-rendering `Group` block reads. Mirrors the body 1:1 so
+    /// the value type can be threaded into analytics + debug logs from
+    /// outside the view body without re-implementing the gating logic.
+    private var currentPhase: MicrobeLabPhase {
+        MicrobeLabPhase.resolve(
+            parentHandoffCompleted: parentHandoff.hasCompletedHandoff,
+            kidOnboardingCompleted: onboarding.hasCompletedOnboarding,
+            catalogLoaded: catalog != nil,
+            catalogFailureMessage: loadError
+        )
     }
 
     public var body: some View {
@@ -286,6 +304,20 @@ public struct AppRootView: View {
             @unknown default:
                 break
             }
+        }
+        .onChange(of: currentPhase) { _, newPhase in
+            // Phase transition observer — emits a DebugLog.lifecycle line
+            // + an `app_phase_reached` analytics event exactly once per
+            // change. ForgeNavigation's `MicrobeLabPhase` is the source
+            // of truth for the slug. The conditional-rendering Group
+            // block remains the actual phase router today; this observer
+            // turns the value type into runtime traction so analytics +
+            // logs see a single canonical phase identifier instead of
+            // re-derivation at every consumer.
+            guard newPhase != lastObservedPhase else { return }
+            lastObservedPhase = newPhase
+            DebugLog.lifecycle("AppRootView phase → \(newPhase.slug)")
+            Task { await analytics.track(.appPhaseReached(phaseSlug: newPhase.slug)) }
         }
     }
 
