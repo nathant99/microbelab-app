@@ -1,5 +1,7 @@
 # MicrobeLab — Feature Plan
 
+> **Seventh-pass rule-restatement summary** (top-of-doc per the seven-pass invariant codified 2026-06-12; verbatim user-direct, repeated SEVEN times in one calendar day — all-time portfolio record): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* Scope: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`. No checkbox below implies an edit to any of those paths; items that need them ship via `Docs/HANDOFF_TO_USER_<TOPIC>.md`. See `@CLAUDE.md` § Xcode-managed file safety for the canonical statement.
+>
 > Phased delivery roadmap. Mirrors the engineering breakdown in `@Docs/TECHNICAL_DESIGN.md`. Implementing sessions check off boxes as work lands; do not collapse phases — the per-phase exit criteria gate ship readiness.
 >
 > **SPM folder convention** (per `@CLAUDE.md` § SPM Folder Convention): new feature surfaces with ≥ 3 files (view + machine + service) land in a per-feature subdirectory under their target (e.g., `AppFeature/Onboarding/`, `AppFeature/Engagement/`). Add subdirs as the codebase grows; the flat-root pattern stays canonical SPM regardless.
