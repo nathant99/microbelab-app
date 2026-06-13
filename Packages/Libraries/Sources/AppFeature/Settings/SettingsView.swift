@@ -18,9 +18,21 @@ public struct SettingsView: View {
     /// state at the moment Settings opens.
     private let progressReportSnapshot: ProgressReportSnapshot?
 
-    public init(store: AppSettingsStore? = nil, progressReportSnapshot: ProgressReportSnapshot? = nil) {
+    /// Shared `ParentalConsentService` instance. When non-nil + the
+    /// parental gate has passed, the "For parents" section surfaces a
+    /// "Parental consents" NavigationLink to `ParentalConsentManagerView`.
+    /// Optional so legacy SettingsView call sites (preview, test) still
+    /// compile without threading the service.
+    private let consentService: ParentalConsentService?
+
+    public init(
+        store: AppSettingsStore? = nil,
+        progressReportSnapshot: ProgressReportSnapshot? = nil,
+        consentService: ParentalConsentService? = nil
+    ) {
         _store = State(initialValue: store ?? AppSettingsStore())
         self.progressReportSnapshot = progressReportSnapshot
+        self.consentService = consentService
     }
 
     public var body: some View {
@@ -142,32 +154,65 @@ public struct SettingsView: View {
     /// `.claude/rules/age-assurance.md` § 2026 FTC COPPA Rule Amendments.
     @ViewBuilder
     private var forParentsSection: some View {
-        if let snapshot = progressReportSnapshot {
+        if progressReportSnapshot != nil || consentService != nil {
             Section {
-                if hasPassedGate {
-                    NavigationLink {
-                        ProgressReportView(snapshot: snapshot)
-                    } label: {
-                        Label("Progress report", systemImage: "chart.bar.doc.horizontal")
-                    }
-                    .accessibilityHint("Opens the standards-mapped engagement summary")
-                } else {
-                    HStack {
-                        Label("Progress report", systemImage: "chart.bar.doc.horizontal")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Button("Confirm adult") {
-                            showingGate = true
-                        }
-                        .font(.caption.weight(.semibold))
-                        .buttonStyle(.borderless)
-                    }
+                if let snapshot = progressReportSnapshot {
+                    progressReportRow(snapshot: snapshot)
+                }
+                if let service = consentService {
+                    parentalConsentRow(service: service)
                 }
             } header: {
                 Text("For parents")
             } footer: {
-                Text("On-device only. The report covers session count, streak, XP, time, and the NGSS / NHES standards the Phase 1 kits address. Per-question detail stays local.")
+                Text("On-device only. The report covers session count, streak, XP, time, and the NGSS / NHES standards the Phase 1 kits address. Per-question detail stays local. Consents renew annually per the 2026 FTC COPPA Rule.")
                     .font(.caption)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func progressReportRow(snapshot: ProgressReportSnapshot) -> some View {
+        if hasPassedGate {
+            NavigationLink {
+                ProgressReportView(snapshot: snapshot)
+            } label: {
+                Label("Progress report", systemImage: "chart.bar.doc.horizontal")
+            }
+            .accessibilityHint("Opens the standards-mapped engagement summary")
+        } else {
+            HStack {
+                Label("Progress report", systemImage: "chart.bar.doc.horizontal")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Confirm adult") {
+                    showingGate = true
+                }
+                .font(.caption.weight(.semibold))
+                .buttonStyle(.borderless)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func parentalConsentRow(service: ParentalConsentService) -> some View {
+        if hasPassedGate {
+            NavigationLink {
+                ParentalConsentManagerView(service: service)
+            } label: {
+                Label("Parental consents", systemImage: "checkmark.seal")
+            }
+            .accessibilityHint("Opens the per-feature consent manager")
+        } else {
+            HStack {
+                Label("Parental consents", systemImage: "checkmark.seal")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Confirm adult") {
+                    showingGate = true
+                }
+                .font(.caption.weight(.semibold))
+                .buttonStyle(.borderless)
             }
         }
     }

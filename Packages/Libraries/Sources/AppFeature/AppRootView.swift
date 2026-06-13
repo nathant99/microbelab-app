@@ -72,6 +72,15 @@ public struct AppRootView: View {
     // QuestionAttempt row through to UserDefaults; the parent-facing
     // report consumes the log via `proficiencies(matching:)`.
     @State private var attemptStore = QuestionAttemptStore()
+    // Per-feature parental consent records per the 2026 FTC COPPA Rule
+    // (effective April 22 2026). Closes the FEATURE_PLAN § Onboarding &
+    // Child Safety items "Parental consent service" + "Parental gates":
+    // consumer surfaces (disease-story arcs, weekly summary, external-
+    // link taps, classroom mode) call `hasValidConsent(for:)` before
+    // proceeding. Annual re-consent via `recordGrant` resetting the
+    // expiry window. Surfaced through `ParentalConsentManagerView` from
+    // SettingsView's "For parents" section (parental-gate guarded).
+    @State private var consent = ParentalConsentService()
     // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
     // audio) feedback for correct/incorrect answers, achievement unlocks,
     // wave clears, and run-complete moments. Closes the FEATURE_PLAN
@@ -499,7 +508,10 @@ public struct AppRootView: View {
             }
             if disclosure.showsProfile {
                 Tab("Profile", systemImage: "person", value: MicrobeLabTab.profile) {
-                    ProfileView(progressReportSnapshot: progressReportSnapshot)
+                    ProfileView(
+                        progressReportSnapshot: progressReportSnapshot,
+                        consentService: consent
+                    )
                 }
             }
         }
