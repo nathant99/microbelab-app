@@ -50,6 +50,14 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
     /// already starts gentle in sessions 1-2 — this is the long-term
     /// override for kids who want the chill version permanently.
     public var simplifyChallenge: Bool
+    /// Opt-in toggle for the local weekly summary notification per
+    /// FEATURE_PLAN.md § Parent Integration → "Weekly summary". Defaults
+    /// OFF per 2026 FTC COPPA Rule § Opt-in consent. Toggling on requires
+    /// (a) parental-gate adult confirm + (b) granted
+    /// `ParentalConsentService.weeklySummaryNotifications` consent + (c)
+    /// `UNUserNotificationCenter` authorization. The SettingsView toggle
+    /// orchestrates all three gates.
+    public var weeklySummaryNotificationEnabled: Bool
 
     public init(
         soundEffectsEnabled: Bool = true,
@@ -58,7 +66,8 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
         forceReduceTransparency: Bool = false,
         diseaseStoryGateEnabled: Bool = true,
         dailySessionCap: DailySessionCap = .thirty,
-        simplifyChallenge: Bool = false
+        simplifyChallenge: Bool = false,
+        weeklySummaryNotificationEnabled: Bool = false
     ) {
         self.soundEffectsEnabled = soundEffectsEnabled
         self.hapticsEnabled = hapticsEnabled
@@ -67,6 +76,7 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
         self.diseaseStoryGateEnabled = diseaseStoryGateEnabled
         self.dailySessionCap = dailySessionCap
         self.simplifyChallenge = simplifyChallenge
+        self.weeklySummaryNotificationEnabled = weeklySummaryNotificationEnabled
     }
 
     public static let `default` = AppSettings()
@@ -85,6 +95,7 @@ public nonisolated struct AppSettings: Codable, Sendable, Equatable {
         self.diseaseStoryGateEnabled = try container.decodeIfPresent(Bool.self, forKey: .diseaseStoryGateEnabled) ?? defaults.diseaseStoryGateEnabled
         self.dailySessionCap = try container.decodeIfPresent(DailySessionCap.self, forKey: .dailySessionCap) ?? defaults.dailySessionCap
         self.simplifyChallenge = try container.decodeIfPresent(Bool.self, forKey: .simplifyChallenge) ?? defaults.simplifyChallenge
+        self.weeklySummaryNotificationEnabled = try container.decodeIfPresent(Bool.self, forKey: .weeklySummaryNotificationEnabled) ?? defaults.weeklySummaryNotificationEnabled
     }
 }
 

@@ -25,14 +25,22 @@ public struct SettingsView: View {
     /// compile without threading the service.
     private let consentService: ParentalConsentService?
 
+    /// Shared `WeeklySummaryService` instance. When non-nil + the
+    /// parental gate has passed + the snapshot is non-nil, the "For
+    /// parents" section surfaces an opt-in toggle that orchestrates
+    /// authorization + consent + scheduling.
+    private let weeklySummaryService: WeeklySummaryService?
+
     public init(
         store: AppSettingsStore? = nil,
         progressReportSnapshot: ProgressReportSnapshot? = nil,
-        consentService: ParentalConsentService? = nil
+        consentService: ParentalConsentService? = nil,
+        weeklySummaryService: WeeklySummaryService? = nil
     ) {
         _store = State(initialValue: store ?? AppSettingsStore())
         self.progressReportSnapshot = progressReportSnapshot
         self.consentService = consentService
+        self.weeklySummaryService = weeklySummaryService
     }
 
     public var body: some View {
@@ -154,13 +162,22 @@ public struct SettingsView: View {
     /// `.claude/rules/age-assurance.md` § 2026 FTC COPPA Rule Amendments.
     @ViewBuilder
     private var forParentsSection: some View {
-        if progressReportSnapshot != nil || consentService != nil {
+        if progressReportSnapshot != nil || consentService != nil || weeklySummaryService != nil {
             Section {
                 if let snapshot = progressReportSnapshot {
                     progressReportRow(snapshot: snapshot)
                 }
                 if let service = consentService {
                     parentalConsentRow(service: service)
+                }
+                if let weekly = weeklySummaryService,
+                   let consent = consentService,
+                   let snapshot = progressReportSnapshot {
+                    weeklySummaryRow(
+                        weekly: weekly,
+                        consent: consent,
+                        snapshot: snapshot
+                    )
                 }
             } header: {
                 Text("For parents")
@@ -183,6 +200,67 @@ public struct SettingsView: View {
         } else {
             HStack {
                 Label("Progress report", systemImage: "chart.bar.doc.horizontal")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Confirm adult") {
+                    showingGate = true
+                }
+                .font(.caption.weight(.semibold))
+                .buttonStyle(.borderless)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func weeklySummaryRow(
+        weekly: WeeklySummaryService,
+        consent: ParentalConsentService,
+        snapshot: ProgressReportSnapshot
+    ) -> some View {
+        if hasPassedGate {
+            let binding = Binding<Bool>(
+                get: { store.settings.weeklySummaryNotificationEnabled },
+                set: { newValue in
+                    var next = store.settings
+                    next.weeklySummaryNotificationEnabled = newValue
+                    store.save(next)
+                    Task {
+                        if newValue {
+                            // Grant consent if not already; the parent
+                            // has explicitly opted in by toggling on.
+                            if !consent.hasValidConsent(for: .weeklySummaryNotifications) {
+                                consent.recordGrant(for: .weeklySummaryNotifications)
+                            }
+                            let granted = await weekly.requestAuthorization()
+                            if granted {
+                                await weekly.scheduleNextSummary(from: snapshot)
+                            } else {
+                                // System denied — flip the setting back so
+                                // the row reflects the actual state.
+                                var rollback = store.settings
+                                rollback.weeklySummaryNotificationEnabled = false
+                                store.save(rollback)
+                            }
+                        } else {
+                            await weekly.cancel()
+                            consent.revoke(.weeklySummaryNotifications)
+                        }
+                    }
+                    DebugLog.state("SettingsView weekly summary toggle → \(newValue)")
+                }
+            )
+            Toggle(isOn: binding) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Weekly summary")
+                    Text("Saturday morning, on-device only. A quiet week is fine — no shame.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityHint("Toggle the opt-in weekly summary notification")
+        } else {
+            HStack {
+                Label("Weekly summary", systemImage: "bell")
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Confirm adult") {

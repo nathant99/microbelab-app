@@ -22,12 +22,19 @@ public struct ProfileView: View {
     /// surfaces the "Parental consents" row behind the parental gate.
     private let consentService: ParentalConsentService?
 
+    /// Shared `WeeklySummaryService`. When non-nil + the snapshot is
+    /// non-nil + the consent service is non-nil, `SettingsView` surfaces
+    /// the opt-in weekly summary toggle behind the parental gate.
+    private let weeklySummaryService: WeeklySummaryService?
+
     public init(
         progressReportSnapshot: ProgressReportSnapshot? = nil,
-        consentService: ParentalConsentService? = nil
+        consentService: ParentalConsentService? = nil,
+        weeklySummaryService: WeeklySummaryService? = nil
     ) {
         self.progressReportSnapshot = progressReportSnapshot
         self.consentService = consentService
+        self.weeklySummaryService = weeklySummaryService
     }
 
     public var body: some View {
@@ -57,7 +64,8 @@ public struct ProfileView: View {
                     NavigationLink {
                         SettingsView(
                             progressReportSnapshot: progressReportSnapshot,
-                            consentService: consentService
+                            consentService: consentService,
+                            weeklySummaryService: weeklySummaryService
                         )
                     } label: {
                         Label("All settings", systemImage: "gear")

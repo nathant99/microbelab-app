@@ -81,6 +81,14 @@ public struct AppRootView: View {
     // expiry window. Surfaced through `ParentalConsentManagerView` from
     // SettingsView's "For parents" section (parental-gate guarded).
     @State private var consent = ParentalConsentService()
+    // Local weekly-summary notification coordinator. Closes the
+    // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
+    // Opt-in by default per FTC 2026; the SettingsView toggle is gated
+    // on parental gate + `.weeklySummaryNotifications` consent + system
+    // notification authorization. `AppRootView.task` re-schedules with
+    // the freshest snapshot every cold launch when the toggle is on so
+    // the next-fire body reflects current state.
+    @State private var weeklySummary = WeeklySummaryService()
     // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
     // audio) feedback for correct/incorrect answers, achievement unlocks,
     // wave clears, and run-complete moments. Closes the FEATURE_PLAN
@@ -265,6 +273,15 @@ public struct AppRootView: View {
                 // ForgeAccessibility timer. Engine is an actor so the call is
                 // safe to schedule from the .task block.
                 await analytics.startSession()
+                // Refresh the weekly-summary fire content every cold
+                // launch when the parent has opted in + the
+                // `.weeklySummaryNotifications` consent is current. The
+                // composer reads the snapshot at this moment so Saturday's
+                // notification reflects the freshest engagement signal.
+                if settingsStore.settings.weeklySummaryNotificationEnabled,
+                   consent.hasValidConsent(for: .weeklySummaryNotifications) {
+                    await weeklySummary.scheduleNextSummary(from: progressReportSnapshot)
+                }
             }
         }
         .onChange(of: settingsStore.settings.dailySessionCap) { _, newCap in
@@ -510,7 +527,8 @@ public struct AppRootView: View {
                 Tab("Profile", systemImage: "person", value: MicrobeLabTab.profile) {
                     ProfileView(
                         progressReportSnapshot: progressReportSnapshot,
-                        consentService: consent
+                        consentService: consent,
+                        weeklySummaryService: weeklySummary
                     )
                 }
             }
