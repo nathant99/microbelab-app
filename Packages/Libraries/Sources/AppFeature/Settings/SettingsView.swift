@@ -11,8 +11,16 @@ public struct SettingsView: View {
     @State private var hasPassedGate: Bool = false
     @State private var showingGate: Bool = false
 
-    public init(store: AppSettingsStore? = nil) {
+    /// Optional snapshot of the kid's engagement signals. When non-nil + the
+    /// parental gate has passed, the "For parents" section surfaces a
+    /// "Progress report" NavigationLink to `ProgressReportView`. Wired via
+    /// `AppRootView` → `ProfileView` → here so the snapshot reflects live
+    /// state at the moment Settings opens.
+    private let progressReportSnapshot: ProgressReportSnapshot?
+
+    public init(store: AppSettingsStore? = nil, progressReportSnapshot: ProgressReportSnapshot? = nil) {
         _store = State(initialValue: store ?? AppSettingsStore())
+        self.progressReportSnapshot = progressReportSnapshot
     }
 
     public var body: some View {
@@ -26,6 +34,7 @@ public struct SettingsView: View {
             sensorySection
             contentGateSection
             sessionCapSection
+            forParentsSection
             CrisisResourceCard()
             footerSection
         }
@@ -121,6 +130,45 @@ public struct SettingsView: View {
         } footer: {
             Text("Default 30 minutes per portfolio convention. A grown-up can raise or remove this from this menu after confirming.")
                 .font(.caption)
+        }
+    }
+
+    // MARK: - For parents (gated)
+
+    /// Parent-facing surfaces. Today: progress report (standards-mapped
+    /// engagement summary via ForgeReporting). Future: weekly summary opt-in,
+    /// classroom-mode toggles, COPPA consent records. Gated behind the same
+    /// parental gate as content + session-cap toggles per
+    /// `.claude/rules/age-assurance.md` § 2026 FTC COPPA Rule Amendments.
+    @ViewBuilder
+    private var forParentsSection: some View {
+        if let snapshot = progressReportSnapshot {
+            Section {
+                if hasPassedGate {
+                    NavigationLink {
+                        ProgressReportView(snapshot: snapshot)
+                    } label: {
+                        Label("Progress report", systemImage: "chart.bar.doc.horizontal")
+                    }
+                    .accessibilityHint("Opens the standards-mapped engagement summary")
+                } else {
+                    HStack {
+                        Label("Progress report", systemImage: "chart.bar.doc.horizontal")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Confirm adult") {
+                            showingGate = true
+                        }
+                        .font(.caption.weight(.semibold))
+                        .buttonStyle(.borderless)
+                    }
+                }
+            } header: {
+                Text("For parents")
+            } footer: {
+                Text("On-device only. The report covers session count, streak, XP, time, and the NGSS / NHES standards the Phase 1 kits address. Per-question detail stays local.")
+                    .font(.caption)
+            }
         }
     }
 

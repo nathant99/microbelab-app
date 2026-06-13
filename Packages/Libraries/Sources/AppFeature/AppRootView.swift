@@ -304,6 +304,25 @@ public struct AppRootView: View {
         DebugLog.lifecycle("AppRootView — captured session summary (elapsed=\(Int(elapsed))s, xpEarned=\(xpEarned))")
     }
 
+    /// Build the engagement snapshot the parent-facing progress report
+    /// consumes. Pure-value capture — the view stores the snapshot at the
+    /// moment SettingsView is invoked so the report reflects the kid's state
+    /// at that instant rather than ticking live across navigation. Per
+    /// `.claude/rules/age-assurance.md` § Portfolio Status: counts only,
+    /// never PII. `displayName` stays the anonymous default so a future
+    /// avatar-name surface doesn't accidentally leak into the parent screen.
+    private var progressReportSnapshot: ProgressReportSnapshot {
+        ProgressReportSnapshot(
+            totalSessions: sessionCount.sessionCount,
+            totalDurationMinutes: Int(dailyTime.dailyElapsedMinutes),
+            activitiesCompleted: gamification.earnedAchievementSlugs.count,
+            currentStreak: gamification.currentStreak,
+            longestStreak: gamification.longestStreak,
+            totalXP: gamification.totalXP,
+            activeDays: retention.totalDistinctSessionDays
+        )
+    }
+
     /// Combine the system accessibility env values with the parent-gated
     /// `forceReduceMotion` + `forceReduceTransparency` toggles via the pure
     /// `A11yPreferences.resolved` helper. Per
@@ -406,7 +425,7 @@ public struct AppRootView: View {
             }
             if disclosure.showsProfile {
                 Tab("Profile", systemImage: "person") {
-                    ProfileView()
+                    ProfileView(progressReportSnapshot: progressReportSnapshot)
                 }
             }
         }
