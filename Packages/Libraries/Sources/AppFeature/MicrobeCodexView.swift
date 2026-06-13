@@ -22,8 +22,10 @@ public struct MicrobeCodexView: View {
     private let sensory: SensoryPaletteCoordinator?
     private let discovery: DiscoveryStore?
     private let attemptStore: QuestionAttemptStore?
+    private let chapters: MicrobeChapterStore
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
+    @State private var presentedChapter: PresentedChapter?
     @State private var knowledgeGraph: MicrobeKnowledgeGraph?
     /// Per-session mastery moment detector. The codex axis fires once
     /// when the kid has discovered every microbe in the catalog (12 / 12);
@@ -39,7 +41,8 @@ public struct MicrobeCodexView: View {
         celebration: CelebrationCoordinator? = nil,
         sensory: SensoryPaletteCoordinator? = nil,
         discovery: DiscoveryStore? = nil,
-        attemptStore: QuestionAttemptStore? = nil
+        attemptStore: QuestionAttemptStore? = nil,
+        chapters: MicrobeChapterStore = MicrobeChapterStore()
     ) {
         self.catalog = catalog
         self.kitService = kitService
@@ -48,6 +51,16 @@ public struct MicrobeCodexView: View {
         self.sensory = sensory
         self.discovery = discovery
         self.attemptStore = attemptStore
+        self.chapters = chapters
+    }
+
+    /// Sheet item for the chapter reader. Carries the chapter + the
+    /// microbe display name so the reader sheet doesn't need a catalog
+    /// lookup at present-time.
+    private struct PresentedChapter: Identifiable {
+        let chapter: MicrobeChapter
+        let microbeDisplayName: String
+        var id: String { chapter.slug }
     }
 
     public var body: some View {
@@ -61,7 +74,8 @@ public struct MicrobeCodexView: View {
                             MicrobeCodexCard(
                                 microbe: microbe,
                                 isDiscovered: isDiscovered(microbe),
-                                livesNearDisplayNames: livesNearDisplayNames(for: microbe)
+                                livesNearDisplayNames: livesNearDisplayNames(for: microbe),
+                                hasChapter: chapters.chapter(for: microbe.slug) != nil
                             )
                         }
                         .buttonStyle(.plain)
@@ -108,6 +122,13 @@ public struct MicrobeCodexView: View {
                         }
                 }
             }
+            .sheet(item: $presentedChapter) { item in
+                ChapterReaderSheet(
+                    chapter: item.chapter,
+                    microbeDisplayName: item.microbeDisplayName,
+                    bundle: MicrobeChapterStore.resourcesBundle
+                )
+            }
         }
     }
 
@@ -137,12 +158,22 @@ public struct MicrobeCodexView: View {
     /// Card tap handler. For undiscovered microbes this is the kid's
     /// primary discovery affordance — the tap writes through the
     /// `DiscoveryStore` + fires the per-discovery sensory cue + runs the
-    /// codex mastery check. For already-discovered cards the tap is a
-    /// no-op today (drill-in detail screen is a separate follow-up
-    /// surface; the Liquid Glass hint copy still reads "Tap to view codex
-    /// entry" so the affordance shape is preserved).
+    /// codex mastery check. For already-discovered cards the tap surfaces
+    /// the microbe's DN-S chapter when one is bundled (the 6 canonical
+    /// cast: Lacto / Yeast / Photo / Net / Spore / Guard); cards for the
+    /// codex-supporting cast members without authored chapters keep the
+    /// existing no-op behavior.
     private func handleCardTap(microbe: MicrobeCharacter) {
-        guard !isDiscovered(microbe) else { return }
+        if isDiscovered(microbe) {
+            if let chapter = chapters.chapter(for: microbe.slug) {
+                presentedChapter = PresentedChapter(
+                    chapter: chapter,
+                    microbeDisplayName: microbe.displayName
+                )
+                DebugLog.state("MicrobeCodexView opened chapter reader: \(microbe.slug)")
+            }
+            return
+        }
         guard let discovery else { return }
         discovery.markDiscovered(slug: microbe.slug)
         // Per-discovery sensory cue — distinct from the mastery moment

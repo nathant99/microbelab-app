@@ -17,15 +17,21 @@ public struct MicrobeCodexCard: View {
     /// Kept optional so existing callers + tests don't need to thread the
     /// graph through.
     public let livesNearDisplayNames: [String]
+    /// True when the microbe has a bundled DN-S chapter the codex reader
+    /// can surface. Discovered cards with a chapter render a small book
+    /// glyph + accessibility hint so the kid knows the tap opens a story.
+    public let hasChapter: Bool
 
     public init(
         microbe: MicrobeCharacter,
         isDiscovered: Bool,
-        livesNearDisplayNames: [String] = []
+        livesNearDisplayNames: [String] = [],
+        hasChapter: Bool = false
     ) {
         self.microbe = microbe
         self.isDiscovered = isDiscovered
         self.livesNearDisplayNames = livesNearDisplayNames
+        self.hasChapter = hasChapter
     }
 
     public var body: some View {
@@ -34,6 +40,12 @@ public struct MicrobeCodexCard: View {
             HStack(alignment: .firstTextBaseline) {
                 Text(isDiscovered ? microbe.displayName : "???")
                     .font(.headline)
+                if isDiscovered, hasChapter {
+                    Image(systemName: "book.closed.fill")
+                        .imageScale(.small)
+                        .foregroundStyle(.tint)
+                        .accessibilityHidden(true)
+                }
                 Spacer()
                 roleChip
             }
@@ -49,7 +61,7 @@ public struct MicrobeCodexCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabelText)
-        .accessibilityHint(isDiscovered ? "Tap to view codex entry" : "Not yet discovered — zoom in to find me")
+        .accessibilityHint(accessibilityHintText)
     }
 
     private var livesNearLine: some View {
@@ -69,6 +81,12 @@ public struct MicrobeCodexCard: View {
         let base = "\(microbe.displayName), \(microbe.role.rawValue) microbe"
         guard isDiscovered, !livesNearDisplayNames.isEmpty else { return base }
         return "\(base). Lives near \(livesNearDisplayNames.joined(separator: ", "))"
+    }
+
+    private var accessibilityHintText: String {
+        if !isDiscovered { return "Not yet discovered — zoom in to find me" }
+        if hasChapter { return "Tap to read this microbe's story" }
+        return "Tap to view codex entry"
     }
 
     private var portraitPlaceholder: some View {
