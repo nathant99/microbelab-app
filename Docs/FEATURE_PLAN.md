@@ -98,10 +98,10 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 
 ### Adventure Mode
 
-- [ ] Wire Level 1 config from `spark-anvil-hub/Resources/HubContributions/microbelab.json` (Life Zone contribution)
-- [ ] Implement `MicrobeLabHubContribution` Level 2 Swift overlay in `Packages/Libraries/Sources/AppFeature/HubContribution/`
-- [ ] Register mode-cards in `AdventureView`
-- [ ] Wire `ForgeProgressionManager` gating across mode-cards
+- [ ] Wire Level 1 config from `spark-anvil-hub/Resources/HubContributions/microbelab.json` (Life Zone contribution) — labsmith-side handoff filed at `Docs/HANDOFF_FROM_APP_FORGEADVENTURE_LIFE_ZONE_PROPOSAL.md` (eighth-pass round, PR #74); waits on labsmith to author the canonical baseline JSON + ship the `ZoneID.lifeZone` case
+- [x] Implement `MicrobeLabHubContribution` Level 2 Swift overlay in `Packages/Libraries/Sources/AppFeature/HubContribution/` — **shipped PR #74** (eighth-pass auto-cycle sweep). `MicrobeLabHubContribution` (`nonisolated public struct`) conforms to `ForgeAdventure.HubContribution` with `themeAccent` = `#33CCBB` hero color per `Docs/TECHNICAL_DESIGN.md`, `mentorPersona` = `.microbeLabCilia` (`MentorPersona` extension with Cilia's canonical system-prompt header), `kitResources` = the 4 Phase-1 question kits already bundled via `QuestionKitService.phase1KitSlugs`, `engineCopy` carrying trauma-informed protection / agency / discovery copy for `.simulation` / `.defense` / `.quest`. `MicrobeLabHubChallengeAdapter` (SwiftUI adapter) renders a hub-friendly per-engine placeholder surface (icon + completion message + back-to-hub + wrap-up-today affordances). Targets `.scienceLabs` until labsmith ships `lifeZone` per the cross-repo handoff above
+- [/] Register mode-cards in `AdventureView` — partial: `MicrobeLabHubRegistrar.register(into:)` ships the async registrar helper AdventureHub-side integration calls when the hub orchestration lands. AdventureHub owns the canonical registry instance; this item closes fully when AdventureHub-side integration calls the registrar at hub startup
+- [ ] Wire `ForgeProgressionManager` gating across mode-cards — awaits hub-side ProgressionManager integration; gating semantics live in the Level 2 contribution's `kitResources` Bloom-band + grade-band metadata (already supplied)
 
 ### Onboarding
 
