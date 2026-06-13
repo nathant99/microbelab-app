@@ -29,6 +29,11 @@ public struct MicrobiomeView: View {
     @State private var hasFedFiber = false
     @State private var hasFedSugar = false
     @State private var stableTickRun: Int = 0
+    // Per-session mastery moments — fired once per kind via
+    // `CelebrationCoordinator.personalBest(metric:value:)` (`.epic` tier)
+    // when the kid demonstrates internalization of ecology causality.
+    // Per `Docs/FEATURE_PLAN.md` § Delight & Polish → "Mastery moments".
+    @State private var masteryDetector = MasteryMomentDetector()
 
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
@@ -162,6 +167,7 @@ public struct MicrobiomeView: View {
                         }
                     }
                     evaluateAchievements()
+                    evaluateEcologyMastery()
                 }
                 .buttonStyle(.glassProminent)
 
@@ -216,6 +222,31 @@ public struct MicrobiomeView: View {
         // unlocks in the same tick each surface a discrete cue.
         if !newlyEarned.isEmpty {
             sensory?.fire(.achievement)
+        }
+    }
+
+    /// Mastery-moment evaluation point. Pure mutation against the per-session
+    /// `MasteryMomentDetector`; the detector enforces the once-per-session
+    /// rule + criteria thresholds so the view's job is to forward state and
+    /// fire UI surfaces (celebration overlay + mentor bubble cue + sensory
+    /// streak-milestone haptic) on a non-nil `Moment` return.
+    private func evaluateEcologyMastery() {
+        guard let moment = masteryDetector.recordEcologyTick(
+            stableTickRun: stableTickRun,
+            feedingMode: feedingMode
+        ) else { return }
+        DebugLog.state("MicrobiomeView mastery moment: \(moment.kind.rawValue) at tick=\(tickCount) stableRun=\(stableTickRun)")
+        // Epic-tier celebration ripples the screen + plays the
+        // `daily-complete` Lottie per ForgeCelebration's mapping.
+        celebration?.personalBest(metric: moment.headline, value: "\(stableTickRun) stable ticks")
+        // Carry the moment's voice into the mentor bubble so the kid sees
+        // calm narration of what they just did (no benchmark framing).
+        mentorMessage = moment.subline
+        // Distinct sensory cue — streakMilestone carries a longer, more
+        // intentional haptic pattern than the routine `.achievement` cue.
+        sensory?.fire(.streakMilestone(MasteryMomentDetector.ecologyMasteryStableTickThreshold))
+        if let analytics {
+            Task { await analytics.track(.achievementEarned(slug: moment.kind.rawValue)) }
         }
     }
 
