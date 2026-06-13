@@ -11,6 +11,7 @@ public struct ProgressTabView: View {
     public let totalMicrobes: Int
     @Bindable public var gamification: GamificationService
     @State private var showingSummary = false
+    @State private var showingCertificate = false
 
     public init(
         progress: PlayerProgressData,
@@ -42,6 +43,14 @@ public struct ProgressTabView: View {
                     }
                     .accessibilityHint("Open today's session summary")
                 }
+                ToolbarItem(placement: .secondaryAction) {
+                    Button {
+                        showingCertificate = true
+                    } label: {
+                        Label("Share my codex", systemImage: "square.and.arrow.up")
+                    }
+                    .accessibilityHint("Preview a shareable codex certificate showing the microbes you've met")
+                }
             }
             .sheet(isPresented: $showingSummary) {
                 SessionSummarySheet(
@@ -50,7 +59,26 @@ public struct ProgressTabView: View {
                 )
                 .presentationDetents([.medium])
             }
+            .sheet(isPresented: $showingCertificate) {
+                CodexCertificateSheet(
+                    certificate: currentCertificate,
+                    onDismiss: { showingCertificate = false }
+                )
+                .presentationDetents([.large])
+            }
         }
+    }
+
+    /// Capture a frozen `CodexCertificate` snapshot at the moment the sheet presents.
+    /// Future-session activity doesn't retroactively change a certificate the kid has
+    /// shared.
+    private var currentCertificate: CodexCertificate {
+        CodexCertificate(
+            displayName: progress.displayName,
+            microbesDiscovered: progress.discoveredMicrobeIDs.count,
+            microbesTotal: totalMicrobes,
+            issuedAt: Date()
+        )
     }
 
     /// Capture a frozen `SessionSummary` snapshot at the moment the sheet
