@@ -2,9 +2,20 @@
 
 > **Seventh-pass rule-restatement summary** (top-of-doc per the seven-pass invariant codified 2026-06-12; verbatim user-direct, repeated SEVEN times in one calendar day — all-time portfolio record): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."* Scope: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`. Every round-document the agent emits in the cadence window carries this summary so the next round inherits the cadence without re-reading the entire CLAUDE.md. See `@CLAUDE.md` § Xcode-managed file safety for the canonical statement.
 
-**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #66 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
+**Status**: Phase 1 effectively shipped. Round 0 (scaffold) shipped 2026-05-22; Phase 1 systems landed via PRs #11 → #71 (through 2026-06-12). The bulk of Phase 1 engineering is complete; remaining work is asset-bundle-blocked (12-microbe portrait pack) or follow-on polish (UI tests, real-device perf capture).
 
-**Latest round (2026-06-12, PRs #63 → #66, sixth-pass auto-cycle sweep)**: 4-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`) paired with the **sixth-pass** Xcode-managed file safety reinforcement + an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes + follow-technical-design-doc + SPM-folder-structure directive set. Each PR landed end-to-end before the next branched. Rollup:
+**Latest round (2026-06-12, PRs #68 → #71, seventh-pass auto-cycle sweep)**: 4-PR sweep driven by the user-direct standing auto-cycle (`branch → commit → push → gh pr create → gh pr merge → verify`) paired with the **seventh-pass** Xcode-managed file safety reinforcement + the persisted maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes + follow-technical-design-doc + SPM-folder-structure directive set. Each PR landed end-to-end before the next branched. Seven restatements in one calendar day is the all-time portfolio record for any single rule. Rollup:
+
+| PR | Theme |
+|---|---|
+| #68 | **Seventh-pass** Xcode-managed file safety reinforcement — codifies the **seven-pass invariant** (supersedes the six-pass invariant). New rule: when the same safety rule has been restated seven times in a single calendar day, the agent re-affirms the rule (verbatim user-direct quote + scope table reference) at the top of every round-document it emits (PR descriptions, every new `HANDOFF_TO_USER_<TOPIC>.md`, `Docs/IMPLEMENTATION_HANDOFF.md` rollup top, `Docs/FEATURE_PLAN.md` prologue). Markdown decay risk is now structurally mitigated by per-round re-affirmation rather than relying on a future session reading CLAUDE.md first. |
+| #69 | SpriteView VoiceOver labels — closes the high-priority GAP 1 from `Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md` § Findings. `ExploreView` / `MicrobiomeView` / `ImmuneGameView` each carry a top-level `.accessibilityElement(children: .contain) + .accessibilityLabel(...) + .accessibilityValue(...)` envelope so VoiceOver users land on a named canvas + hear dynamic state on each state change (tier snap / feeding-mode change + tick / wave + score + pathogens-remaining). FEATURE_PLAN § Quality "Accessibility audit" GAP 1 follow-up closed. |
+| #70 | ForgeReporting wire-up — parent-facing standards-mapped progress report (engagement skeleton). `ProgressReportService` (Services/Engagement/, pure nonisolated value type wrapping `ForgeReporting.ForgeReportGenerator`) + `ProgressReportView` (AppFeature/Settings/) under a new "For parents" section gated behind the existing parental-gate math gate. Plumbing: `AppRootView` builds a `ProgressReportSnapshot` from live engagement signals + threads through `ProfileView(progressReportSnapshot:)` → `SettingsView(progressReportSnapshot:)`. Per-standard proficiency (strengths / growth areas) follows when per-question attempt logs land; today's surface is the engagement skeleton. 7 new `ProgressReportServiceTests`. Closes (partial) FEATURE_PLAN § Parent Integration → "Progress dashboard". |
+| #71 | ForgeSensory wire-up — juice layer (haptic + audio-ready axis). `SensoryPaletteCoordinator` (Services/Engagement/, MainActor `@Observable`) wraps `ForgeSensory.SensoryPalette`. `AppRootView` instantiates one coordinator + threads through MicrobeCodexView → QuizView and MicrobiomeView → ImmuneGameView. Per-event wiring: QuizView fires `.correctAnswer` / `.incorrectAnswer` / `.achievement` / `.challengeComplete`; MicrobiomeView fires `.achievement`; ImmuneGameView fires `.streakMilestone(wave)` / `.challengeComplete` / `.achievement`. Audio dispatch defaults nil until the SFX pack lands per `.claude/rules/forgekit.md` § Asset generation ownership; haptic axis fires immediately via `ForgeHapticEngine.shared`. Trauma-informed: incorrect haptic is the canonical soft tap, never punitive. 6 new `SensoryPaletteCoordinatorTests`. Closes (partial — visual + haptic axes) FEATURE_PLAN § Delight & Polish → "Juice layer". |
+
+Net additions: 2 new Services modules (`ProgressReportService` + `SensoryPaletteCoordinator`, both under `Services/Engagement/` per the portfolio SPM folder convention) + 1 new AppFeature module (`ProgressReportView` under `AppFeature/Settings/`) + 13 new unit tests across 2 suites (`ProgressReportServiceTests` + `SensoryPaletteCoordinatorTests`) + 2 ForgeKit modules promoted from declared-but-unused → actively consumed (`ForgeReporting` → Services; `ForgeSensory` → Services). Build green at each merge.
+
+**Previous round (2026-06-12, PRs #63 → #66, sixth-pass auto-cycle sweep)**: 4-PR sweep driven by the user-direct standing auto-cycle paired with the **sixth-pass** Xcode-managed file safety reinforcement + an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes + follow-technical-design-doc + SPM-folder-structure directive set. Rollup:
 
 | PR | Theme |
 |---|---|
@@ -41,13 +52,13 @@ Net additions: 1 new Services module (`MicrobeKnowledgeGraph`) + 1 new SharedUI 
 3. **This repo's CLAUDE.md** — portfolio tech stack + reference doc index + Xcode-managed file constraints
 4. **Portfolio patterns**: `labsmith/Docs/PORTFOLIO_PATTERNS.md` § Implementation Prep
 
-## ForgeKit Integration Status (post-2026-06-12 maximize-integration sweep)
+## ForgeKit Integration Status (post-2026-06-12 maximize-integration sweep, seventh pass)
 
 Modules now actively consumed (vs the `Package.swift` declared list):
 
 | Module | Where it's wired | Notes |
 |---|---|---|
-| `ForgeModels` | Models, Services, AppFeature | `StudentProfile`, `BloomLevel`, base value types |
+| `ForgeModels` | Models, Services, AppFeature | `StudentProfile`, `BloomLevel`, `StandardAlignment`, base value types |
 | `ForgePersistence` | Services | SwiftData helpers |
 | `ForgeGamification` | Services (`GamificationService` wraps `XPEngine` + `StreakManager` + `AchievementEngine`) | Phase-1 achievements + XP curve |
 | `ForgeAccessibility` | Services (`DailyTimeCoordinator` wraps `SessionTimerService`) | Daily-cap pipeline (PR #54) |
@@ -60,6 +71,8 @@ Modules now actively consumed (vs the `Package.swift` declared list):
 | `ForgeKnowledgeGraph` | Services (`MicrobeKnowledgeGraph` wraps `KnowledgeGraph` with shared-habitat edges; `MicrobeCodexView` surfaces "Lives near" hints) | Cross-microbe ecology surfacing (PR #60) |
 | `ForgeAnalytics` | Services (`AnalyticsService` wraps the actor-based `AnalyticsEngine`; `MicrobeLabAnalyticsEvent` enum carries grep-able event names + PII-safe property bags) | On-device event totals + session lifecycle (PR #64) |
 | `ForgeSpotlight` | Services (`MicrobeSpotlightIndex` wraps `ForgeSpotlightIndexer`; `MicrobeSpotlightItem` adapts `MicrobeCharacter` to `SpotlightIndexable`) | 12-microbe codex Spotlight indexing (PR #65) |
+| `ForgeReporting` | Services (`ProgressReportService` wraps `ForgeReportGenerator`; `AppFeature/Settings/ProgressReportView` renders the parent-conference text + standards-covered list under the parental-gate "For parents" section) | Parent-facing standards-mapped progress report (PR #70) |
+| `ForgeSensory` | Services (`SensoryPaletteCoordinator` wraps `SensoryPalette`; QuizView / MicrobiomeView / ImmuneGameView fire `.correctAnswer` / `.incorrectAnswer` / `.achievement` / `.streakMilestone(wave)` / `.challengeComplete` events) | Juice layer haptic axis (PR #71); audio dispatch defaults nil until SFX pack lands |
 
 Still declared but unused in Swift code (deps stay in `Package.swift` so future wiring is friction-free):
 
@@ -95,6 +108,8 @@ Still declared but unused in Swift code (deps stay in `Package.swift` so future 
 - `AnalyticsService` — MainActor `@Observable` wrapper around the `ForgeAnalytics.AnalyticsEngine` actor; on-device only (PR #64)
 - `MicrobeSpotlightIndex` — MainActor `@Observable` wrapper around `ForgeSpotlightIndexer`; indexes the 12-microbe catalog for Spotlight search (PR #65)
 - `MentorRecallStore` — UserDefaults-persisted ring buffer of recently-met microbe slugs; powers Cilia's callback line surface (PR #66)
+- `ProgressReportService` — pure nonisolated value type wrapping `ForgeReporting.ForgeReportGenerator`; produces parent-conference report text + standards-covered list from a `ProgressReportSnapshot` (PR #70)
+- `SensoryPaletteCoordinator` — MainActor `@Observable` wrapper around `ForgeSensory.SensoryPalette`; routes haptic (and audio when SFX pack lands) feedback events across QuizView / MicrobiomeView / ImmuneGameView (PR #71)
 - `DebugLog` — single-seam emitter with 7 categories per `.claude/rules/debug-logging.md`
 
 ### Game Engine
@@ -150,10 +165,15 @@ These remain unchecked in `Docs/FEATURE_PLAN.md`:
 | ~~Onboarding flow (5-step)~~ | ✅ SHIPPED via `MicrobeLabOnboardingFlow` (AppFeature/Onboarding/) |
 | ~~Celebration system~~ | ✅ SHIPPED via PR #53 — `CelebrationCoordinator` proportional juice layer |
 | ~~Parental controls (daily cap)~~ | ✅ SHIPPED via PR #54 — `DailyTimeCoordinator` + `DailyCapOverlay` |
+| ~~Accessibility audit GAP 1 (SpriteView VoiceOver labels)~~ | ✅ SHIPPED via PR #69 — 3 SpriteView hosts carry top-level `.accessibilityLabel` + dynamic `.accessibilityValue` |
+| ~~Progress dashboard (engagement skeleton)~~ | ✅ SHIPPED via PR #70 — `ProgressReportService` + `ProgressReportView` under SettingsView's "For parents" section; per-standard proficiency (strengths / growth areas) follows when per-question attempt logs land |
+| ~~Juice layer (haptic axis)~~ | ✅ SHIPPED via PR #71 — `SensoryPaletteCoordinator` routes haptic events across QuizView / MicrobiomeView / ImmuneGameView; audio dispatch defaults nil until SFX pack lands |
 | Declared Age Range API gate (iOS 26.2+) | **Scaffold landed PR #55**. Live `await requestAgeRange(...)` blocked on (a) entitlement provisioning via Xcode GUI per `HANDOFF_TO_USER_XCODE_GUI_TASKS.md` § 6b, (b) COPPA consent + retention surface (receiving "Under 13" creates actual knowledge) |
 | Adventure Mode (Life Zone) wire-up | Awaits AdventureHub Level 1 config + Level 2 Swift overlay handoff |
 | Performance profiling (16ms tier transition / 8ms sim tick) | **Signposts landed PR #56**. Real-device Instruments capture + bench-harness assertions still pending |
-| UI tests / accessibility XCUITests | Best landed once portrait pack ships (UI tests rely on rendered assets) — accessibility audit already PASS WITH GAPS per `Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md` |
+| UI tests / accessibility XCUITests | Best landed once portrait pack ships (UI tests rely on rendered assets) — accessibility audit already PASS WITH GAPS per `Docs/AUDIT_ACCESSIBILITY_PASS_2026-06-12.md`; GAP 1 closed PR #69 |
+| Juice layer audio axis (SFX pack) | Asset-blocked on labsmith SFX bundle handoff per `.claude/rules/forgekit.md` § Asset generation ownership; coordinator is wired and ready (SFX dispatch closure parameter defaults nil) |
+| Parent progress dashboard (per-standard proficiency) | Awaits per-question attempt log persistence; `ProgressReportService` already exposes the standards list + `StudentReportData.standardProficiencies` will pick up when the log lands |
 
 ## Sequencing Constraints
 
