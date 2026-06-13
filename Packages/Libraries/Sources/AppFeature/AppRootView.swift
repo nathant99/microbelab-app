@@ -24,6 +24,18 @@ public struct AppRootView: View {
     @State private var sessionCount = SessionCountStore()
     @State private var retention = RetentionMetricsStore()
     @State private var sessionTarget = SessionTargetService()
+    /// Active tab in `tabShell`. Defaults to `.explore` so cold launches
+    /// land on the microscope canvas. App Intents (Siri / Spotlight /
+    /// Shortcuts) drive this via `NavigationCoordinator.shared` — the
+    /// `.onChange(of: navigationCoordinator.requestedTab)` observer below
+    /// applies the request and clears it so the same intent can re-fire
+    /// later.
+    @State private var selectedTab: MicrobeLabTab = .explore
+    /// Single MainActor-isolated coordinator that brokers App Intent →
+    /// tab-switch requests. `@Observable`-backed so SwiftUI tracks
+    /// changes automatically. Per `Services.NavigationCoordinator` +
+    /// AppFeature `Intents/`.
+    private let navigationCoordinator: NavigationCoordinator = .shared
     @State private var welcomeBackDaysAway: Int?
     @State private var streakRescue: StreakRescue = .none
     @State private var celebration = CelebrationCoordinator()
@@ -395,8 +407,8 @@ public struct AppRootView: View {
             sessionCount: sessionCount.sessionCount,
             simplifyChallenge: settingsStore.settings.simplifyChallenge
         )
-        return TabView {
-            Tab("Explore", systemImage: "microscope") {
+        return TabView(selection: $selectedTab) {
+            Tab("Explore", systemImage: "microscope", value: MicrobeLabTab.explore) {
                 ExploreView(
                     catalog: catalog,
                     mentor: mentor,
@@ -405,11 +417,11 @@ public struct AppRootView: View {
                     recall: recall
                 )
             }
-            Tab("Codex", systemImage: "book") {
+            Tab("Codex", systemImage: "book", value: MicrobeLabTab.codex) {
                 MicrobeCodexView(catalog: catalog, gamification: gamification, celebration: celebration, sensory: sensory)
             }
             if disclosure.showsMicrobiome {
-                Tab("Microbiome", systemImage: "leaf") {
+                Tab("Microbiome", systemImage: "leaf", value: MicrobeLabTab.microbiome) {
                     MicrobiomeView(
                         simulator: simulator,
                         mentor: mentor,
@@ -422,7 +434,7 @@ public struct AppRootView: View {
                 }
             }
             if disclosure.showsProgress {
-                Tab("Progress", systemImage: "chart.bar") {
+                Tab("Progress", systemImage: "chart.bar", value: MicrobeLabTab.progress) {
                     ProgressTabView(
                         progress: PlayerProgressData.empty(),
                         totalMicrobes: catalog.microbes.count,
@@ -431,10 +443,38 @@ public struct AppRootView: View {
                 }
             }
             if disclosure.showsProfile {
-                Tab("Profile", systemImage: "person") {
+                Tab("Profile", systemImage: "person", value: MicrobeLabTab.profile) {
                     ProfileView(progressReportSnapshot: progressReportSnapshot)
                 }
             }
+        }
+        .onChange(of: navigationCoordinator.requestedTab) { _, requested in
+            // App Intents → tab switch. The coordinator surfaces a
+            // requested tab; we apply it iff the tab is currently
+            // visible in the progressive-disclosure shell (e.g., a
+            // Shortcut targeting Microbiome silently no-ops on session 1
+            // when the tab isn't surfaced yet). Then clear the request
+            // so the same intent can re-fire later.
+            guard let target = requested else { return }
+            if isTabAvailable(target, disclosure: disclosure) {
+                selectedTab = target
+                DebugLog.lifecycle("AppRootView — intent-driven tab switch → \(target.rawValue)")
+            } else {
+                DebugLog.lifecycle("AppRootView — intent requested tab \(target.rawValue) not yet disclosed; ignored")
+            }
+            navigationCoordinator.clearRequest()
+        }
+    }
+
+    /// Returns true if the requested tab is currently visible in the
+    /// progressive-disclosure shell. Explore + Codex are always available;
+    /// the others gate on `TabDisclosure`.
+    private func isTabAvailable(_ tab: MicrobeLabTab, disclosure: TabDisclosure) -> Bool {
+        switch tab {
+        case .explore, .codex: return true
+        case .microbiome: return disclosure.showsMicrobiome
+        case .progress: return disclosure.showsProgress
+        case .profile: return disclosure.showsProfile
         }
     }
 
