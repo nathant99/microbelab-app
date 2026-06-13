@@ -18,8 +18,16 @@ public struct ProfileView: View {
     /// parent-facing "Progress report" row behind the parental gate.
     private let progressReportSnapshot: ProgressReportSnapshot?
 
-    public init(progressReportSnapshot: ProgressReportSnapshot? = nil) {
+    /// Shared `ParentalConsentService`. When non-nil, `SettingsView`
+    /// surfaces the "Parental consents" row behind the parental gate.
+    private let consentService: ParentalConsentService?
+
+    public init(
+        progressReportSnapshot: ProgressReportSnapshot? = nil,
+        consentService: ParentalConsentService? = nil
+    ) {
         self.progressReportSnapshot = progressReportSnapshot
+        self.consentService = consentService
     }
 
     public var body: some View {
@@ -47,7 +55,10 @@ public struct ProfileView: View {
                 }
                 Section("Settings") {
                     NavigationLink {
-                        SettingsView(progressReportSnapshot: progressReportSnapshot)
+                        SettingsView(
+                            progressReportSnapshot: progressReportSnapshot,
+                            consentService: consentService
+                        )
                     } label: {
                         Label("All settings", systemImage: "gear")
                     }
