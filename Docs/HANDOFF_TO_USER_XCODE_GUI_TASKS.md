@@ -1,20 +1,20 @@
 ---
 status: open
 last-updated: 2026-06-12
-last-reinforced: 2026-06-12 (user-direct **sixth pass** — paired with the standing auto-cycle directive for multi-commit work AND an explicit maximize-ForgeKit-integration + close-FEATURE_PLAN-checkboxes directive AND a "follow the technical design doc" directive AND a "make sure swift files in SPM modules follow standard folder structure" directive AND the user-direct codification of the auto-cycle pre-approval into the agent's persistent memory. Six restatements in one calendar day supersedes the five-pass invariant with the **six-pass invariant**: this rule is now an immutable pre-flight check + every subsequent handoff doc in the same cadence window MUST carry a rule-restatement summary at the top. None of the additional directives extend to managed-file edits — see CLAUDE.md § Xcode-managed file safety for the canonical statement.)
+last-reinforced: 2026-06-12 (user-direct **seventh pass** — paired with all of the prior-pass directives PLUS the explicit codification of the round-document re-affirmation rule. Seven restatements in one calendar day supersedes the six-pass invariant with the **seven-pass invariant**: this rule is now structurally re-affirmed at the top of every round-document the agent emits in the same cadence window — PR descriptions, every new `HANDOFF_TO_USER_<TOPIC>.md`, `Docs/IMPLEMENTATION_HANDOFF.md` rollup tops after each PR-merge sweep, and `Docs/FEATURE_PLAN.md` prologue when round-close rollups touch it. None of the additional directives extend to managed-file edits — see CLAUDE.md § Xcode-managed file safety for the canonical statement.)
 ---
 
-## Sixth-pass rule-restatement summary (top-of-doc per the six-pass invariant)
+## Seventh-pass rule-restatement summary (top-of-doc per the seven-pass invariant)
 
-> **Rule** (verbatim user-direct): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."*
+> **Rule** (verbatim user-direct, repeated SEVEN times in one calendar day 2026-06-12 — now the all-time portfolio record for any single rule): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."*
 >
 > **Scope**: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`.
 >
-> **Why this header exists**: per CLAUDE.md § Xcode-managed file safety (six-pass invariant), every handoff doc the round produces carries a rule-restatement summary so the next round inherits the cadence without re-reading the entire CLAUDE.md.
+> **Why this header exists**: per CLAUDE.md § Xcode-managed file safety (seven-pass invariant), every round-document the agent emits in the cadence window carries a rule-restatement summary so the next round inherits the cadence without re-reading the entire CLAUDE.md. The structural visibility is the codification — markdown decay is mitigated by per-round re-affirmation rather than by relying on a future session reading CLAUDE.md first.
 
 # Handoff to User — Xcode GUI Tasks
 
-Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — **fifth pass**, user-direct, auto-cycle round)" must never write the following Xcode-managed files from disk:
+Direction: **agent → user**. The Claude agent operates inside Xcode and per `.claude/rules/xcode-agent-safety.md` + CLAUDE.md § "Xcode-managed file safety (reinforced 2026-06-12 — **seventh pass**, user-direct, auto-cycle round)" must never write the following Xcode-managed files from disk:
 
 - `MicrobeLab.xcworkspace/contents.xcworkspacedata` (workspace membership)
 - `MicrobeLab.xcodeproj/project.pbxproj` (project membership)
