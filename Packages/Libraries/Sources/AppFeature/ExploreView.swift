@@ -98,6 +98,9 @@ public struct ExploreView: View {
     public var body: some View {
         SpriteView(scene: scene, options: [.allowsTransparency])
             .ignoresSafeArea()
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Microscope view. Pinch to zoom; tap the tier badge to snap to a magnification level.")
+            .accessibilityValue("Current magnification: \(currentTier.displayLabel).")
             .safeAreaInset(edge: .top, spacing: 8) {
                 MicroscopeHUD(currentTier: currentTier) { tier in
                     scene.snapToTier(tier)

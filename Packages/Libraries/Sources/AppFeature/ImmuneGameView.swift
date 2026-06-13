@@ -119,6 +119,11 @@ public struct ImmuneGameView: View {
         VStack(spacing: 0) {
             SpriteView(scene: scene, options: [.allowsTransparency])
                 .ignoresSafeArea(edges: .horizontal)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Macrophage minigame. Drag the macrophage to consume pathogens; clear the wave to advance.")
+                .accessibilityValue(isComplete
+                    ? "Run complete. Final score \(score)."
+                    : "Wave \(wave). Score \(score). Pathogens remaining: \(pathogensRemaining).")
                 .safeAreaInset(edge: .top, spacing: 8) {
                     scoreHud
                         .padding(.horizontal)

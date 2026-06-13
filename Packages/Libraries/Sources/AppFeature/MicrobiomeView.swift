@@ -64,6 +64,9 @@ public struct MicrobiomeView: View {
             VStack(spacing: 0) {
                 SpriteView(scene: scene, options: [.allowsTransparency])
                     .ignoresSafeArea(edges: .horizontal)
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("Microbiome simulator. Pick a feeding mode below to shift the gut ecology; tap the antibiotic button to perturb it.")
+                    .accessibilityValue("Current feeding mode: \(Self.accessibilityLabel(for: feedingMode)). Tick \(tickCount).")
                     .safeAreaInset(edge: .top, spacing: 8) {
                         headerRow
                             .padding(.horizontal)
@@ -204,6 +207,19 @@ public struct MicrobiomeView: View {
                 let capturedSlug = definition.id
                 Task { await analytics.track(.achievementEarned(slug: capturedSlug)) }
             }
+        }
+    }
+
+    // VoiceOver-facing label for the feeding mode — sibling helper to the
+    // private one in `SharedUI.FeedingModePicker`; mirrored here so the
+    // simulator-canvas accessibility value doesn't need to reach into the
+    // picker's private surface. Keep the two in sync if either gains a case.
+    static func accessibilityLabel(for mode: FeedingMode) -> String {
+        switch mode {
+        case .fiber: return "Fiber"
+        case .sugar: return "Sugar"
+        case .balanced: return "Balanced"
+        case .none: return "Empty"
         }
     }
 }
