@@ -35,6 +35,7 @@ public struct MicrobiomeView: View {
     private let difficulty: DifficultyAdjuster
     private let celebration: CelebrationCoordinator?
     private let analytics: AnalyticsService?
+    private let sensory: SensoryPaletteCoordinator?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -42,7 +43,8 @@ public struct MicrobiomeView: View {
         gamification: GamificationService? = nil,
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
         celebration: CelebrationCoordinator? = nil,
-        analytics: AnalyticsService? = nil
+        analytics: AnalyticsService? = nil,
+        sensory: SensoryPaletteCoordinator? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -54,6 +56,7 @@ public struct MicrobiomeView: View {
         self.difficulty = difficulty
         self.celebration = celebration
         self.analytics = analytics
+        self.sensory = sensory
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -104,7 +107,8 @@ public struct MicrobiomeView: View {
                     gamification: gamification,
                     difficulty: difficulty,
                     celebration: celebration,
-                    analytics: analytics
+                    analytics: analytics,
+                    sensory: sensory
                 )
                     .navigationTitle("Defense")
                     #if os(iOS)
@@ -207,6 +211,11 @@ public struct MicrobiomeView: View {
                 let capturedSlug = definition.id
                 Task { await analytics.track(.achievementEarned(slug: capturedSlug)) }
             }
+        }
+        // Juice layer: per-achievement haptic; per-event so successive
+        // unlocks in the same tick each surface a discrete cue.
+        if !newlyEarned.isEmpty {
+            sensory?.fire(.achievement)
         }
     }
 

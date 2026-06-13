@@ -46,6 +46,12 @@ public struct AppRootView: View {
     // still here when you're ready"). Closes the Character-personality
     // FEATURE_PLAN item.
     @State private var recall = MentorRecallStore()
+    // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
+    // audio) feedback for correct/incorrect answers, achievement unlocks,
+    // wave clears, and run-complete moments. Closes the FEATURE_PLAN
+    // § Delight & Polish "Juice layer" item on the haptic + audio axis;
+    // the visual axis stays on CelebrationCoordinator above.
+    @State private var sensory = SensoryPaletteCoordinator()
     // Auto-surface session-summary on app background (PR #61). Pure
     // in-memory — the welcome-back overlay covers the "kid left for 3+
     // days" case via LastActiveStore. Per Docs/FEATURE_PLAN.md § Parent
@@ -400,7 +406,7 @@ public struct AppRootView: View {
                 )
             }
             Tab("Codex", systemImage: "book") {
-                MicrobeCodexView(catalog: catalog, gamification: gamification, celebration: celebration)
+                MicrobeCodexView(catalog: catalog, gamification: gamification, celebration: celebration, sensory: sensory)
             }
             if disclosure.showsMicrobiome {
                 Tab("Microbiome", systemImage: "leaf") {
@@ -410,7 +416,8 @@ public struct AppRootView: View {
                         gamification: gamification,
                         difficulty: difficulty,
                         celebration: celebration,
-                        analytics: analytics
+                        analytics: analytics,
+                        sensory: sensory
                     )
                 }
             }

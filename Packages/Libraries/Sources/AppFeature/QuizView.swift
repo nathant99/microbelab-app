@@ -13,17 +13,20 @@ public struct QuizView: View {
     let kit: QuestionKit
     let gamification: GamificationService?
     let celebration: CelebrationCoordinator?
+    let sensory: SensoryPaletteCoordinator?
     @State private var machine: QuizMachine
     @State private var hasAwardedCompletionXP = false
 
     public init(
         kit: QuestionKit,
         gamification: GamificationService? = nil,
-        celebration: CelebrationCoordinator? = nil
+        celebration: CelebrationCoordinator? = nil,
+        sensory: SensoryPaletteCoordinator? = nil
     ) {
         self.kit = kit
         self.gamification = gamification
         self.celebration = celebration
+        self.sensory = sensory
         _machine = State(initialValue: QuizMachine(totalQuestions: kit.questions.count))
     }
 
@@ -51,14 +54,23 @@ public struct QuizView: View {
             if let gamification {
                 let baseXP = 10 * machine.correctCount
                 gamification.awardXP(baseXP, reason: "quiz kit \(kit.slug)")
-                gamification.evaluateAchievements { definition in
+                let newlyEarned = gamification.evaluateAchievements { definition in
                     switch definition.id {
                     case MicrobeLabAchievements.firstQuiz.id: return true
                     case MicrobeLabAchievements.quizPerfect.id: return allCorrect
                     default: return false
                     }
                 }
+                // Juice layer: per-achievement haptic alongside the celebration
+                // overlay's visual badge. No-op when no new achievement landed.
+                if !newlyEarned.isEmpty {
+                    sensory?.fire(.achievement)
+                }
             }
+            // Challenge-complete haptic on kit completion regardless of XP /
+            // achievement outcome — the kid finished a kit and the audio +
+            // haptic layer should acknowledge it.
+            sensory?.fire(.challengeComplete)
             // Proportional celebration per Docs/FEATURE_PLAN.md § Delight &
             // Polish — perfect kit gets an epic tier (full-screen Lottie
             // fallback to emoji + headline); a "got most of them" finish gets
@@ -221,8 +233,15 @@ public struct QuizView: View {
             }
             if !machine.revealed {
                 Button("Check") {
-                    machine.reveal(against: currentQuestion)
-                    DebugLog.state("QuizView reveal \(machine.currentIndex): correct=\(machine.selectedChoiceIndex == currentQuestion.correctIndex)")
+                    let wasCorrect = machine.reveal(against: currentQuestion)
+                    DebugLog.state("QuizView reveal \(machine.currentIndex): correct=\(wasCorrect)")
+                    // Juice layer haptic + (future) audio per
+                    // Docs/FEATURE_PLAN.md § Delight & Polish — fires on every
+                    // reveal. Trauma-informed: the incorrect haptic is the
+                    // canonical ForgeHapticLibrary.wrongAnswer (soft tap),
+                    // never punitive. The visual axis stays on the existing
+                    // mentor bubble + explanation card.
+                    sensory?.fire(wasCorrect ? .correctAnswer : .incorrectAnswer)
                 }
                 .buttonStyle(.glassProminent)
                 .disabled(machine.selectedChoiceIndex == nil)
