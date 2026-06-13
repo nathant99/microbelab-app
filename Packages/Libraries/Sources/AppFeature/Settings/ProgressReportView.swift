@@ -79,7 +79,7 @@ public struct ProgressReportView: View {
         } header: {
             Text("Parent conference summary")
         } footer: {
-            Text("Generated locally via ForgeReporting. Strengths + growth areas surface here once per-standard proficiency lands; today the summary covers engagement + recommendations.")
+            Text("Generated locally via ForgeReporting. Strengths + growth areas surface once the kid has answered quiz questions tagged to a standard; engagement + recommendations always render.")
                 .font(.caption)
         }
     }
