@@ -93,6 +93,12 @@ public enum MicrobeLabAnalyticsEvent: Sendable, Equatable {
     case quizCompleted(kitSlug: String, correct: Int, total: Int)
     /// Kid earned an achievement.
     case achievementEarned(slug: String)
+    /// AppRootView transitioned to a new startup / steady-state phase.
+    /// Payload is the canonical slug from `MicrobeLabPhase.slug` so the
+    /// event surface stays grep-stable. Emitted on the boundary of
+    /// `parent_handoff` → `kid_onboarding` → `loading_catalog` →
+    /// `tab_shell` / `catalog_failure`.
+    case appPhaseReached(phaseSlug: String)
 
     /// Canonical event name (snake_case per portfolio analytics convention).
     public var name: String {
@@ -104,6 +110,7 @@ public enum MicrobeLabAnalyticsEvent: Sendable, Equatable {
         case .feedingModeChanged: return "feeding_mode_changed"
         case .quizCompleted: return "quiz_completed"
         case .achievementEarned: return "achievement_earned"
+        case .appPhaseReached: return "app_phase_reached"
         }
     }
 
@@ -130,6 +137,8 @@ public enum MicrobeLabAnalyticsEvent: Sendable, Equatable {
             ]
         case .achievementEarned(let slug):
             return ["achievement_slug": slug]
+        case .appPhaseReached(let phaseSlug):
+            return ["phase_slug": phaseSlug]
         }
     }
 }
