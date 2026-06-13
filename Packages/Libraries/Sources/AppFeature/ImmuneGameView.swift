@@ -31,6 +31,11 @@ public struct ImmuneGameView: View {
     // Achievement-criteria tracking.
     @State private var hasClearedFirstWave = false
     @State private var hasClearedAllWaves = false
+    // Per-session mastery moments — fires once per kind when the kid
+    // demonstrates internalization of the defense system. Mirrors the
+    // `MicrobiomeView` ecology-mastery wiring shipped PR #76. Per
+    // `Docs/FEATURE_PLAN.md` § Delight & Polish → "Mastery moments".
+    @State private var masteryDetector = MasteryMomentDetector()
 
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
@@ -238,6 +243,12 @@ public struct ImmuneGameView: View {
             if let analytics {
                 Task { await analytics.track(.immuneRunCompleted) }
             }
+            // Defense-mastery axis (closes PR #76 partial). The detector
+            // returns a `Moment` only on a perfect run (≥ 5 waves cleared
+            // AND zero pathogens remaining) — the step-button advance gate
+            // already enforces `pathogensRemaining == 0` before `clearWave`,
+            // so any `finished == true` path here is a perfect run.
+            evaluateDefenseMastery()
         } else {
             mentorMessage = "Wave clear. The next group is on its way — take a breath."
             celebration?.celebrate(.medium, message: "Wave clear", emoji: "✨")
@@ -269,6 +280,33 @@ public struct ImmuneGameView: View {
         }
         if !newlyEarned.isEmpty {
             sensory?.fire(.achievement)
+        }
+    }
+
+    /// Defense-mastery moment evaluation. Mirrors the ecology-mastery
+    /// wiring in `MicrobiomeView.evaluateEcologyMastery()`: pure mutation
+    /// against the per-session `MasteryMomentDetector`; on a non-nil
+    /// `Moment` return, fire the same trifecta as the ecology axis —
+    /// `.epic`-tier celebration ripple via `CelebrationCoordinator
+    /// .personalBest(metric:value:)` + the moment's subline into the
+    /// mentor bubble + a distinct `.streakMilestone` sensory cue.
+    ///
+    /// Trauma-informed: the detector's subline copy stoplist (`finally` /
+    /// `at last` / `you almost` / `failed` / `behind` / `should have` /
+    /// `compared to` / `better than`) is pinned by parameterized test in
+    /// `MasteryMomentDetectorTests`; the mentor bubble inherits that copy
+    /// verbatim. The defense run never frames prior runs as failure.
+    private func evaluateDefenseMastery() {
+        guard let moment = masteryDetector.recordDefenseRunComplete(
+            wavesCleared: scene.wave,
+            pathogensRemaining: pathogensRemaining
+        ) else { return }
+        DebugLog.state("ImmuneGameView mastery moment: \(moment.kind.rawValue) waves=\(scene.wave) score=\(score)")
+        celebration?.personalBest(metric: moment.headline, value: "\(scene.wave) waves perfect")
+        mentorMessage = moment.subline
+        sensory?.fire(.streakMilestone(scene.wave))
+        if let analytics {
+            Task { await analytics.track(.achievementEarned(slug: moment.kind.rawValue)) }
         }
     }
 }
