@@ -36,6 +36,18 @@ public struct ImmuneGameView: View {
     // `MicrobiomeView` ecology-mastery wiring shipped PR #76. Per
     // `Docs/FEATURE_PLAN.md` § Delight & Polish → "Mastery moments".
     @State private var masteryDetector = MasteryMomentDetector()
+    // Snapshot for the share-worthy "defense trophy" surface. Captured at
+    // the moment the kid taps "Share trophy"; nil until then so the sheet
+    // never surfaces a placeholder before the run actually completes. Same
+    // frozen-snapshot pattern as `CodexCertificate` (capture on tap; the
+    // share image never re-derives mid-display).
+    @State private var pendingTrophy: ImmuneDefenseTrophy?
+    @State private var showingTrophy = false
+    /// Display name threaded down from `AppRootView` via `PlayerProgressData
+    /// .displayName`. Defaults to "Explorer" when the parent hasn't filled
+    /// it in. The trophy preserves the value verbatim — same convention as
+    /// `CodexCertificate.displayName`.
+    private let playerDisplayName: String
 
     private let mentor: VeeMentor?
     private let gamification: GamificationService?
@@ -50,7 +62,8 @@ public struct ImmuneGameView: View {
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
         celebration: CelebrationCoordinator? = nil,
         analytics: AnalyticsService? = nil,
-        sensory: SensoryPaletteCoordinator? = nil
+        sensory: SensoryPaletteCoordinator? = nil,
+        playerDisplayName: String = "Explorer"
     ) {
         let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
         let initial = MacrophagePacmanScene(
@@ -67,6 +80,7 @@ public struct ImmuneGameView: View {
         self.celebration = celebration
         self.analytics = analytics
         self.sensory = sensory
+        self.playerDisplayName = playerDisplayName
     }
 
     public var body: some View {
@@ -80,6 +94,33 @@ public struct ImmuneGameView: View {
         .onAppear {
             DebugLog.lifecycle("ImmuneGameView onAppear; warningShown=\(showWarning)")
         }
+        .sheet(isPresented: $showingTrophy) {
+            if let trophy = pendingTrophy {
+                ImmuneDefenseTrophySheet(trophy: trophy) {
+                    showingTrophy = false
+                }
+                .presentationDetents([.large])
+            }
+        }
+    }
+
+    /// Capture a frozen `ImmuneDefenseTrophy` snapshot at the moment the
+    /// kid taps "Share trophy" in the score HUD. Future-session activity
+    /// doesn't retroactively change a trophy the kid has shared. The
+    /// `perfectRun` flag mirrors `MasteryMomentDetector
+    /// .recordDefenseRunComplete(wavesCleared:pathogensRemaining:)`'s gate
+    /// (all waves cleared AND zero pathogens missed on the final wave) so
+    /// the mastery moment and the trophy share a perfect-run definition.
+    private func captureTrophySnapshot() -> ImmuneDefenseTrophy {
+        let perfect = hasClearedAllWaves && pathogensRemaining == 0
+        return ImmuneDefenseTrophy(
+            displayName: playerDisplayName,
+            wavesCleared: scene.wave,
+            totalWaves: scene.totalWaves,
+            finalScore: score,
+            perfectRun: perfect,
+            issuedAt: Date()
+        )
     }
 
     // MARK: - Trauma-safe off-ramp
@@ -160,6 +201,18 @@ public struct ImmuneGameView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .glassEffect(.regular.tint(.green), in: .capsule)
+                Button {
+                    pendingTrophy = captureTrophySnapshot()
+                    showingTrophy = true
+                    DebugLog.lifecycle("ImmuneGameView trophy sheet presented: waves=\(scene.wave)/\(scene.totalWaves) score=\(score) perfect=\(pendingTrophy?.perfectRun ?? false)")
+                } label: {
+                    Label("Share trophy", systemImage: "square.and.arrow.up")
+                        .labelStyle(.iconOnly)
+                        .padding(8)
+                }
+                .buttonStyle(.glass)
+                .accessibilityLabel("Share defense trophy")
+                .accessibilityHint("Open a shareable trophy showing your wave + score from this run")
             }
         }
     }
