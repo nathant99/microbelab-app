@@ -36,6 +36,7 @@ public struct ImmuneGameView: View {
     private let gamification: GamificationService?
     private let celebration: CelebrationCoordinator?
     private let analytics: AnalyticsService?
+    private let sensory: SensoryPaletteCoordinator?
 
     public init(
         showWarningInitially: Bool = true,
@@ -43,7 +44,8 @@ public struct ImmuneGameView: View {
         gamification: GamificationService? = nil,
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
         celebration: CelebrationCoordinator? = nil,
-        analytics: AnalyticsService? = nil
+        analytics: AnalyticsService? = nil,
+        sensory: SensoryPaletteCoordinator? = nil
     ) {
         let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
         let initial = MacrophagePacmanScene(
@@ -59,6 +61,7 @@ public struct ImmuneGameView: View {
         self.gamification = gamification
         self.celebration = celebration
         self.analytics = analytics
+        self.sensory = sensory
     }
 
     public var body: some View {
@@ -229,12 +232,20 @@ public struct ImmuneGameView: View {
         if finished {
             mentorMessage = "All waves cleared. Your body's quiet helpers had your back."
             celebration?.celebrate(.epic, message: "Defense run complete", emoji: "🛡️", slug: "game-complete")
+            // Juice layer: epic-tier challenge-complete haptic on full run
+            // pairs with the celebration overlay's full-screen Lottie.
+            sensory?.fire(.challengeComplete)
             if let analytics {
                 Task { await analytics.track(.immuneRunCompleted) }
             }
         } else {
             mentorMessage = "Wave clear. The next group is on its way — take a breath."
             celebration?.celebrate(.medium, message: "Wave clear", emoji: "✨")
+            // Juice layer: medium-tier streak-milestone haptic on per-wave
+            // clear. Mid-run cues stay subtle so the run doesn't feel
+            // overstimulating; the canonical ForgeHapticLibrary pattern
+            // already calibrates the intensity.
+            sensory?.fire(.streakMilestone(wave))
             if let analytics {
                 let captured = wave
                 Task { await analytics.track(.immuneWaveCleared(waveIndex: captured)) }
@@ -255,6 +266,9 @@ public struct ImmuneGameView: View {
         }
         for definition in newlyEarned {
             DebugLog.state("ImmuneGameView achievement \(definition.id) earned (+\(definition.xpValue) XP)")
+        }
+        if !newlyEarned.isEmpty {
+            sensory?.fire(.achievement)
         }
     }
 }

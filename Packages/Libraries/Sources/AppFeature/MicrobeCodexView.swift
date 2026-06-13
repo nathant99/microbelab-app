@@ -12,6 +12,7 @@ public struct MicrobeCodexView: View {
     private let kitService: QuestionKitService
     private let gamification: GamificationService?
     private let celebration: CelebrationCoordinator?
+    private let sensory: SensoryPaletteCoordinator?
     @State private var discoveredIDs: Set<UUID>
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
@@ -22,12 +23,14 @@ public struct MicrobeCodexView: View {
         kitService: QuestionKitService = QuestionKitService(),
         discoveredIDs: Set<UUID> = [],
         gamification: GamificationService? = nil,
-        celebration: CelebrationCoordinator? = nil
+        celebration: CelebrationCoordinator? = nil,
+        sensory: SensoryPaletteCoordinator? = nil
     ) {
         self.catalog = catalog
         self.kitService = kitService
         self.gamification = gamification
         self.celebration = celebration
+        self.sensory = sensory
         _discoveredIDs = State(initialValue: discoveredIDs)
     }
 
@@ -64,7 +67,7 @@ public struct MicrobeCodexView: View {
             }
             .sheet(item: $presentedKit) { kit in
                 NavigationStack {
-                    QuizView(kit: kit, gamification: gamification, celebration: celebration)
+                    QuizView(kit: kit, gamification: gamification, celebration: celebration, sensory: sensory)
                         .toolbar {
                             ToolbarItem(placement: .cancellationAction) {
                                 Button("Done") { presentedKit = nil }
