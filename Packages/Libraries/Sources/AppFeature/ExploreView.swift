@@ -23,19 +23,27 @@ public struct ExploreView: View {
     private let sessionCount: Int
     private let analytics: AnalyticsService?
     private let recall: MentorRecallStore?
+    /// Optional discovery store — when wired, the rare-microbe sighting +
+    /// curious-explorer easter-egg cues ALSO mark the quoted microbe as
+    /// discovered in the codex. Threaded through `AppRootView` so test
+    /// fixtures + previews can omit it (passing nil keeps the cues
+    /// surface as-is without persistence side-effects).
+    private let discovery: DiscoveryStore?
 
     public init(
         catalog: MicrobeCatalogService,
         mentor: VeeMentor,
         sessionCount: Int = 0,
         analytics: AnalyticsService? = nil,
-        recall: MentorRecallStore? = nil
+        recall: MentorRecallStore? = nil,
+        discovery: DiscoveryStore? = nil
     ) {
         self.catalog = catalog
         self.mentor = mentor
         self.sessionCount = sessionCount
         self.analytics = analytics
         self.recall = recall
+        self.discovery = discovery
         // The scene's size is reset by `.resizeFill` once SpriteView lays out.
         let initialScene = MicroscopeScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initialScene)
@@ -134,6 +142,10 @@ public struct ExploreView: View {
                 DebugLog.lifecycle("ExploreView onAppear; catalog=\(catalog.microbes.count) microbes")
                 if let slug = sightingToRecord {
                     recall?.record(slug: slug)
+                    // Sighting also writes through to the codex so the kid
+                    // sees the discovered card next time they visit. Pure
+                    // additive — no-op if the codex already lists the slug.
+                    discovery?.markDiscovered(slug: slug)
                     sightingToRecord = nil
                     DebugLog.state("ExploreView recorded recall sighting: \(slug)")
                 }
@@ -150,7 +162,9 @@ public struct ExploreView: View {
     /// Surface the curious-explorer easter-egg cue. Quotes a canonical
     /// microbe display name + frames the moment as warm recognition (not
     /// loss-aversion). The microbe pick is deterministic per session so
-    /// the slug never flickers between re-renders.
+    /// the slug never flickers between re-renders. The quoted microbe is
+    /// also marked discovered — meets the kid earned through curiosity
+    /// stay reflected in the codex.
     private func surfaceCuriousExplorerCue() {
         let slugs = catalog.microbes.map(\.slug).sorted()
         let pickedSlug = EasterEggDetector.curiousExplorerMicrobe(
@@ -161,5 +175,9 @@ public struct ExploreView: View {
             .flatMap { slug in catalog.microbes.first(where: { $0.slug == slug })?.displayName }
             ?? "a curious neighbor"
         mentorMessage = "You walked the whole range today. \(displayName) usually only shows up for the careful ones — thanks for looking."
+        if let pickedSlug {
+            discovery?.markDiscovered(slug: pickedSlug)
+            recall?.record(slug: pickedSlug)
+        }
     }
 }
