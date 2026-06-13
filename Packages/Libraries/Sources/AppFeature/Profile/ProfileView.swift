@@ -14,7 +14,13 @@ public struct ProfileView: View {
     @State private var showStudio = false
     @State private var displayName = "Explorer"
 
-    public init() {}
+    /// Optional engagement snapshot. When non-nil, `SettingsView` surfaces the
+    /// parent-facing "Progress report" row behind the parental gate.
+    private let progressReportSnapshot: ProgressReportSnapshot?
+
+    public init(progressReportSnapshot: ProgressReportSnapshot? = nil) {
+        self.progressReportSnapshot = progressReportSnapshot
+    }
 
     public var body: some View {
         NavigationStack {
@@ -41,7 +47,7 @@ public struct ProfileView: View {
                 }
                 Section("Settings") {
                     NavigationLink {
-                        SettingsView()
+                        SettingsView(progressReportSnapshot: progressReportSnapshot)
                     } label: {
                         Label("All settings", systemImage: "gear")
                     }
