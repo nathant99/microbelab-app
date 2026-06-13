@@ -58,6 +58,14 @@ public struct AppRootView: View {
     // still here when you're ready"). Closes the Character-personality
     // FEATURE_PLAN item.
     @State private var recall = MentorRecallStore()
+    // Persistent codex discovery set. Per
+    // `Docs/FEATURE_PLAN.md` § Delight & Polish → "Mastery moments —
+    // Distinct screen ripple + chord when child internalizes microbiome
+    // ecology": the codex axis fires when the kid completes the catalog
+    // (12 / 12). Discovery surfaces on codex card tap + sync-write from
+    // ExploreView's rare-sighting / curious-explorer cues so meets the
+    // kid encounters during the microscope loop reflect in the codex.
+    @State private var discovery = DiscoveryStore()
     // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
     // audio) feedback for correct/incorrect answers, achievement unlocks,
     // wave clears, and run-complete moments. Closes the FEATURE_PLAN
@@ -273,7 +281,7 @@ public struct AppRootView: View {
                     // previous active span was productive.
                     sessionStartedAt = Date()
                     sessionStartXP = gamification.totalXP
-                    sessionStartMicrobeCount = nil // wired when discovery surface lands
+                    sessionStartMicrobeCount = discovery.discoveredSlugs.count
                 }
             @unknown default:
                 break
@@ -315,7 +323,7 @@ public struct AppRootView: View {
             currentLevel: gamification.currentLevel,
             totalXP: gamification.totalXP,
             currentStreak: gamification.currentStreak,
-            microbesDiscovered: sessionStartMicrobeCount ?? 0,
+            microbesDiscovered: max(0, discovery.discoveredSlugs.count - (sessionStartMicrobeCount ?? 0)),
             achievementsEarned: gamification.earnedAchievementSlugs.count
         )
         pendingSessionSummary = summary
@@ -414,11 +422,18 @@ public struct AppRootView: View {
                     mentor: mentor,
                     sessionCount: sessionCount.sessionCount,
                     analytics: analytics,
-                    recall: recall
+                    recall: recall,
+                    discovery: discovery
                 )
             }
             Tab("Codex", systemImage: "book", value: MicrobeLabTab.codex) {
-                MicrobeCodexView(catalog: catalog, gamification: gamification, celebration: celebration, sensory: sensory)
+                MicrobeCodexView(
+                    catalog: catalog,
+                    gamification: gamification,
+                    celebration: celebration,
+                    sensory: sensory,
+                    discovery: discovery
+                )
             }
             if disclosure.showsMicrobiome {
                 Tab("Microbiome", systemImage: "leaf", value: MicrobeLabTab.microbiome) {
