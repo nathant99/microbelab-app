@@ -38,6 +38,14 @@ public struct AppRootView: View {
     /// AppFeature `Intents/`.
     private let navigationCoordinator: NavigationCoordinator = .shared
     @State private var welcomeBackDaysAway: Int?
+    /// Optional recap content surfaced on the welcome-back overlay when the
+    /// kid has previously discovered at least one microbe. `nil` when the
+    /// kid is returning after a lapse without any persisted discovery (no
+    /// recall surface to seed) — the warm greeting still surfaces.
+    /// Computed in `evaluateWelcomeBack()` so the recap is frozen at the
+    /// moment the overlay opens (microbes discovered during this session
+    /// don't retroactively change the welcome-back card).
+    @State private var welcomeBackRecap: WelcomeBackRecap?
     @State private var streakRescue: StreakRescue = .none
     @State private var celebration = CelebrationCoordinator()
     @State private var dailyTime: DailyTimeCoordinator
@@ -209,9 +217,11 @@ public struct AppRootView: View {
                         if let days = welcomeBackDaysAway {
                             WelcomeBackOverlay(
                                 daysAway: days,
-                                reduceTransparency: prefs.reduceTransparency
+                                reduceTransparency: prefs.reduceTransparency,
+                                recap: welcomeBackRecap
                             ) {
                                 welcomeBackDaysAway = nil
+                                welcomeBackRecap = nil
                             }
                             .transition(overlayTransition(reduceMotion: prefs.reduceMotion))
                         } else if case .lapsed(let prior) = streakRescue {
@@ -294,6 +304,7 @@ public struct AppRootView: View {
                 if dailyTime.isDailyLimitReached {
                     showDailyCapOverlay = true
                     welcomeBackDaysAway = nil
+                    welcomeBackRecap = nil
                     streakRescue = .none
                     DebugLog.lifecycle("AppRootView — daily cap reached on launch; showing wrap-up overlay")
                 }
@@ -500,6 +511,24 @@ public struct AppRootView: View {
         }
     }
 
+    /// Enrich the welcome-back card with a small recap of previously-met
+    /// microbes once the catalog is loaded. Skipped when the overlay is
+    /// not surfacing (no daysAway), or when discovery store is empty (no
+    /// recall surface to seed). Trauma-informed: frozen at the moment of
+    /// catalog-load so microbes discovered during this session don't
+    /// retroactively change the recap card the kid is reading.
+    private func enrichWelcomeBackRecap(catalog: MicrobeCatalogService) {
+        guard let days = welcomeBackDaysAway else { return }
+        welcomeBackRecap = WelcomeBackRecap.from(
+            discoveredSlugs: discovery.discoveredSlugs,
+            catalog: catalog,
+            daysAway: days
+        )
+        if welcomeBackRecap != nil {
+            DebugLog.lifecycle("AppRootView — welcome-back recap surfaced with \(welcomeBackRecap?.recalledMicrobeDisplayNames.count ?? 0) microbe(s)")
+        }
+    }
+
     private func tabShell(catalog: MicrobeCatalogService) -> some View {
         let mentor = VeeMentor(microbes: catalog.microbes)
         let simulator = MicrobiomeSimulator(microbes: catalog.microbes)
@@ -632,6 +661,10 @@ public struct AppRootView: View {
             // dedupes by `spotlightID` so repeated launches are no-ops.
             let microbes = service.microbes
             Task { await spotlight.indexCatalog(microbes) }
+            // Enrich the welcome-back card with a recap of previously-met
+            // microbes (best-effort — no-op when overlay isn't surfacing
+            // or when discovery store is empty).
+            enrichWelcomeBackRecap(catalog: service)
         case .failure(let error):
             loadError = String(describing: error)
             DebugLog.error("AppRootView catalog load failed", error: error)
