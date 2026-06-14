@@ -84,6 +84,57 @@ public nonisolated enum MicrobeLabAchievements {
         firstQuiz, quizPerfect, immuneRookie, immuneRunner,
         microbiomeSteady, codexHalf,
     ]
+
+    // MARK: - Phase 2 (Adaptive Immunity + Microbiome Expansion)
+
+    public static let firstShapeMatch = AchievementDefinition(
+        id: "ml.first-shape-match",
+        title: "First Shape Match",
+        description: "You recognized your first antigen shape with the B-cell library.",
+        iconAssetName: "puzzlepiece",
+        xpValue: 40
+    )
+    public static let memoryAwakened = AchievementDefinition(
+        id: "ml.memory-awakened",
+        title: "Memory Awakened",
+        description: "You matched a shape the body had recognized before — memory cells in action.",
+        iconAssetName: "brain",
+        xpValue: 60
+    )
+    public static let adaptiveRookie = AchievementDefinition(
+        id: "ml.adaptive-rookie",
+        title: "Adaptive Rookie",
+        description: "You cleared your first wave on the adaptive surface.",
+        iconAssetName: "puzzlepiece.fill",
+        xpValue: 50
+    )
+    public static let adaptiveRunner = AchievementDefinition(
+        id: "ml.adaptive-runner",
+        title: "Adaptive Runner",
+        description: "You filled the B-cell library all the way through every wave.",
+        iconAssetName: "books.vertical.fill",
+        xpValue: 140
+    )
+    public static let librarianOfShapes = AchievementDefinition(
+        id: "ml.librarian-of-shapes",
+        title: "Librarian of Shapes",
+        description: "Every shape the body knows lives in your library — all four memory cells recorded.",
+        iconAssetName: "square.stack.3d.up.fill",
+        xpValue: 100
+    )
+
+    public static let phase2: [AchievementDefinition] = [
+        firstShapeMatch, memoryAwakened, adaptiveRookie,
+        adaptiveRunner, librarianOfShapes,
+    ]
+
+    /// Aggregate accessor — every shipped achievement across all phases.
+    /// Consumers wanting the full set (Progress tab, ForgeReporting
+    /// snapshots, achievement-engine registration) prefer this over
+    /// concatenating per-phase arrays.
+    public static var allDefinitions: [AchievementDefinition] {
+        phase1 + phase2
+    }
 }
 
 /// Lightweight gamification facade: wraps ForgeGamification primitives
@@ -160,15 +211,15 @@ public final class GamificationService {
         DebugLog.state("GamificationService awardXP \(amount) for \(reason); total=\(totalXP) level=\(currentLevel)")
     }
 
-    /// Evaluate the Phase-1 achievement set against the provided criteria
-    /// closure. Newly-earned achievements are added to the earned set and
-    /// returned for celebration UI.
+    /// Evaluate the shipped achievement set (Phase 1 + Phase 2) against
+    /// the provided criteria closure. Newly-earned achievements are added
+    /// to the earned set and returned for celebration UI.
     @discardableResult
     public func evaluateAchievements(
         with criteria: (AchievementDefinition) -> Bool
     ) -> [AchievementDefinition] {
         let newlyEarned = achievementEngine.evaluate(
-            definitions: MicrobeLabAchievements.phase1,
+            definitions: MicrobeLabAchievements.allDefinitions,
             earnedIDs: earnedAchievementSlugs,
             isEarned: criteria
         )
