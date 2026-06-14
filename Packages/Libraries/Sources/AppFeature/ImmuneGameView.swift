@@ -31,6 +31,12 @@ public struct ImmuneGameView: View {
     // Achievement-criteria tracking.
     @State private var hasClearedFirstWave = false
     @State private var hasClearedAllWaves = false
+    /// Set the first time `clearWave()` returns `finished == true` for the
+    /// current life of the view. Guards the run-completion bookkeeping
+    /// (mastery moment + AdaptiveImmunityProgressStore bump) so the kid
+    /// can keep stepping at the wave-5 boundary without re-triggering the
+    /// trifecta.
+    @State private var hasRecordedInnateRunCompletion = false
     // Per-session mastery moments — fires once per kind when the kid
     // demonstrates internalization of the defense system. Mirrors the
     // `MicrobiomeView` ecology-mastery wiring shipped PR #76. Per
@@ -43,6 +49,32 @@ public struct ImmuneGameView: View {
     // share image never re-derives mid-display).
     @State private var pendingTrophy: ImmuneDefenseTrophy?
     @State private var showingTrophy = false
+
+    // MARK: - Phase 2 adaptive surface
+
+    /// Currently-active surface. Defaults to `.innate` per the pedagogy
+    /// sequencing rule (innate first; adaptive unlocks once the kid has
+    /// internalized the innate concept).
+    @State private var mode: ImmuneMode = .innate
+    /// B-cell antibody-matching scene. Lazily configured by SpriteKit on
+    /// first `didMove(to:)` (per `BCellAntibodyMatchScene.configureVisuals`)
+    /// so it stays test-safe in the SPM target.
+    @State private var bcellScene: BCellAntibodyMatchScene
+    /// Adaptive-side score / wave mirror. The scene owns its own state;
+    /// these `@State` mirrors drive the UI without forcing the view to
+    /// observe the scene every body re-eval.
+    @State private var adaptiveScore: Int = 0
+    @State private var adaptiveWave: Int = 1
+    @State private var adaptiveAntigensRemaining: Int = 0
+    @State private var adaptiveIsComplete: Bool = false
+    /// Whether the adaptive-side wave has been spawned. Mirrors the
+    /// innate side's "first wave spawned" gating so step taps before
+    /// spawn don't no-op silently.
+    @State private var adaptiveWaveSpawned: Bool = false
+    /// Currently-loaded antibody shape on the B-cell. Mirrors
+    /// `bcell.loadedAntibody` for the picker UI.
+    @State private var loadedAntibody: AntibodyShape = .spiral
+
     /// Display name threaded down from `AppRootView` via `PlayerProgressData
     /// .displayName`. Defaults to "Explorer" when the parent hasn't filled
     /// it in. The trophy preserves the value verbatim — same convention as
@@ -54,6 +86,17 @@ public struct ImmuneGameView: View {
     private let celebration: CelebrationCoordinator?
     private let analytics: AnalyticsService?
     private let sensory: SensoryPaletteCoordinator?
+    /// Phase 2 progression store. Threaded from `AppRootView` so the
+    /// adaptive unlock gate persists across sessions. Optional so the
+    /// view stays self-contained for Phase 1 surfaces / previews; when
+    /// nil the adaptive surface is permanently locked (no progress
+    /// can accumulate).
+    private let adaptiveProgress: AdaptiveImmunityProgressStore?
+    /// Parent-gated chill-mode flag (mirrors `AppSettings.simplifyChallenge`).
+    /// When true the adaptive surface is always unlocked — kids whose
+    /// parents have signalled "make it gentler" never have to earn their
+    /// way in.
+    private let simplifyChallenge: Bool
 
     public init(
         showWarningInitially: Bool = true,
@@ -63,6 +106,8 @@ public struct ImmuneGameView: View {
         celebration: CelebrationCoordinator? = nil,
         analytics: AnalyticsService? = nil,
         sensory: SensoryPaletteCoordinator? = nil,
+        adaptiveProgress: AdaptiveImmunityProgressStore? = nil,
+        simplifyChallenge: Bool = false,
         playerDisplayName: String = "Explorer"
     ) {
         let wavePathogenCounts = difficulty.immuneWavePathogenCounts(totalWaves: 5)
@@ -72,6 +117,10 @@ public struct ImmuneGameView: View {
             wavePathogenCounts: wavePathogenCounts
         )
         _scene = State(initialValue: initial)
+        let adaptive = BCellAntibodyMatchScene(
+            size: CGSize(width: 400, height: 600)
+        )
+        _bcellScene = State(initialValue: adaptive)
         _hasAcknowledgedWarning = State(initialValue: !showWarningInitially)
         _showWarning = State(initialValue: showWarningInitially)
         _mentorMessage = State(initialValue: nil)
@@ -80,6 +129,8 @@ public struct ImmuneGameView: View {
         self.celebration = celebration
         self.analytics = analytics
         self.sensory = sensory
+        self.adaptiveProgress = adaptiveProgress
+        self.simplifyChallenge = simplifyChallenge
         self.playerDisplayName = playerDisplayName
     }
 
@@ -166,6 +217,69 @@ public struct ImmuneGameView: View {
 
     private var gameSurface: some View {
         VStack(spacing: 0) {
+            modeSelectorBar
+                .padding(.horizontal)
+                .padding(.top, 4)
+            Group {
+                switch mode {
+                case .innate: innateSurface
+                case .adaptive: adaptiveSurface
+                }
+            }
+        }
+    }
+
+    /// Pure-derivation unlock state for the adaptive mode. Refreshed
+    /// every body re-eval because `AdaptiveImmunityProgressStore` is
+    /// `@Observable`. Trauma-informed posture is in
+    /// `AdaptiveImmunityUnlock.unlockExplainerCopy`.
+    private var adaptiveUnlock: AdaptiveImmunityUnlock {
+        guard let adaptiveProgress else {
+            // Without a progress store, behave as if no progress has
+            // accumulated. The simplifyChallenge flag still bypasses
+            // the gate for chill-mode previews.
+            return AdaptiveImmunityUnlock.from(
+                innateRunsCompleted: 0,
+                perfectInnateRuns: 0,
+                simplifyChallenge: simplifyChallenge
+            )
+        }
+        return adaptiveProgress.unlock(simplifyChallenge: simplifyChallenge)
+    }
+
+    private var modeSelectorBar: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Picker("Defense surface", selection: $mode) {
+                ForEach(ImmuneMode.allCases, id: \.self) { candidate in
+                    Label(candidate.displayName, systemImage: candidate.systemImage)
+                        .tag(candidate)
+                        .accessibilityHint(candidate.tagline)
+                }
+            }
+            .pickerStyle(.segmented)
+            .disabled(mode == .adaptive ? false : !adaptiveUnlock.isUnlocked && mode != .innate)
+            .onChange(of: mode) { _, newMode in
+                if newMode == .adaptive && !adaptiveUnlock.isUnlocked {
+                    // Adaptive isn't earned yet; bounce back to innate.
+                    // The locked explainer surfaces beneath the picker.
+                    mode = .innate
+                }
+                if newMode == .adaptive {
+                    DebugLog.lifecycle("ImmuneGameView mode → adaptive")
+                }
+            }
+            if !adaptiveUnlock.isUnlocked, let copy = adaptiveUnlock.unlockExplainerCopy {
+                Text(verbatim: copy)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 2)
+                    .accessibilityHint("Tap Macrophage patrol to keep going; more runs unlock the B-cell library.")
+            }
+        }
+    }
+
+    private var innateSurface: some View {
+        VStack(spacing: 0) {
             SpriteView(scene: scene, options: [.allowsTransparency])
                 .ignoresSafeArea(edges: .horizontal)
                 .accessibilityElement(children: .contain)
@@ -184,6 +298,31 @@ public struct ImmuneGameView: View {
                     .padding(.vertical, 6)
             }
             controlBar
+                .padding()
+                .background(.thinMaterial)
+        }
+    }
+
+    private var adaptiveSurface: some View {
+        VStack(spacing: 0) {
+            SpriteView(scene: bcellScene, options: [.allowsTransparency])
+                .ignoresSafeArea(edges: .horizontal)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("B-cell antibody-matching minigame. Pick a shape; nearby antigens with the matching shape are recognized.")
+                .accessibilityValue(adaptiveIsComplete
+                    ? "All waves cleared. Final score \(adaptiveScore)."
+                    : "Wave \(adaptiveWave). Score \(adaptiveScore). Antigens remaining: \(adaptiveAntigensRemaining).")
+                .safeAreaInset(edge: .top, spacing: 8) {
+                    adaptiveScoreHud
+                        .padding(.horizontal)
+                        .padding(.top, 4)
+                }
+            if let mentorMessage {
+                MentorBubble(message: mentorMessage)
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+            }
+            adaptiveControlBar
                 .padding()
                 .background(.thinMaterial)
         }
@@ -296,6 +435,18 @@ public struct ImmuneGameView: View {
             if let analytics {
                 Task { await analytics.track(.immuneRunCompleted) }
             }
+            // Phase 2 progression: persist this innate run so the adaptive
+            // surface unlocks on the canonical curve. The perfect-run flag
+            // mirrors `MasteryMomentDetector` exactly so the fast-track
+            // unlock and the mastery moment share a definition. Guarded by
+            // `hasRecordedInnateRunCompletion` so the kid can keep tapping
+            // Step at the wave-5 boundary without retriggering.
+            if !hasRecordedInnateRunCompletion {
+                hasRecordedInnateRunCompletion = true
+                let perfect = hasClearedAllWaves && pathogensRemaining == 0
+                adaptiveProgress?.recordRunCompleted(perfectRun: perfect)
+                DebugLog.state("ImmuneGameView innate-run recorded: perfect=\(perfect) runs=\(adaptiveProgress?.innateRunsCompleted ?? -1) perfectRuns=\(adaptiveProgress?.perfectInnateRuns ?? -1)")
+            }
             // Defense-mastery axis (closes PR #76 partial). The detector
             // returns a `Moment` only on a perfect run (≥ 5 waves cleared
             // AND zero pathogens remaining) — the step-button advance gate
@@ -360,6 +511,111 @@ public struct ImmuneGameView: View {
         sensory?.fire(.streakMilestone(scene.wave))
         if let analytics {
             Task { await analytics.track(.achievementEarned(slug: moment.kind.rawValue)) }
+        }
+    }
+
+    // MARK: - Adaptive surface HUD + control bar
+
+    private var adaptiveScoreHud: some View {
+        HStack(spacing: 14) {
+            chip(label: "Wave", value: "\(adaptiveWave) / \(bcellScene.totalWaves)")
+            chip(label: "Score", value: "\(adaptiveScore)")
+            chip(label: "Left", value: "\(adaptiveAntigensRemaining)")
+            Spacer()
+            if adaptiveIsComplete {
+                Text("Library full")
+                    .font(.caption.weight(.bold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .glassEffect(.regular.tint(.purple), in: .capsule)
+            }
+        }
+    }
+
+    private var adaptiveControlBar: some View {
+        VStack(spacing: 10) {
+            antibodyShapePicker
+            HStack(spacing: 12) {
+                Button(adaptiveWaveSpawned ? "Step" : "Begin wave") {
+                    if !adaptiveWaveSpawned {
+                        bcellScene.spawnCurrentWave()
+                        adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
+                        adaptiveWaveSpawned = true
+                        DebugLog.state("ImmuneGameView adaptive wave-\(adaptiveWave) spawned (count=\(adaptiveAntigensRemaining))")
+                        return
+                    }
+                    bcellScene.advanceAntigens(by: 0.5)
+                    let matched = bcellScene.attemptMatch()
+                    adaptiveScore = bcellScene.score
+                    adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
+                    DebugLog.state("ImmuneGameView adaptive step: matched=\(matched) remaining=\(adaptiveAntigensRemaining)")
+                    if matched > 0 {
+                        sensory?.fire(.correctAnswer)
+                    }
+                    if bcellScene.currentWaveIsComplete {
+                        let finished = bcellScene.clearWave()
+                        adaptiveWave = bcellScene.wave
+                        adaptiveIsComplete = finished
+                        surfaceAdaptiveWaveClearCue(finished: finished)
+                        if !finished {
+                            bcellScene.spawnCurrentWave()
+                            adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
+                        }
+                    }
+                }
+                .buttonStyle(.glassProminent)
+                .disabled(adaptiveIsComplete)
+
+                Button("Reset") {
+                    bcellScene.reset()
+                    adaptiveScore = 0
+                    adaptiveWave = 1
+                    adaptiveAntigensRemaining = 0
+                    adaptiveIsComplete = false
+                    adaptiveWaveSpawned = false
+                    loadedAntibody = bcellScene.bcell.loadedAntibody
+                    mentorMessage = nil
+                    DebugLog.state("ImmuneGameView adaptive reset")
+                }
+                .buttonStyle(.glass)
+            }
+            .accessibilityHint(adaptiveIsComplete
+                ? "Adaptive run complete — tap Reset to play again"
+                : "Pick an antibody shape, then tap Step to advance and recognize antigens")
+        }
+    }
+
+    private var antibodyShapePicker: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(verbatim: "Antibody shape")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Picker("Antibody shape", selection: $loadedAntibody) {
+                ForEach(AntibodyShape.allCases, id: \.self) { shape in
+                    Text(verbatim: shape.rawValue.capitalized).tag(shape)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: loadedAntibody) { _, newShape in
+                bcellScene.loadAntibody(newShape)
+                DebugLog.state("ImmuneGameView antibody loaded: \(newShape.rawValue)")
+            }
+        }
+    }
+
+    /// Surface a wave-clear cue for the adaptive surface. Trauma-informed:
+    /// frames each match as recognition, never destruction. Static
+    /// authored content (no `@Generable` calls — recognition cues are
+    /// stable enough to ship as authored copy).
+    private func surfaceAdaptiveWaveClearCue(finished: Bool) {
+        if finished {
+            mentorMessage = "Your B-cell library remembers every shape. The body's quiet helpers will recognize them faster next time."
+            celebration?.celebrate(.epic, message: "B-cell library full", emoji: "🧬", slug: "game-complete")
+            sensory?.fire(.challengeComplete)
+        } else {
+            mentorMessage = "Shapes recognized. The body remembers — the next wave will move faster."
+            celebration?.celebrate(.medium, message: "Wave recognized", emoji: "✨")
+            sensory?.fire(.streakMilestone(adaptiveWave))
         }
     }
 }

@@ -41,6 +41,8 @@ public struct MicrobiomeView: View {
     private let celebration: CelebrationCoordinator?
     private let analytics: AnalyticsService?
     private let sensory: SensoryPaletteCoordinator?
+    private let adaptiveProgress: AdaptiveImmunityProgressStore?
+    private let simplifyChallenge: Bool
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -49,7 +51,9 @@ public struct MicrobiomeView: View {
         difficulty: DifficultyAdjuster = DifficultyAdjuster(level: .standard),
         celebration: CelebrationCoordinator? = nil,
         analytics: AnalyticsService? = nil,
-        sensory: SensoryPaletteCoordinator? = nil
+        sensory: SensoryPaletteCoordinator? = nil,
+        adaptiveProgress: AdaptiveImmunityProgressStore? = nil,
+        simplifyChallenge: Bool = false
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -62,6 +66,8 @@ public struct MicrobiomeView: View {
         self.celebration = celebration
         self.analytics = analytics
         self.sensory = sensory
+        self.adaptiveProgress = adaptiveProgress
+        self.simplifyChallenge = simplifyChallenge
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -113,7 +119,9 @@ public struct MicrobiomeView: View {
                     difficulty: difficulty,
                     celebration: celebration,
                     analytics: analytics,
-                    sensory: sensory
+                    sensory: sensory,
+                    adaptiveProgress: adaptiveProgress,
+                    simplifyChallenge: simplifyChallenge
                 )
                     .navigationTitle("Defense")
                     #if os(iOS)
