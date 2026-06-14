@@ -18,8 +18,29 @@ import Services
 struct SessionSummarySheet: View {
     let summary: SessionSummary
     let onDismiss: () -> Void
+    /// Optional opt-in reflection-prompt callback. When non-nil, the
+    /// sheet surfaces a secondary "Add a reflection" button BELOW the
+    /// canonical "See you next time" dismiss CTA so the kid can tap
+    /// through into the ForgeKit 0.99.0 `ReflectionPromptSheet` for a
+    /// trauma-safe one-question journal entry. The presenter handles
+    /// the actual sheet routing because SwiftUI sheets stacking on
+    /// sheets is flaky — the presenter dismisses this sheet then
+    /// surfaces the reflection sheet in sequence. See
+    /// `MicrobeLabReflectionPrompts.sessionClose` for the canonical
+    /// prompt and `AppRootView` / `ProgressTabView` for the wiring.
+    let onAddReflection: (() -> Void)?
 
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+
+    init(
+        summary: SessionSummary,
+        onDismiss: @escaping () -> Void,
+        onAddReflection: (() -> Void)? = nil
+    ) {
+        self.summary = summary
+        self.onDismiss = onDismiss
+        self.onAddReflection = onAddReflection
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -34,6 +55,16 @@ struct SessionSummarySheet: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .accessibilityHint("Closes the session summary")
+            if let onAddReflection {
+                Button(action: onAddReflection) {
+                    Label("Add a reflection", systemImage: "text.bubble")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.regular)
+                .accessibilityIdentifier("SessionSummarySheet.AddReflection")
+                .accessibilityHint("Open a short reflection prompt about today's session")
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

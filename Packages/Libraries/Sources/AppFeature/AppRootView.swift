@@ -5,6 +5,7 @@ import SharedUI
 import GameEngine
 import AIMentor
 import ForgeCelebration
+import ForgeUI
 
 /// 4-tab `TabView` shell per portfolio convention + `Docs/TECHNICAL_DESIGN.md`
 /// § Home Screen & Navigation.
@@ -104,6 +105,16 @@ public struct AppRootView: View {
     @State private var sessionStartedAt: Date?
     @State private var sessionStartXP: Int?
     @State private var sessionStartMicrobeCount: Int?
+    // ForgeKit 0.99.0 reflection-prompt persistence. Closes the
+    // maximize-ForgeKit-integration directive on the freshest 0.99.0
+    // module. The store is on-device, ring-buffered cap 50, parent-
+    // visibility-opt-in per `.claude/rules/age-assurance.md`. Surfaced
+    // from `SessionSummarySheet` via the new `onAddReflection`
+    // affordance — the kid taps "Add a reflection", we dismiss the
+    // session-summary sheet, then present `ReflectionPromptSheet` in
+    // sequence (sheets-on-sheets is flaky in SwiftUI).
+    @State private var reflectionStore = ReflectionEntryStore()
+    @State private var showingReflection: Bool = false
     /// Tracks the most-recently observed phase so transitions can fire
     /// the `app_phase_reached` analytics event + a DebugLog.lifecycle
     /// line exactly once per change. `nil` on cold launch — the first
@@ -220,12 +231,35 @@ public struct AppRootView: View {
                     // (see captureSessionSummaryIfProductive).
                     .sheet(isPresented: $showingPendingSummary) {
                         if let summary = pendingSessionSummary {
-                            SessionSummarySheet(summary: summary) {
-                                showingPendingSummary = false
-                                pendingSessionSummary = nil
-                            }
+                            SessionSummarySheet(
+                                summary: summary,
+                                onDismiss: {
+                                    showingPendingSummary = false
+                                    pendingSessionSummary = nil
+                                },
+                                onAddReflection: {
+                                    showingPendingSummary = false
+                                    pendingSessionSummary = nil
+                                    // Sequence the reflection sheet AFTER
+                                    // the summary dismisses so SwiftUI's
+                                    // sheet stack stays single-layer.
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                                        showingReflection = true
+                                    }
+                                }
+                            )
                             .presentationDetents([.medium])
                         }
+                    }
+                    .sheet(isPresented: $showingReflection) {
+                        ReflectionPromptSheet(
+                            config: MicrobeLabReflectionPrompts.sessionClose,
+                            onComplete: { entry in
+                                reflectionStore.append(entry)
+                                showingReflection = false
+                            }
+                        )
+                        .presentationDetents([.medium, .large])
                     }
             } else if let loadError {
                 catalogLoadFailure(loadError)
@@ -519,7 +553,8 @@ public struct AppRootView: View {
                     ProgressTabView(
                         progress: PlayerProgressData.empty(),
                         totalMicrobes: catalog.microbes.count,
-                        gamification: gamification
+                        gamification: gamification,
+                        reflectionStore: reflectionStore
                     )
                 }
             }

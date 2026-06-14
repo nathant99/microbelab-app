@@ -2,6 +2,7 @@ import SwiftUI
 import Models
 import Services
 import ForgeModels
+import ForgeUI
 
 /// Progress tab. XP / streak / discovered-microbe count + Phase 1
 /// achievement gallery. Reads directly from the injected
@@ -10,17 +11,26 @@ public struct ProgressTabView: View {
     public let progress: PlayerProgressData
     public let totalMicrobes: Int
     @Bindable public var gamification: GamificationService
+    /// Optional reflection store — when supplied, the session-summary
+    /// sheet surfaces an "Add a reflection" affordance that routes
+    /// through ForgeKit 0.99.0's `ReflectionPromptSheet`. Older call
+    /// sites that pass nil simply omit the affordance (the existing
+    /// "See you next time" dismiss stays the only CTA).
+    public var reflectionStore: ReflectionEntryStore?
     @State private var showingSummary = false
     @State private var showingCertificate = false
+    @State private var showingReflection = false
 
     public init(
         progress: PlayerProgressData,
         totalMicrobes: Int,
-        gamification: GamificationService
+        gamification: GamificationService,
+        reflectionStore: ReflectionEntryStore? = nil
     ) {
         self.progress = progress
         self.totalMicrobes = totalMicrobes
         self.gamification = gamification
+        self.reflectionStore = reflectionStore
     }
 
     public var body: some View {
@@ -55,7 +65,16 @@ public struct ProgressTabView: View {
             .sheet(isPresented: $showingSummary) {
                 SessionSummarySheet(
                     summary: currentSummary,
-                    onDismiss: { showingSummary = false }
+                    onDismiss: { showingSummary = false },
+                    onAddReflection: reflectionStore == nil ? nil : {
+                        showingSummary = false
+                        // Sequence the reflection sheet AFTER the
+                        // summary dismisses so SwiftUI's sheet stack
+                        // stays single-layer.
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                            showingReflection = true
+                        }
+                    }
                 )
                 .presentationDetents([.medium])
             }
@@ -65,6 +84,18 @@ public struct ProgressTabView: View {
                     onDismiss: { showingCertificate = false }
                 )
                 .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showingReflection) {
+                if let store = reflectionStore {
+                    ReflectionPromptSheet(
+                        config: MicrobeLabReflectionPrompts.sessionClose,
+                        onComplete: { entry in
+                            store.append(entry)
+                            showingReflection = false
+                        }
+                    )
+                    .presentationDetents([.medium, .large])
+                }
             }
         }
     }
