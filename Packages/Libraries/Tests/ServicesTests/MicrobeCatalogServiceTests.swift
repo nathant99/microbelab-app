@@ -11,7 +11,9 @@ nonisolated struct MicrobeCatalogServiceTests {
         case .failure(let error):
             Issue.record("Bundled catalog should load but errored: \(error)")
         case .success(let service):
-            #expect(service.microbes.count == 12)
+            // Phase 2 expansion: 12 → 20 (8 added covering skin / soil / stomach
+            // / oralCavity ecology gaps). See microbes.json notes.
+            #expect(service.microbes.count == 20)
         }
     }
 
@@ -27,14 +29,51 @@ nonisolated struct MicrobeCatalogServiceTests {
         }
     }
 
+    @Test func phase2CastExpansionPresent() throws {
+        guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
+            Issue.record("Catalog should have loaded")
+            return
+        }
+        // Phase 2 cast expansion (8 microbes closing the FEATURE_PLAN checkbox).
+        let phase2 = ["sebu", "demi", "halo", "pylo", "sweet", "nodu", "therm", "loam"]
+        for slug in phase2 {
+            #expect(service.microbe(forSlug: slug) != nil,
+                    "Missing Phase 2 expansion slug: \(slug)")
+        }
+    }
+
+    @Test func phase2EcologyCoverageExpanded() throws {
+        guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
+            Issue.record("Catalog should have loaded")
+            return
+        }
+        // Phase 2 microbiome scenes (oral / skin / soil / stomach) need at least
+        // 2-3 microbes per ecology to be playable. Pin per-slot floors so a future
+        // edit doesn't silently regress the Phase 2 prerequisite.
+        let skin = service.microbes.filter { $0.preferredEnvironment == .skin }
+        let soil = service.microbes.filter { $0.preferredEnvironment == .soil }
+        let oral = service.microbes.filter { $0.preferredEnvironment == .oralCavity }
+        let stomach = service.microbes.filter { $0.preferredEnvironment == .stomach }
+        #expect(skin.count >= 3, "Skin ecology needs ≥3 microbes for Phase 2 scene")
+        #expect(soil.count >= 6, "Soil ecology needs ≥6 microbes for Phase 2 scene")
+        #expect(oral.count >= 3, "Oral ecology needs ≥3 microbes for Phase 2 scene")
+        #expect(stomach.count >= 1, "Stomach ecology needs ≥1 microbe (H. pylori bridge)")
+    }
+
     @Test func beneficialMicrobesFlaggedCorrectly() throws {
         guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
             Issue.record("Catalog should have loaded")
             return
         }
         let beneficial = service.microbes(role: .beneficial)
-        // Per CLAUDE.md trauma-informed posture: beneficial microbes are foregrounded.
-        #expect(beneficial.count >= 4, "Beneficial-microbe foregrounding requires ≥4 beneficial cast members.")
+        // Per CLAUDE.md trauma-informed posture: beneficial microbes are
+        // foregrounded. Post Phase-2 expansion the floor rises to ≥ 10 (≥ 50%
+        // of the 20-microbe catalog), preserving the beneficial-first ratio.
+        #expect(beneficial.count >= 10,
+                "Beneficial-microbe foregrounding requires ≥10 beneficial cast members at 20-microbe scale.")
+        let pathogens = service.microbes(role: .pathogenic)
+        #expect(pathogens.isEmpty,
+                "Phase 2 expansion preserves the no-pathogenic-cast trauma-informed posture.")
     }
 
     @Test func uniqueSlugs() throws {
