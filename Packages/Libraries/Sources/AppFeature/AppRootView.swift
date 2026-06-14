@@ -81,6 +81,11 @@ public struct AppRootView: View {
     // QuestionAttempt row through to UserDefaults; the parent-facing
     // report consumes the log via `proficiencies(matching:)`.
     @State private var attemptStore = QuestionAttemptStore()
+    // Phase 2 adaptive-immunity progression counter (innate runs +
+    // perfect-innate runs). Drives `AdaptiveImmunityUnlock` so the B-cell
+    // antibody-matching surface unlocks on the canonical curve. Persisted
+    // via UserDefaults; pure-additive.
+    @State private var adaptiveProgress = AdaptiveImmunityProgressStore()
     // Per-feature parental consent records per the 2026 FTC COPPA Rule
     // (effective April 22 2026). Closes the FEATURE_PLAN § Onboarding &
     // Child Safety items "Parental consent service" + "Parental gates":
@@ -573,7 +578,9 @@ public struct AppRootView: View {
                         difficulty: difficulty,
                         celebration: celebration,
                         analytics: analytics,
-                        sensory: sensory
+                        sensory: sensory,
+                        adaptiveProgress: adaptiveProgress,
+                        simplifyChallenge: settingsStore.settings.simplifyChallenge
                     )
                 }
             }
