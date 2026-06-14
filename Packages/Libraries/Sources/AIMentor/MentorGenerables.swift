@@ -49,3 +49,48 @@ public struct EcologyHypothesis: Codable, Sendable, Equatable {
         self.hypothesis = hypothesis
     }
 }
+
+/// Adaptive-immunity scenarios the mentor scaffolds across the
+/// `BCellAntibodyMatchScene` arc. Per CLAUDE.md trauma-informed posture +
+/// `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture: framed as
+/// protection + recognition, never as warfare. The three cases cover the
+/// canonical pedagogy beats the mentor needs to surface during the
+/// adaptive-immunity Phase 2 arc.
+public nonisolated enum AdaptiveImmuneScenario: String, Codable, Sendable, CaseIterable {
+    /// First exposure — the body meets a new shape it hasn't catalogued.
+    case firstEncounter
+    /// Antibody-to-antigen match — the kid lines up a complementary shape.
+    case matchedShape
+    /// Re-exposure — memory cells recognize the shape faster than first time.
+    case recallFromMemory
+}
+
+/// Mentor reaction surfaced during the adaptive-immunity Phase 2 surface
+/// (B-cell antibody-matching minigame + memory-cell recognition arc).
+///
+/// Property order matters per `.claude/rules/foundationmodels.md` — the
+/// LLM writes `observation` first so the testable `memoryHypothesis` can
+/// reference the same shape-matching language without re-deriving it.
+///
+/// Trauma-informed register (per `Docs/TECHNICAL_DESIGN.md`):
+/// - Frames immune response as RECOGNITION (the body's library of shapes),
+///   not warfare (no "destroy" / "attack" / "kill" framing).
+/// - The cast verb is "match" or "remember", not "fight".
+/// - Memory framing is curiosity-positive ("the body keeps a note") not
+///   threat-anxiety ("the body must be ready").
+///
+/// Authored fallback content (`VeeMentor.fallbackAdaptiveImmuneHypothesis`)
+/// is always available so the mentor surfaces calmly even when
+/// FoundationModels is unavailable or paused.
+@Generable
+public struct AdaptiveImmuneHypothesis: Codable, Sendable, Equatable {
+    @Guide(description: "Open-ended observation framed around shape-matching recognition (not warfare). Age 9-14 register, hedging language only.")
+    public let observation: String
+    @Guide(description: "One testable prediction about memory cells or antibody recognition the kid can verify in the simulator. Trauma-safe: never frames re-exposure as threat.")
+    public let memoryHypothesis: String
+
+    public init(observation: String, memoryHypothesis: String) {
+        self.observation = observation
+        self.memoryHypothesis = memoryHypothesis
+    }
+}

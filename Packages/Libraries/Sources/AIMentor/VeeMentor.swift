@@ -125,6 +125,30 @@ public final class VeeMentor {
         }
     }
 
+    /// Curriculum-safe static `AdaptiveImmuneHypothesis` for the named
+    /// scenario — always available, never blocks. Trauma-safe register
+    /// per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture:
+    /// shape-matching + recognition framing, never warfare.
+    public func fallbackAdaptiveImmuneHypothesis(for scenario: AdaptiveImmuneScenario) -> AdaptiveImmuneHypothesis {
+        switch scenario {
+        case .firstEncounter:
+            return AdaptiveImmuneHypothesis(
+                observation: "What shape did your body just meet for the first time?",
+                memoryHypothesis: "Usually the body takes a moment to find a matching antibody on a first meet."
+            )
+        case .matchedShape:
+            return AdaptiveImmuneHypothesis(
+                observation: "Your antibody fits this shape — what might the body do with that match?",
+                memoryHypothesis: "Often the body keeps a note of the matched shape so it recognizes it next time."
+            )
+        case .recallFromMemory:
+            return AdaptiveImmuneHypothesis(
+                observation: "Did the body recognize this shape faster than last time?",
+                memoryHypothesis: "Memory cells usually let the body match a known shape more quickly on a return visit."
+            )
+        }
+    }
+
     /// Curriculum-safe static `EcologyHypothesis` — always available, never blocks.
     public func fallbackEcologyHypothesis(for mode: FeedingMode) -> EcologyHypothesis {
         switch mode {
@@ -197,6 +221,34 @@ public final class VeeMentor {
             return response.content
         } catch {
             return fallbackZoomCue(for: tier)
+        }
+    }
+
+    /// Generate a Socratic `AdaptiveImmuneHypothesis` for the named
+    /// scenario. Falls back to the static authored content when the model
+    /// is unavailable. Per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed
+    /// Design Posture, the prompt explicitly forbids warfare framing —
+    /// adaptive immunity surfaces as the body's library of shapes.
+    public func adaptiveImmuneHypothesis(for scenario: AdaptiveImmuneScenario) async -> AdaptiveImmuneHypothesis {
+        guard isAvailable, let session = makeSession() else {
+            return fallbackAdaptiveImmuneHypothesis(for: scenario)
+        }
+        do {
+            let response = try await session.respond(
+                to: """
+                The kid just hit the \(scenario.rawValue) beat in the B-cell \
+                antibody-matching minigame. Compose an open-ended observation \
+                question framed around SHAPE-MATCHING and recognition (never \
+                warfare — no "fight" / "attack" / "destroy" / "kill" / "war" / \
+                "enemy" / "battle"), and one testable prediction about how \
+                memory cells respond on re-exposure. Age 9-14 register, \
+                hedging language only ("often", "usually", "many").
+                """,
+                generating: AdaptiveImmuneHypothesis.self
+            )
+            return response.content
+        } catch {
+            return fallbackAdaptiveImmuneHypothesis(for: scenario)
         }
     }
 

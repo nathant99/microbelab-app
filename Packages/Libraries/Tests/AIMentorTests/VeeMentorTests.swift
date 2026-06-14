@@ -74,6 +74,83 @@ struct VeeMentorTests {
         }
     }
 
+    @Test func fallbackAdaptiveImmuneHypothesisCoversAllScenarios() {
+        let mentor = fixture()
+        for scenario in AdaptiveImmuneScenario.allCases {
+            let hyp = mentor.fallbackAdaptiveImmuneHypothesis(for: scenario)
+            #expect(!hyp.observation.isEmpty)
+            #expect(!hyp.memoryHypothesis.isEmpty)
+        }
+    }
+
+    @Test func fallbackAdaptiveImmuneHypothesisAvoidsWarfareFraming() {
+        // Trauma-informed posture per Docs/TECHNICAL_DESIGN.md § Trauma-
+        // Informed Design Posture: adaptive immunity surfaces as the
+        // body's library of shapes, NEVER as warfare. Authored fallback
+        // content must pass the stoplist regardless of the AI surface
+        // (the AI prompt also forbids it, but the fallback is the
+        // load-bearing trauma-safe default).
+        let stoplist = [
+            "fight",
+            "attack",
+            "destroy",
+            "kill",
+            "war",
+            "enemy",
+            "battle",
+            "weapon",
+            "soldier",
+            "warrior",
+        ]
+        let mentor = fixture()
+        for scenario in AdaptiveImmuneScenario.allCases {
+            let hyp = mentor.fallbackAdaptiveImmuneHypothesis(for: scenario)
+            let combined = (hyp.observation + " " + hyp.memoryHypothesis).lowercased()
+            for token in stoplist {
+                #expect(!combined.contains(token), "scenario=\(scenario) contained warfare-stoplist token '\(token)': \"\(combined)\"")
+            }
+        }
+    }
+
+    @Test func fallbackAdaptiveImmuneHypothesisUsesHedgingLanguage() {
+        // Per .claude/rules/ai-content.md the fallback content uses
+        // hedging language ("often", "usually", "many", "sometimes")
+        // rather than absolute claims — adaptive immunity is messy and
+        // the kid-readable register reflects that.
+        let hedgers = ["often", "usually", "many", "sometimes", "may", "might", "tend"]
+        let mentor = fixture()
+        for scenario in AdaptiveImmuneScenario.allCases {
+            let hyp = mentor.fallbackAdaptiveImmuneHypothesis(for: scenario)
+            let body = (hyp.observation + " " + hyp.memoryHypothesis).lowercased()
+            let anyHedge = hedgers.contains { body.contains($0) }
+            #expect(anyHedge, "scenario=\(scenario) fallback lacked hedging language: \"\(body)\"")
+        }
+    }
+
+    @Test func fallbackAdaptiveImmuneHypothesisUsesShapeMatchingRegister() {
+        // The pedagogy beat for adaptive immunity is shape-matching +
+        // memory. The fallback content should reference at least one of
+        // these registers (so the kid maps the line to the gameplay).
+        let registers = ["shape", "match", "memory", "recogniz", "fit", "library", "note"]
+        let mentor = fixture()
+        for scenario in AdaptiveImmuneScenario.allCases {
+            let hyp = mentor.fallbackAdaptiveImmuneHypothesis(for: scenario)
+            let body = (hyp.observation + " " + hyp.memoryHypothesis).lowercased()
+            let anyRegister = registers.contains { body.contains($0) }
+            #expect(anyRegister, "scenario=\(scenario) fallback lacked shape-matching register: \"\(body)\"")
+        }
+    }
+
+    @Test func adaptiveImmuneScenarioRawValuesAreStable() {
+        // Raw values are load-bearing because the async `adaptiveImmuneHypothesis`
+        // method interpolates them into the LLM prompt. Renaming a case
+        // would silently break the prompt's pedagogy framing.
+        #expect(AdaptiveImmuneScenario.firstEncounter.rawValue == "firstEncounter")
+        #expect(AdaptiveImmuneScenario.matchedShape.rawValue == "matchedShape")
+        #expect(AdaptiveImmuneScenario.recallFromMemory.rawValue == "recallFromMemory")
+        #expect(AdaptiveImmuneScenario.allCases.count == 3)
+    }
+
     @Test func voiceLineFallsBackToCatchphraseWhenNoLinesAuthored() {
         // The fixture above doesn't set voiceLines — mentor must fall back
         // to the catchphrase.
