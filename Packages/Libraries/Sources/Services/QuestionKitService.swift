@@ -2,22 +2,41 @@ import Foundation
 import Models
 
 /// Loads bundled question kit JSON files from `Bundle.module`. Phase 1 ships
-/// kit 01 (microbiology basics); kits 02-04 land in Phase 1 follow-ups per
-/// `Docs/FEATURE_PLAN.md` § Gamification.
+/// kits 01-04 (microbiology basics / microbiome / immune defense / beneficial
+/// microbes); Phase 2 kits 05-08 (adaptive immunity / oral biome / skin biome
+/// / soil biome) land as their underlying gameplay surfaces ship per
+/// `Docs/FEATURE_PLAN.md` § Phase 2. Kit 05 (adaptive-immunity) shipped the
+/// eighteenth-pass auto-cycle round (PR #120) alongside the BCellAntibody
+/// surface (PR #105) + AdaptiveImmunityUnlock (PR #108) + mentor cues (PR #111).
 public nonisolated struct QuestionKitService: Sendable {
     public enum LoadError: Error, Sendable {
         case resourceMissing(slug: String)
         case decodingFailed(slug: String, message: String)
     }
 
-    /// Slugs of every kit bundled at app boot. Order is canonical kit order
-    /// — used by the UI to drive the kit-progress strip.
+    /// Slugs of every Phase-1 kit bundled at app boot. Order is canonical kit
+    /// order — used by the UI to drive the kit-progress strip.
     public static let phase1KitSlugs: [String] = [
         "microbiology-basics",
         "microbiome",
         "immune-defense",
         "beneficial-microbes"
     ]
+
+    /// Slugs of every Phase-2 kit bundled to date. Kit 05 ships alongside the
+    /// adaptive-immunity gameplay surface (`BCellAntibodyMatchScene` +
+    /// `AdaptiveImmunityUnlock`). Kits 06-08 (oral / skin / soil microbiome)
+    /// land alongside the corresponding microbiome scenes. Order is canonical
+    /// kit order so the UI can extend the kit-progress strip incrementally.
+    public static let phase2KitSlugs: [String] = [
+        "adaptive-immunity"
+    ]
+
+    /// Convenience union: every shipped kit slug in canonical order. Used by
+    /// new UI surfaces that span both phases (e.g., the Codex → Quizzes Menu).
+    public static var allKitSlugs: [String] {
+        phase1KitSlugs + phase2KitSlugs
+    }
 
     public init() {}
 
@@ -48,6 +67,20 @@ public nonisolated struct QuestionKitService: Sendable {
             case .success(let kit): return kit
             case .failure(let error):
                 DebugLog.data("QuestionKitService.loadAllPhase1Kits failed for \(slug): \(error)")
+                return nil
+            }
+        }
+    }
+
+    /// Convenience: load every Phase-2 kit slug shipped to date, same
+    /// drop-on-error semantics as `loadAllPhase1Kits()`. Returns an empty
+    /// array if no Phase-2 kits have shipped yet.
+    public func loadAllPhase2Kits() -> [QuestionKit] {
+        Self.phase2KitSlugs.compactMap { slug in
+            switch loadKit(slug: slug) {
+            case .success(let kit): return kit
+            case .failure(let error):
+                DebugLog.data("QuestionKitService.loadAllPhase2Kits failed for \(slug): \(error)")
                 return nil
             }
         }
