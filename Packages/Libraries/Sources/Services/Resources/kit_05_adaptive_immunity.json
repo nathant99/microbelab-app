@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4005-A000-000000000005",
+  "slug": "adaptive-immunity",
+  "title": "The Library of Shapes",
+  "summary": "How adaptive immunity remembers — B-cells, antibodies, and the body's quiet library of microbe shapes. Trauma-informed register: no warfare vocabulary; the immune system learns and remembers rather than 'fights'.",
+  "kitNumber": 5,
+  "questions": [
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000001",
+      "prompt": "Adaptive immunity is different from innate immunity because it…",
+      "choices": [
+        "Learns the shape of each microbe and remembers it next time",
+        "Works faster than innate immunity on the first encounter",
+        "Only protects the skin",
+        "Replaces innate immunity once you're older"
+      ],
+      "correctIndex": 0,
+      "explanation": "Adaptive immunity is slower the first time you meet a microbe — but it remembers, so the next encounter is faster and calmer.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000002",
+      "prompt": "A B-cell's main job is to…",
+      "choices": [
+        "Make antibodies — small proteins shaped to match a specific microbe",
+        "Carry oxygen through the blood",
+        "Send signals to the stomach",
+        "Store calcium for bones"
+      ],
+      "correctIndex": 0,
+      "explanation": "B-cells produce antibodies. Each B-cell makes antibodies shaped to recognize one specific kind of microbe.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000003",
+      "prompt": "An antibody recognizes a microbe by…",
+      "choices": [
+        "Matching its shape to a matching shape on the microbe's surface",
+        "Listening for sounds the microbe makes",
+        "Reading the microbe's DNA letter by letter",
+        "Smelling the microbe through the bloodstream"
+      ],
+      "correctIndex": 0,
+      "explanation": "Antibodies are shaped to fit specific molecules on a microbe's surface — a little like a key fitting a lock.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000004",
+      "prompt": "Memory B-cells help your body the next time you meet the same microbe by…",
+      "choices": [
+        "Recognizing the shape quickly and making the right antibodies sooner",
+        "Asking your brain to remember",
+        "Producing red blood cells faster",
+        "Raising your temperature for the rest of your life"
+      ],
+      "correctIndex": 0,
+      "explanation": "Memory B-cells are why your second meeting with a microbe is usually shorter and gentler than the first.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000005",
+      "prompt": "Vaccines work with your adaptive immunity by…",
+      "choices": [
+        "Showing the body the shape of a microbe so memory B-cells form ahead of time",
+        "Adding more red blood cells",
+        "Replacing your immune system entirely",
+        "Removing all microbes from your body"
+      ],
+      "correctIndex": 0,
+      "explanation": "A vaccine introduces the shape of a microbe — or part of it — so the body can practice. If the real microbe shows up later, memory B-cells are already ready.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA005-0000-4005-8000-000000000006",
+      "prompt": "Most microbes the adaptive immune system meets are…",
+      "choices": [
+        "Quiet helpers it learns to recognize and leave alone",
+        "Always dangerous",
+        "Too small to be recognized",
+        "Made of metal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Adaptive immunity learns which microbes are part of normal life and which are not. Most of what it meets is friendly — it remembers that too.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    }
+  ]
+}
