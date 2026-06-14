@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "generatedAt": "2026-06-12",
-  "notes": "12-microbe Phase 1 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Remaining 6 are codex-supporting microbes (beneficial-first framing per CLAUDE.md trauma-informed posture). Names checked against labsmith REGISTRY_PORTFOLIO_CHARACTER_NAMES.md. v2 adds per-character voiceLines (3-5 sample dialogue lines per DN-S voice-register card).",
+  "generatedAt": "2026-06-13",
+  "notes": "20-microbe Phase 2 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Next 6 are Phase 1 codex-supporting microbes. Final 8 (Sebu / Demi / Halo / Pylo / Sweet / Nodu / Therm / Loam) close FEATURE_PLAN.md § Phase 2 'Bundle 8 additional microbe characters' — skin (+2), soil (+4), stomach (+1), oralCavity (+1) ecology coverage to unblock Phase 2 oral/skin/soil microbiome scenes. Beneficial-first framing preserved (11 beneficial / 7 neutral / 2 opportunistic = 55% beneficial). Trauma-safe authoring per .claude/rules/trauma-informed-content.md (eczema-safe skin framing; Demodex face mites framed as quiet cleaners; H. pylori framed as 'most are quiet'; no pandemic-era pathogen names). v2 adds per-character voiceLines (3-5 sample dialogue lines per DN-S voice-register card).",
   "microbes": [
     {
       "id": "9DB2A1F0-1111-4001-8000-000000000001",
@@ -205,6 +205,142 @@
         "Tough doesn't mean unfriendly.",
         "Dry me out — I'll wait. Days, years.",
         "Scientists keep poking at me to learn how I bounce back."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-400D-8000-00000000000D",
+      "slug": "sebu",
+      "displayName": "Sebu",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "skin",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.3, "onBalanced": 0.4, "onNone": 0.3 },
+      "catchphrase": "Skin oil is dinner.",
+      "factCard": "Cutibacterium acnes lives in the oils on your skin and often helps keep the skin's mix of microbes balanced. Most strains are quiet, useful neighbors.",
+      "firstKit": 7,
+      "voiceLines": [
+        "Your skin makes oil for a reason. I'm part of that reason.",
+        "Pimples come and go — that's how skin is, at every age.",
+        "Be gentle with your skin. I'm doing my best down here."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-400E-8000-00000000000E",
+      "slug": "demi",
+      "displayName": "Demi",
+      "kingdom": "protist",
+      "role": "neutral",
+      "preferredEnvironment": "skin",
+      "growthRate": { "onFiber": 0.1, "onSugar": 0.2, "onBalanced": 0.3, "onNone": 0.2 },
+      "catchphrase": "I clean while you sleep.",
+      "factCard": "Tiny face mites called Demodex live on almost every adult's skin. They quietly tidy up dead skin cells around the eyelashes and nose, and most people never notice them.",
+      "firstKit": 7,
+      "voiceLines": [
+        "Everyone has a few of us. Truly — everyone.",
+        "I prefer the quiet hours. You won't feel a thing.",
+        "Tidy work, nothing dramatic. That's the whole job."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-400F-8000-00000000000F",
+      "slug": "halo",
+      "displayName": "Halo",
+      "kingdom": "archaea",
+      "role": "beneficial",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.2, "onBalanced": 0.3, "onNone": 0.5 },
+      "catchphrase": "Salt is my house.",
+      "factCard": "Halophilic archaea thrive in salt flats and salty lakes — places where almost nothing else can grow. They color some salt ponds bright pink.",
+      "firstKit": 8,
+      "voiceLines": [
+        "What looks empty to you looks like home to me.",
+        "Pink salt ponds? That's a few trillion of us showing up.",
+        "I drink the brine the way you drink water."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-4010-8000-000000000010",
+      "slug": "pylo",
+      "displayName": "Pylo",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "stomach",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.2, "onBalanced": 0.3, "onNone": 0.1 },
+      "catchphrase": "Stomach is a hard room. I'm built for it.",
+      "factCard": "Helicobacter pylori lives in the stomach lining and most people carry it without ever feeling it. A small number of carriers develop ulcers, but the everyday story is much quieter.",
+      "firstKit": 6,
+      "voiceLines": [
+        "Stomach acid would dissolve most of my cousins. Not me.",
+        "Most people who carry me never know I'm here.",
+        "Doctors only meet me when something's bothering you."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-4011-8000-000000000011",
+      "slug": "sweet",
+      "displayName": "Sweet",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "oralCavity",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.7, "onBalanced": 0.3, "onNone": -0.2 },
+      "catchphrase": "Your mouth tastes like home.",
+      "factCard": "Streptococcus mutans is a sugar-loving mouth microbe. When sugar sticks around, it grows fast — which is why brushing matters. Without sugar around, it lives quietly.",
+      "firstKit": 5,
+      "voiceLines": [
+        "Sweet snacks wake me up. Quiet rinses settle me down.",
+        "Brushing isn't punishment — it's how we share the mouth fairly.",
+        "I'm not the bad guy. I just like sugar a lot."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-4012-8000-000000000012",
+      "slug": "nodu",
+      "displayName": "Nodu",
+      "kingdom": "bacteria",
+      "role": "beneficial",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.6, "onSugar": 0.2, "onBalanced": 0.4, "onNone": 0.1 },
+      "catchphrase": "Plants eat what I make.",
+      "factCard": "Rhizobium bacteria live in tiny nodules on the roots of beans and clovers. They pull nitrogen from the air and turn it into food the plant can use.",
+      "firstKit": 8,
+      "voiceLines": [
+        "Beans grow strong because of what we trade.",
+        "Air into food — that's the deal I offer.",
+        "Farmers have known me longer than they knew my name."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-4013-8000-000000000013",
+      "slug": "therm",
+      "displayName": "Therm",
+      "kingdom": "archaea",
+      "role": "neutral",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.6 },
+      "catchphrase": "Hot springs are my city.",
+      "factCard": "Thermophilic archaea live in boiling hot springs at Yellowstone and other geothermal sites. The bright colors around a hot spring come from billions of them.",
+      "firstKit": 8,
+      "voiceLines": [
+        "When you boil water, that's a comfortable bath for me.",
+        "The orange and yellow rings around a hot spring? That's us.",
+        "Scientists borrowed an enzyme from us to copy DNA in labs."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-3333-4014-8000-000000000014",
+      "slug": "loam",
+      "displayName": "Loam",
+      "kingdom": "fungi",
+      "role": "beneficial",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.5, "onSugar": 0.2, "onBalanced": 0.4, "onNone": 0.3 },
+      "catchphrase": "Old leaves become new soil.",
+      "factCard": "Saprophytic fungi quietly break down fallen leaves, wood, and other plant matter, turning them back into rich soil the forest can grow from.",
+      "firstKit": 8,
+      "voiceLines": [
+        "Nothing in a forest goes to waste — I see to that.",
+        "Give me a fallen log and a year. Watch what happens.",
+        "Decay isn't the end of a story. It's how the next chapter starts."
       ]
     }
   ]
