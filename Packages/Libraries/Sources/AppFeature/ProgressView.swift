@@ -166,12 +166,12 @@ public struct ProgressTabView: View {
                 Text(verbatim: "Achievements")
                     .font(.headline)
                 Spacer()
-                Text(verbatim: "\(gamification.earnedAchievementSlugs.count) / \(MicrobeLabAchievements.phase1.count)")
+                Text(verbatim: "\(gamification.earnedAchievementSlugs.count) / \(MicrobeLabAchievements.allDefinitions.count)")
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 110), spacing: 10)], spacing: 10) {
-                ForEach(MicrobeLabAchievements.phase1, id: \.id) { definition in
+                ForEach(MicrobeLabAchievements.allDefinitions, id: \.id) { definition in
                     achievementChip(definition)
                 }
             }

@@ -37,6 +37,23 @@ public struct ImmuneGameView: View {
     /// can keep stepping at the wave-5 boundary without re-triggering the
     /// trifecta.
     @State private var hasRecordedInnateRunCompletion = false
+
+    // MARK: - Phase 2 adaptive achievement tracking
+
+    /// Set on the first successful shape match on the adaptive surface
+    /// — drives `MicrobeLabAchievements.firstShapeMatch`.
+    @State private var hasMatchedAnyShape = false
+    /// Set on the first match that lands on a shape already in the body's
+    /// memory cells (count ≥ 2 of any shape) — drives
+    /// `MicrobeLabAchievements.memoryAwakened`. The B-cell scene's
+    /// `MemoryRecord.recognitionCount ≥ 2` after a match is the canonical
+    /// signal; we capture it here so the achievement evaluation closure
+    /// stays pure-derivation off observed state.
+    @State private var hasTriggeredMemoryRecall = false
+    /// Set on the first adaptive wave-clear.
+    @State private var hasClearedFirstAdaptiveWave = false
+    /// Set when every adaptive wave is cleared.
+    @State private var hasClearedAllAdaptiveWaves = false
     // Per-session mastery moments — fires once per kind when the kid
     // demonstrates internalization of the defense system. Mirrors the
     // `MicrobiomeView` ecology-mastery wiring shipped PR #76. Per
@@ -487,6 +504,38 @@ public struct ImmuneGameView: View {
         }
     }
 
+    /// Evaluate Phase-2 adaptive-immunity achievements. Mirrors
+    /// `evaluateAchievements` exactly — pure-derivation against captured
+    /// `@State` flags so the AchievementEngine criteria closure stays
+    /// deterministic + cheap. `AchievementEngine` only unlocks each ID
+    /// once so re-tap idempotency is free.
+    ///
+    /// `librarianOfShapes` lands when every member of `AntibodyShape
+    /// .allCases` has a `MemoryRecord` entry. The B-cell scene's
+    /// `memoryCells` array IS the authority on which shapes the body has
+    /// recognized.
+    private func evaluateAdaptiveAchievements() {
+        guard let gamification else { return }
+        let allShapesRecorded = Set(bcellScene.memoryCells.map { $0.shape })
+            .isSuperset(of: Set(AntibodyShape.allCases))
+        let newlyEarned = gamification.evaluateAchievements { definition in
+            switch definition.id {
+            case MicrobeLabAchievements.firstShapeMatch.id: return hasMatchedAnyShape
+            case MicrobeLabAchievements.memoryAwakened.id: return hasTriggeredMemoryRecall
+            case MicrobeLabAchievements.adaptiveRookie.id: return hasClearedFirstAdaptiveWave
+            case MicrobeLabAchievements.adaptiveRunner.id: return hasClearedAllAdaptiveWaves
+            case MicrobeLabAchievements.librarianOfShapes.id: return allShapesRecorded
+            default: return false
+            }
+        }
+        for definition in newlyEarned {
+            DebugLog.state("ImmuneGameView adaptive achievement \(definition.id) earned (+\(definition.xpValue) XP)")
+        }
+        if !newlyEarned.isEmpty {
+            sensory?.fire(.achievement)
+        }
+    }
+
     /// Defense-mastery moment evaluation. Mirrors the ecology-mastery
     /// wiring in `MicrobiomeView.evaluateEcologyMastery()`: pure mutation
     /// against the per-session `MasteryMomentDetector`; on a non-nil
@@ -550,13 +599,25 @@ public struct ImmuneGameView: View {
                     adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
                     DebugLog.state("ImmuneGameView adaptive step: matched=\(matched) remaining=\(adaptiveAntigensRemaining)")
                     if matched > 0 {
+                        hasMatchedAnyShape = true
                         sensory?.fire(.correctAnswer)
+                        // Memory recall — any shape with recognitionCount ≥ 2
+                        // means the body has matched this shape before.
+                        if bcellScene.memoryCells.contains(where: { $0.recognitionCount >= 2 }) {
+                            hasTriggeredMemoryRecall = true
+                        }
+                        evaluateAdaptiveAchievements()
                     }
                     if bcellScene.currentWaveIsComplete {
                         let finished = bcellScene.clearWave()
                         adaptiveWave = bcellScene.wave
                         adaptiveIsComplete = finished
+                        hasClearedFirstAdaptiveWave = true
+                        if finished {
+                            hasClearedAllAdaptiveWaves = true
+                        }
                         surfaceAdaptiveWaveClearCue(finished: finished)
+                        evaluateAdaptiveAchievements()
                         if !finished {
                             bcellScene.spawnCurrentWave()
                             adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count

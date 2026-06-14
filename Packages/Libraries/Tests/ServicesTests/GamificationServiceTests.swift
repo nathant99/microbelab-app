@@ -44,6 +44,47 @@ struct GamificationServiceTests {
         #expect(MicrobeLabAchievements.phase1.count == 10)
     }
 
+    @Test func phase2SetHasFiveAchievements() {
+        #expect(MicrobeLabAchievements.phase2.count == 5)
+    }
+
+    @Test func allDefinitionsCoversBothPhases() {
+        let all = MicrobeLabAchievements.allDefinitions
+        #expect(all.count == MicrobeLabAchievements.phase1.count + MicrobeLabAchievements.phase2.count)
+        // Spot-check both phases land in the aggregate.
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstZoom.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstShapeMatch.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.librarianOfShapes.id }))
+    }
+
+    @Test func phase2IDsAreUnique() {
+        let ids = MicrobeLabAchievements.phase2.map(\.id)
+        #expect(Set(ids).count == ids.count, "Phase-2 achievement IDs must be unique")
+    }
+
+    @Test func allDefinitionsHaveUniqueIDs() {
+        // Hard collision check: id collisions silently coalesce
+        // achievements in the AchievementEngine evaluation path. Every
+        // shipped definition must carry a distinct id.
+        let ids = MicrobeLabAchievements.allDefinitions.map(\.id)
+        #expect(Set(ids).count == ids.count)
+    }
+
+    @Test func phase2AchievementsAwardXP() async {
+        let service = GamificationService()
+        let firstMatch = MicrobeLabAchievements.firstShapeMatch
+        let memoryAwakened = MicrobeLabAchievements.memoryAwakened
+        let earned = service.evaluateAchievements { definition in
+            switch definition.id {
+            case firstMatch.id, memoryAwakened.id: return true
+            default: return false
+            }
+        }
+        #expect(earned.count == 2)
+        let expectedXP = firstMatch.xpValue + memoryAwakened.xpValue
+        #expect(service.totalXP == expectedXP)
+    }
+
     @Test func hydratedFromStreakStoreReadsPersistedCounters() {
         // swiftlint:disable:next force_unwrapping
         let defaults = UserDefaults(suiteName: "\(#file).hydration")!
