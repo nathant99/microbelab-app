@@ -591,9 +591,15 @@ public struct ImmuneGameView: View {
                         adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
                         adaptiveWaveSpawned = true
                         DebugLog.state("ImmuneGameView adaptive wave-\(adaptiveWave) spawned (count=\(adaptiveAntigensRemaining))")
+                        // Pedagogy scenario beat: the body has just met a
+                        // new wave; cue the firstEncounter framing.
+                        surfaceAdaptiveMentorCue(for: .firstEncounter)
                         return
                     }
                     bcellScene.advanceAntigens(by: 0.5)
+                    let memoryShapesBefore = Set(
+                        bcellScene.memoryCells.map(\.shape)
+                    )
                     let matched = bcellScene.attemptMatch()
                     adaptiveScore = bcellScene.score
                     adaptiveAntigensRemaining = bcellScene.antigens.filter { !$0.isMatched }.count
@@ -601,6 +607,17 @@ public struct ImmuneGameView: View {
                     if matched > 0 {
                         hasMatchedAnyShape = true
                         sensory?.fire(.correctAnswer)
+                        // Pedagogy scenario — the mentor surfaces a per-
+                        // beat cue based on whether the body just
+                        // recognized a shape from memory (recall) or
+                        // catalogued a fresh one (matchedShape).
+                        let recallObserved = memoryShapesBefore.contains(
+                            bcellScene.bcell.loadedAntibody.complement
+                        )
+                        let scenario: AdaptiveImmuneScenario = recallObserved
+                            ? .recallFromMemory
+                            : .matchedShape
+                        surfaceAdaptiveMentorCue(for: scenario)
                         // Memory recall — any shape with recognitionCount ≥ 2
                         // means the body has matched this shape before.
                         if bcellScene.memoryCells.contains(where: { $0.recognitionCount >= 2 }) {
@@ -678,5 +695,20 @@ public struct ImmuneGameView: View {
             celebration?.celebrate(.medium, message: "Wave recognized", emoji: "✨")
             sensory?.fire(.streakMilestone(adaptiveWave))
         }
+    }
+
+    /// Surface a per-scenario adaptive-immunity mentor cue. Pairs with
+    /// the `AdaptiveImmuneScenario` enum (`.firstEncounter` /
+    /// `.matchedShape` / `.recallFromMemory`) shipped PR #104. Uses the
+    /// synchronous static fallback for snappy UI; the async LLM path is
+    /// available for future scaffolding but the per-tap surface stays
+    /// authored so taps feel instant. Trauma-informed register inherited
+    /// from `VeeMentor.fallbackAdaptiveImmuneHypothesis` (no warfare
+    /// vocabulary; pinned by parameterized test in VeeMentorTests).
+    private func surfaceAdaptiveMentorCue(for scenario: AdaptiveImmuneScenario) {
+        guard let mentor else { return }
+        let cue = mentor.fallbackAdaptiveImmuneHypothesis(for: scenario)
+        mentorMessage = "\(cue.observation) \(cue.memoryHypothesis)"
+        DebugLog.state("ImmuneGameView adaptive mentor cue: \(scenario.rawValue)")
     }
 }
