@@ -78,3 +78,96 @@ public nonisolated struct MacrophageState: Codable, Sendable, Equatable {
         self.consumeRadius = consumeRadius
     }
 }
+
+// MARK: - Adaptive immunity (Phase 2)
+
+/// Antigen / antibody shape categories for the Phase 2 B-cell antibody-
+/// matching minigame.
+///
+/// Per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture the
+/// adaptive-immunity surface is framed as SHAPE-MATCHING + recognition,
+/// never warfare. Each `AntigenKind` has a complementary `AntibodyShape`
+/// (`.spiral` ↔ `.spiral`; `.ridged` ↔ `.ridged`; etc.) — matching is
+/// the pedagogy beat, not destruction.
+///
+/// Kept generic / abstract so the shape register is curriculum-truth
+/// (most antigens are shape-recognition surfaces, NOT named pathogens
+/// the kid could fear). No COVID, no pandemic-era references.
+public nonisolated enum AntibodyShape: String, Codable, Sendable, CaseIterable {
+    case spiral
+    case ridged
+    case branched
+    case rounded
+
+    /// Pedagogically-canonical complementary shape. In real adaptive
+    /// immunity the antibody's binding region mirrors the antigen
+    /// epitope — for kid pedagogy we surface this as "matching shapes."
+    public var complement: AntibodyShape {
+        // Symmetric: each shape pairs with itself in the simplified
+        // pedagogy register. Phase 2.5+ could surface mirror-pairs once
+        // the kid has internalized basic shape-recognition.
+        return self
+    }
+}
+
+/// Antigen marker surfaced for the kid to recognize. Pure-value state so
+/// the SPM test target can drive the minigame logic without GPU.
+public nonisolated struct AntigenState: Codable, Sendable, Equatable, Identifiable {
+    public let id: UUID
+    public let shape: AntibodyShape
+    public var position: Vec2
+    public var velocity: Vec2
+    /// `true` once a complementary antibody has been matched to this
+    /// antigen. Matched antigens stop being targetable but stay in the
+    /// pool until cleared at wave end (so the kid sees their progress).
+    public var isMatched: Bool
+
+    public init(
+        id: UUID = UUID(),
+        shape: AntibodyShape,
+        position: Vec2,
+        velocity: Vec2 = .zero,
+        isMatched: Bool = false
+    ) {
+        self.id = id
+        self.shape = shape
+        self.position = position
+        self.velocity = velocity
+        self.isMatched = isMatched
+    }
+}
+
+/// The kid's B-cell avatar — carries the currently-loaded antibody
+/// shape. Loading a new shape replaces the previous one.
+public nonisolated struct BCellState: Codable, Sendable, Equatable {
+    public var position: Vec2
+    public var loadedAntibody: AntibodyShape
+    /// Match radius in scene-coords. Antigens within this radius whose
+    /// `shape` matches `loadedAntibody.complement` are eligible for
+    /// matching on the kid's next confirm tap.
+    public var matchRadius: Double
+
+    public init(
+        position: Vec2,
+        loadedAntibody: AntibodyShape = .spiral,
+        matchRadius: Double = 32
+    ) {
+        self.position = position
+        self.loadedAntibody = loadedAntibody
+        self.matchRadius = matchRadius
+    }
+}
+
+/// Memory cells the body retains after a successful match. Each entry
+/// pairs a shape with the count of how many times it has been
+/// recognized — the pedagogy beat for the `AdaptiveImmuneScenario`
+/// `.recallFromMemory` case (per `AIMentor.MentorGenerables`).
+public nonisolated struct MemoryRecord: Codable, Sendable, Equatable {
+    public let shape: AntibodyShape
+    public var recognitionCount: Int
+
+    public init(shape: AntibodyShape, recognitionCount: Int = 1) {
+        self.shape = shape
+        self.recognitionCount = recognitionCount
+    }
+}
