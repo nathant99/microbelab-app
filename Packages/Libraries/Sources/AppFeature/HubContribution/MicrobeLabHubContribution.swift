@@ -15,11 +15,16 @@ import Models
 /// A handoff in `Docs/HANDOFF_FROM_APP_FORGEADVENTURE_LIFE_ZONE_PROPOSAL.md` requests
 /// labsmith add the canonical Life Zone case + corresponding migration path.
 ///
-/// The contribution wires three engines to MicrobeLab's existing surfaces:
+/// The contribution wires four engines to MicrobeLab's existing surfaces:
 ///
 /// - `.simulation` — Microbiome Simulator (`MicrobiomeView` / `MicrobiomePuzzleScene`)
 /// - `.defense`    — Innate-immune Pac-Man (`ImmuneGameView` / `MacrophagePacmanScene`)
 /// - `.quest`      — Microscope exploration (`ExploreView` / `MicroscopeScene`)
+/// - `.puzzle`     — Antibody Lab (`ImmuneGameView` adaptive surface /
+///                   `BCellAntibodyMatchScene`) — Phase 2 shape-matching
+///                   pedagogy beat; gated on `AdaptiveImmunityUnlock` so the
+///                   hub-orchestrated surface inherits the same innate-first
+///                   progression curve as the in-app surface.
 ///
 /// All three render the existing app surfaces via `AnyView` adapters; the hub provides the
 /// completion + lifecycle callbacks (`onComplete` / `onExitToHub`) the contribution must
@@ -50,7 +55,7 @@ public nonisolated struct MicrobeLabHubContribution: HubContribution {
         sourceAppID: String = "microbelab",
         sourceAppDisplayName: String = "MicrobeLab",
         zone: ZoneID = .scienceLabs,
-        supportedEngines: [GameModeType] = [.simulation, .defense, .quest],
+        supportedEngines: [GameModeType] = [.simulation, .defense, .quest, .puzzle],
         preferredPresentation: HubPresentation = .fullScreen,
         mentorPersona: MentorPersona = .microbeLabCilia,
         kitResources: [HubKitResource] = MicrobeLabHubContribution.canonicalKitResources
@@ -112,6 +117,19 @@ public nonisolated struct MicrobeLabHubContribution: HubContribution {
             title: "Microscope expedition",
             tagline: "Zoom from 1× to 10000× to meet the microbes.",
             completionMessage: "You met a new microbe today."
+        ),
+        // Phase 2 Antibody Lab — `.puzzle` engine kind (shape-pattern
+        // matching is pedagogically a puzzle category; .defense is
+        // reserved for the innate macrophage Pac-Man so the two surfaces
+        // stay distinct in the hub picker). The completionMessage
+        // mirrors the in-app B-cell adaptive surface's celebratory beat
+        // ("memory cells locked in") which is trauma-informed: protection
+        // + library-building framing, never warfare vocabulary per
+        // `.claude/rules/trauma-informed-content.md`.
+        .puzzle: EngineCopy(
+            title: "Antibody library",
+            tagline: "Help the B-cells remember the shape.",
+            completionMessage: "Memory cells locked in — your library grew today."
         ),
     ]
 
@@ -243,6 +261,7 @@ struct MicrobeLabHubChallengeAdapter: View {
         case .quest: "magnifyingglass"
         case .simulation: "leaf"
         case .defense: "shield.lefthalf.filled"
+        case .puzzle: "key.viewfinder"
         default: "circle.dashed"
         }
     }
