@@ -21,6 +21,7 @@ public struct MicrobiomeView: View {
     @State private var tickCount: Int = 0
     @State private var showingAntibioticPrompt = false
     @State private var showingImmuneGame = false
+    @State private var showingOralMicrobiome = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -43,6 +44,10 @@ public struct MicrobiomeView: View {
     private let sensory: SensoryPaletteCoordinator?
     private let adaptiveProgress: AdaptiveImmunityProgressStore?
     private let simplifyChallenge: Bool
+    /// Catalog used to host the oral-cavity sub-puzzle. When nil, the toolbar
+    /// affordance for the oral surface is hidden so callers (e.g., unit
+    /// previews) that don't need it don't pay the wiring cost.
+    private let catalog: MicrobeCatalogService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -53,7 +58,8 @@ public struct MicrobiomeView: View {
         analytics: AnalyticsService? = nil,
         sensory: SensoryPaletteCoordinator? = nil,
         adaptiveProgress: AdaptiveImmunityProgressStore? = nil,
-        simplifyChallenge: Bool = false
+        simplifyChallenge: Bool = false,
+        catalog: MicrobeCatalogService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -68,6 +74,7 @@ public struct MicrobiomeView: View {
         self.sensory = sensory
         self.adaptiveProgress = adaptiveProgress
         self.simplifyChallenge = simplifyChallenge
+        self.catalog = catalog
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -111,6 +118,16 @@ public struct MicrobiomeView: View {
                     }
                     .accessibilityHint("Open the innate immunity minigame")
                 }
+                if catalog != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingOralMicrobiome = true
+                        } label: {
+                            Label("Oral microbiome", systemImage: "mouth.fill")
+                        }
+                        .accessibilityHint("Open the oral-cavity microbiome puzzle")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -127,6 +144,17 @@ public struct MicrobiomeView: View {
                     #if os(iOS)
                     .navigationBarTitleDisplayMode(.inline)
                     #endif
+            }
+            .navigationDestination(isPresented: $showingOralMicrobiome) {
+                if let catalog {
+                    OralMicrobiomeView(
+                        catalog: catalog,
+                        mentor: mentor,
+                        celebration: celebration,
+                        analytics: analytics,
+                        sensory: sensory
+                    )
+                }
             }
         }
     }
