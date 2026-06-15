@@ -73,4 +73,66 @@ nonisolated struct OralMicrobiomeStateTests {
         let decoded = try JSONDecoder().decode(OralMicrobiomeState.self, from: data)
         #expect(decoded == original)
     }
+
+    // MARK: - nextStableRun (oralBalanceKeeper criterion derivation)
+
+    @Test func nextStableRunIncrementsUnderWater() {
+        // Water is the canonical gentle load. Each tick under water extends
+        // the stable run by 1 — the oral neighborhood is holding balance.
+        #expect(OralMicrobiomeState.nextStableRun(prior: 0, sugarLoad: .water) == 1)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 7, sugarLoad: .water) == 8)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 42, sugarLoad: .water) == 43)
+    }
+
+    @Test func nextStableRunIncrementsUnderFruit() {
+        // Fruit shares the gentle-load semantic with water.
+        #expect(OralMicrobiomeState.nextStableRun(prior: 0, sugarLoad: .fruit) == 1)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 5, sugarLoad: .fruit) == 6)
+    }
+
+    @Test func nextStableRunResetsUnderSugarSnack() {
+        // Sugar snack tilts the ecology toward acid-makers; the stable run
+        // resets. Trauma-informed: the reset is ecology, NEVER framed as
+        // shame in the consuming view — that framing lives in
+        // `OralMicrobiomeView.refreshMentorCue`.
+        #expect(OralMicrobiomeState.nextStableRun(prior: 0, sugarLoad: .sugarSnack) == 0)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 7, sugarLoad: .sugarSnack) == 0)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 42, sugarLoad: .sugarSnack) == 0)
+    }
+
+    @Test func nextStableRunHoldsUnderBrush() {
+        // Brushing is care, NOT progress. Holding the run in place mirrors
+        // the kid's lived experience — brushing doesn't undo a sugar snack
+        // but it also doesn't earn more credit than earlier gentle loads
+        // already accumulated.
+        #expect(OralMicrobiomeState.nextStableRun(prior: 0, sugarLoad: .brush) == 0)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 7, sugarLoad: .brush) == 7)
+        #expect(OralMicrobiomeState.nextStableRun(prior: 42, sugarLoad: .brush) == 42)
+    }
+
+    @Test func nextStableRunReachesThresholdUnderEightWaterTicks() {
+        // Closure check: a fresh run under .water reaches the canonical
+        // `OralMicrobiomeView.stableRunThreshold` of 8 in exactly 8 ticks.
+        // Load-bearing — the threshold isn't part of Models, but the
+        // derivation is, so this guards the canonical climb path.
+        var run = 0
+        for _ in 1...8 {
+            run = OralMicrobiomeState.nextStableRun(prior: run, sugarLoad: .water)
+        }
+        #expect(run == 8)
+    }
+
+    @Test func nextStableRunBlocksThresholdWhenSugarInterrupts() {
+        // Closure check: a sugar snack mid-run zeros the run; achievement
+        // doesn't fire until the kid resumes gentle loads for 8 ticks.
+        var run = 5
+        run = OralMicrobiomeState.nextStableRun(prior: run, sugarLoad: .sugarSnack)
+        #expect(run == 0)
+        for _ in 1...7 {
+            run = OralMicrobiomeState.nextStableRun(prior: run, sugarLoad: .fruit)
+        }
+        #expect(run == 7) // not yet at threshold
+        run = OralMicrobiomeState.nextStableRun(prior: run, sugarLoad: .water)
+        #expect(run == 8) // threshold reached
+    }
 }
