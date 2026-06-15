@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4007-A000-000000000007",
+  "slug": "skin-microbiome",
+  "title": "The Skin Garden",
+  "summary": "How the skin microbiome works — a calm, layered community of microbes that lives across every patch of skin. Trauma-informed register: no shame around eczema, acne, or body image; the skin is a garden, not a battlefield.",
+  "kitNumber": 7,
+  "questions": [
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000001",
+      "prompt": "The skin microbiome is the community of microbes that live…",
+      "choices": [
+        "Across the whole surface of your skin — face, arms, scalp, everywhere",
+        "Only inside your blood",
+        "Only on your fingertips",
+        "Only when you're sick"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every patch of skin hosts its own neighborhood of microbes. Dry skin, oily skin, and damp skin each carry their own crowd — all part of you.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    },
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000002",
+      "prompt": "Cutibacterium acnes is a skin microbe that lives near hair follicles. It usually…",
+      "choices": [
+        "Keeps the skin balanced by living quietly on natural skin oils",
+        "Only appears after exercise",
+        "Lives only inside the stomach",
+        "Cannot survive on humans"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cutibacterium acnes is on almost everyone — it feeds on the skin's natural oils and is mostly a quiet helper. Skin changes happen for many reasons; this microbe is one small part of a much bigger ecology.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000003",
+      "prompt": "Demodex mites live in tiny numbers on almost every adult and most kids. They usually…",
+      "choices": [
+        "Live quietly in skin pores and don't cause trouble",
+        "Are dangerous to everyone",
+        "Live only in soil, never on people",
+        "Bite human skin every day"
+      ],
+      "correctIndex": 0,
+      "explanation": "Demodex mites are part of the normal skin community for nearly everyone. They're tiny, they're quiet, and they're just one more member of the garden.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000004",
+      "prompt": "Gentle washing helps the skin microbiome stay balanced because it…",
+      "choices": [
+        "Removes excess oil and old skin cells without stripping the protective community",
+        "Sterilizes the skin completely",
+        "Removes all microbes forever",
+        "Makes the skin grow new layers instantly"
+      ],
+      "correctIndex": 0,
+      "explanation": "Skin doesn't need to be sterile — it needs to be cared for. Gentle washing keeps the community in balance; harsh scrubbing can disrupt it.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    },
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000005",
+      "prompt": "Eczema, dry patches, and skin sensitivity are usually…",
+      "choices": [
+        "A sign the skin community needs a little support — moisturizer, calm care, sometimes a doctor's help",
+        "A sign someone did something wrong",
+        "A reason to feel bad about yourself",
+        "Permanent and unfixable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Skin sensitivities happen to many people, at every age. They don't mean anyone failed — the skin community just needs more care, and sometimes a grown-up or doctor to help figure out what.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA007-0000-4007-8000-000000000006",
+      "prompt": "Most microbes in a healthy skin community are…",
+      "choices": [
+        "Quiet members that help keep the skin's protective layer working",
+        "Always dangerous",
+        "Identical across every person",
+        "Visible to the human eye"
+      ],
+      "correctIndex": 0,
+      "explanation": "The skin garden — like the gut and the mouth — is mostly quiet helpers. Everyone's skin community is slightly different, and that's part of what makes you, you.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    }
+  ]
+}

@@ -126,9 +126,129 @@ nonisolated struct QuestionKitServiceTests {
     @Test func phase2KitSlugsContainsAdaptiveImmunity() {
         // Phase-2 ships kit 05 alongside the BCellAntibodyMatchScene + the
         // AdaptiveImmunityUnlock progression curve + mentor cues. Kits 06-08
-        // (oral / skin / soil microbiome) follow when the corresponding
-        // scenes ship.
+        // (oral / skin / soil microbiome) ship ahead of the corresponding
+        // microbiome scenes so the kit-progress strip carries the full set.
         #expect(QuestionKitService.phase2KitSlugs.contains("adaptive-immunity"))
+    }
+
+    @Test func loadsKit06OralMicrobiomeFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "oral-microbiome")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 6)
+        #expect(kit.slug == "oral-microbiome")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
+    @Test func loadsKit07SkinMicrobiomeFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "skin-microbiome")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 7)
+        #expect(kit.slug == "skin-microbiome")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
+    @Test func loadsKit08SoilMicrobiomeFromBundle() throws {
+        let service = QuestionKitService()
+        let result = service.loadKit(slug: "soil-microbiome")
+        guard case .success(let kit) = result else {
+            Issue.record("Expected success, got \(result)")
+            return
+        }
+        #expect(kit.kitNumber == 8)
+        #expect(kit.slug == "soil-microbiome")
+        #expect(!kit.questions.isEmpty)
+        for question in kit.questions {
+            #expect(question.choices.indices.contains(question.correctIndex))
+        }
+    }
+
+    @Test func phase2KitSlugsReachesPhase2Target() {
+        // Phase-2 ships all 4 kits (05 adaptive + 06 oral + 07 skin + 08 soil)
+        // per Docs/FEATURE_PLAN.md § Phase 2. Guards against future regression.
+        #expect(QuestionKitService.phase2KitSlugs.count == 4)
+        #expect(QuestionKitService.phase2KitSlugs == [
+            "adaptive-immunity",
+            "oral-microbiome",
+            "skin-microbiome",
+            "soil-microbiome"
+        ])
+    }
+
+    @Test func everyPhase2KitNumberMatchesCanonicalOrder() {
+        let service = QuestionKitService()
+        let kits = service.loadAllPhase2Kits()
+        // Canonical: kit05 → kitNumber 5; kit06 → 6; kit07 → 7; kit08 → 8.
+        for (index, kit) in kits.enumerated() {
+            #expect(kit.kitNumber == index + 5,
+                    "kit \(kit.slug) kitNumber=\(kit.kitNumber) but expected \(index + 5)")
+        }
+    }
+
+    @Test func phase2EcologyKitsCarryEcologyCurriculumStandards() {
+        let service = QuestionKitService()
+        // Ecology kits (oral / skin / soil) should surface NGSS MS-LS2-2
+        // (interactions in ecosystems) per Docs/TECHNICAL_DESIGN.md
+        // § Curriculum — that's the standard the microbiome-as-ecology
+        // pedagogy maps to.
+        for slug in ["oral-microbiome", "skin-microbiome", "soil-microbiome"] {
+            guard case .success(let kit) = service.loadKit(slug: slug) else {
+                Issue.record("\(slug) should load")
+                continue
+            }
+            let tagged = kit.questions.compactMap(\.curriculumStandard)
+            #expect(tagged.contains(where: { $0.contains("MS-LS2") }),
+                    "Kit \(slug) must surface at least one MS-LS2-* standard for ecology coverage.")
+        }
+    }
+
+    @Test func phase2EcologyKitsTraumaInformedRegisterStoplist() {
+        let service = QuestionKitService()
+        // Pin trauma-informed register across the 3 new ecology kits. Each
+        // ecology has its own register-sensitive vocabulary:
+        //
+        // - Oral (kit 06): no warfare register; cavities framed as ecology,
+        //   not blame
+        // - Skin (kit 07): no body-image-shame register; eczema framed with
+        //   care, not failure
+        // - Soil (kit 08): no warfare register; decomposers are quiet
+        //   helpers, not destroyers
+        let warfareStoplist = ["fight", "attack", "destroy", "kill", "war",
+                               "enemy", "battle", "weapon", "soldier",
+                               "warrior"]
+        let bodyShameStoplist = ["gross", "dirty", "ugly", "ashamed",
+                                 "blemish", "filthy"]
+        let blameStoplist = ["lazy", "careless", "should have brushed",
+                             "wrong choice", "your fault"]
+
+        for slug in ["oral-microbiome", "skin-microbiome", "soil-microbiome"] {
+            guard case .success(let kit) = service.loadKit(slug: slug) else {
+                Issue.record("\(slug) should load")
+                continue
+            }
+            for question in kit.questions {
+                let blob = ([question.prompt, question.explanation] + question.choices)
+                    .joined(separator: " ")
+                    .lowercased()
+                for forbidden in warfareStoplist + bodyShameStoplist + blameStoplist {
+                    #expect(!blob.contains(forbidden),
+                            "Kit \(slug) question \(question.id) contains forbidden token '\(forbidden)'")
+                }
+            }
+        }
     }
 
     @Test func loadAllPhase2KitsCoversBundledSet() {

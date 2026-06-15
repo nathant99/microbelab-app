@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4006-A000-000000000006",
+  "slug": "oral-microbiome",
+  "title": "The Mouthful Neighborhood",
+  "summary": "How the oral microbiome works — a small, busy neighborhood with hundreds of microbes that balance each other. Trauma-informed register: brushing is care, not a moral test; cavities are ecology, not blame.",
+  "kitNumber": 6,
+  "questions": [
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000001",
+      "prompt": "The oral microbiome is the community of microbes that live in…",
+      "choices": [
+        "Your mouth — on teeth, gums, tongue, and cheeks",
+        "Only your stomach",
+        "Only your fingertips",
+        "Only your hair"
+      ],
+      "correctIndex": 0,
+      "explanation": "Your mouth hosts hundreds of microbe species — bacteria, yeasts, even some viruses. Together they make up the oral microbiome.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    },
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000002",
+      "prompt": "Streptococcus mutans is a common oral microbe that gets more attention because it…",
+      "choices": [
+        "Loves sugar and can turn it into acid that softens tooth enamel",
+        "Eats only fiber",
+        "Lives only on dry land",
+        "Cannot survive in saliva"
+      ],
+      "correctIndex": 0,
+      "explanation": "Strep. mutans isn't 'bad' on its own — it just thrives on sugar. When sugar is around a lot, it makes acid, and that acid can wear on enamel over time.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000003",
+      "prompt": "Brushing your teeth helps the oral microbiome by…",
+      "choices": [
+        "Gently lowering the layer of plaque so no single microbe takes over",
+        "Removing every microbe in your mouth forever",
+        "Stopping all helpful microbes from growing back",
+        "Replacing your saliva with new saliva"
+      ],
+      "correctIndex": 0,
+      "explanation": "Brushing doesn't sterilize your mouth — it gently thins the plaque layer so the community stays balanced. Helpful microbes regrow quickly.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    },
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000004",
+      "prompt": "Saliva helps keep the oral microbiome balanced because it…",
+      "choices": [
+        "Washes microbes gently and carries minerals that strengthen enamel",
+        "Is the same as stomach acid",
+        "Is made of plastic",
+        "Stops all microbe growth completely"
+      ],
+      "correctIndex": 0,
+      "explanation": "Saliva is one of the body's quietest helpers — it rinses food bits, carries calcium and phosphate to enamel, and keeps the mouth chemistry friendly to balance.",
+      "curriculumStandard": "NGSS MS-LS1-3"
+    },
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000005",
+      "prompt": "Drinking water after a sugary snack helps the oral neighborhood because it…",
+      "choices": [
+        "Rinses leftover sugar so acid-making microbes have less to work with",
+        "Adds new bacteria to your mouth",
+        "Makes saliva disappear",
+        "Removes oxygen from the mouth"
+      ],
+      "correctIndex": 0,
+      "explanation": "A quick sip of water after sweets is one of the simplest microbiome-friendly habits — less leftover sugar means less acid time for enamel.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    },
+    {
+      "id": "AAAAA006-0000-4006-8000-000000000006",
+      "prompt": "Most microbes in a healthy mouth are…",
+      "choices": [
+        "Quiet members of a balanced community that help keep things steady",
+        "Always dangerous",
+        "Identical to one another",
+        "Only present after meals"
+      ],
+      "correctIndex": 0,
+      "explanation": "Like the gut, the mouth is mostly home to quiet, balanced microbes. The 'cavity-causing' ones are part of the same neighborhood — they just respond strongly to sugar and time.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    }
+  ]
+}

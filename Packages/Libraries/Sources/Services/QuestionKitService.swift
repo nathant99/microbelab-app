@@ -3,11 +3,14 @@ import Models
 
 /// Loads bundled question kit JSON files from `Bundle.module`. Phase 1 ships
 /// kits 01-04 (microbiology basics / microbiome / immune defense / beneficial
-/// microbes); Phase 2 kits 05-08 (adaptive immunity / oral biome / skin biome
-/// / soil biome) land as their underlying gameplay surfaces ship per
-/// `Docs/FEATURE_PLAN.md` § Phase 2. Kit 05 (adaptive-immunity) shipped the
-/// eighteenth-pass auto-cycle round (PR #120) alongside the BCellAntibody
-/// surface (PR #105) + AdaptiveImmunityUnlock (PR #108) + mentor cues (PR #111).
+/// microbes); Phase 2 ships kits 05-08 (adaptive immunity / oral biome / skin
+/// biome / soil biome) per `Docs/FEATURE_PLAN.md` § Phase 2. Kit 05
+/// (adaptive-immunity) shipped the eighteenth-pass auto-cycle round (PR #120)
+/// alongside the BCellAntibody surface (PR #105) + AdaptiveImmunityUnlock
+/// (PR #108) + mentor cues (PR #111). Kits 06 (oral) + 07 (skin) + 08 (soil)
+/// ship the nineteenth-pass auto-cycle round (2026-06-15) ahead of the
+/// per-ecology microbiome scenes so the kit-progress strip can surface them
+/// the moment they land.
 public nonisolated struct QuestionKitService: Sendable {
     public enum LoadError: Error, Sendable {
         case resourceMissing(slug: String)
@@ -26,10 +29,14 @@ public nonisolated struct QuestionKitService: Sendable {
     /// Slugs of every Phase-2 kit bundled to date. Kit 05 ships alongside the
     /// adaptive-immunity gameplay surface (`BCellAntibodyMatchScene` +
     /// `AdaptiveImmunityUnlock`). Kits 06-08 (oral / skin / soil microbiome)
-    /// land alongside the corresponding microbiome scenes. Order is canonical
-    /// kit order so the UI can extend the kit-progress strip incrementally.
+    /// ship ahead of the corresponding microbiome scenes so the kit-progress
+    /// strip surfaces the full Phase 2 set; per-ecology scene authoring
+    /// follows as separate FEATURE_PLAN items. Order is canonical kit order.
     public static let phase2KitSlugs: [String] = [
-        "adaptive-immunity"
+        "adaptive-immunity",
+        "oral-microbiome",
+        "skin-microbiome",
+        "soil-microbiome"
     ]
 
     /// Convenience union: every shipped kit slug in canonical order. Used by
