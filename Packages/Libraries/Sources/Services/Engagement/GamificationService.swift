@@ -123,9 +123,37 @@ public nonisolated enum MicrobeLabAchievements {
         xpValue: 100
     )
 
+    // Per-ecology balance-keeper achievements (oral / skin / soil). Each
+    // rewards the kid for holding a per-ecology microbiome stable under the
+    // ecology's gentle-care equivalent of fiber feeding. Trauma-informed
+    // posture inherited from kits 06/07/08: ecology is a neighborhood, never
+    // a battlefield; the achievement names recognition + care, not victory.
+    public static let oralBalanceKeeper = AchievementDefinition(
+        id: "ml.oral-balance-keeper",
+        title: "Mouthful Steadier",
+        description: "You kept the oral neighborhood steady — water, fruit, and gentle brushing held the balance.",
+        iconAssetName: "mouth.fill",
+        xpValue: 80
+    )
+    public static let skinKindnessChampion = AchievementDefinition(
+        id: "ml.skin-kindness-champion",
+        title: "Skin Garden Tender",
+        description: "You cared for the skin garden — gentle washing kept the community in balance.",
+        iconAssetName: "hand.raised.fill",
+        xpValue: 80
+    )
+    public static let soilDecomposerWhisperer = AchievementDefinition(
+        id: "ml.soil-decomposer-whisperer",
+        title: "Underground Steward",
+        description: "You held the soil neighborhood steady — decomposers, nitrogen-fixers, and extremophiles all thriving.",
+        iconAssetName: "leaf.arrow.triangle.circlepath",
+        xpValue: 100
+    )
+
     public static let phase2: [AchievementDefinition] = [
         firstShapeMatch, memoryAwakened, adaptiveRookie,
         adaptiveRunner, librarianOfShapes,
+        oralBalanceKeeper, skinKindnessChampion, soilDecomposerWhisperer,
     ]
 
     /// Aggregate accessor — every shipped achievement across all phases.

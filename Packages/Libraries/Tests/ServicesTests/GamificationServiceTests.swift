@@ -44,8 +44,61 @@ struct GamificationServiceTests {
         #expect(MicrobeLabAchievements.phase1.count == 10)
     }
 
-    @Test func phase2SetHasFiveAchievements() {
-        #expect(MicrobeLabAchievements.phase2.count == 5)
+    @Test func phase2SetHasEightAchievements() {
+        // Adaptive-immunity quintet (PR #110) + the three per-ecology
+        // balance-keeper achievements landed this round (oral / skin /
+        // soil). Closes FEATURE_PLAN.md § Phase 2 "Add 8 Phase-2
+        // achievements" fully.
+        #expect(MicrobeLabAchievements.phase2.count == 8)
+    }
+
+    @Test func phase2EcologyBalanceKeepersPresent() {
+        let phase2IDs = Set(MicrobeLabAchievements.phase2.map(\.id))
+        #expect(phase2IDs.contains(MicrobeLabAchievements.oralBalanceKeeper.id))
+        #expect(phase2IDs.contains(MicrobeLabAchievements.skinKindnessChampion.id))
+        #expect(phase2IDs.contains(MicrobeLabAchievements.soilDecomposerWhisperer.id))
+    }
+
+    @Test func phase2EcologyAchievementsTraumaSafeRegister() {
+        // The 3 ecology achievements are positive-tier 80-100 XP rewards.
+        // Trauma-informed register: titles + descriptions name care +
+        // recognition, never victory or "you finally" framing. Pin a small
+        // stoplist so future copy edits don't silently regress.
+        let ecology = [
+            MicrobeLabAchievements.oralBalanceKeeper,
+            MicrobeLabAchievements.skinKindnessChampion,
+            MicrobeLabAchievements.soilDecomposerWhisperer
+        ]
+        let stoplist = ["finally", "at last", "should have", "almost",
+                        "failed", "behind", "loser", "fell short",
+                        "compared", "better than", "wrong"]
+        for definition in ecology {
+            let blob = "\(definition.title) \(definition.description)".lowercased()
+            for forbidden in stoplist {
+                #expect(!blob.contains(forbidden),
+                        "Achievement \(definition.id) contains forbidden token '\(forbidden)'")
+            }
+            // XP value sanity: each is in the 50-150 band like the other
+            // Phase 2 achievements; never zero (would silently drop XP).
+            #expect(definition.xpValue >= 50)
+            #expect(definition.xpValue <= 150)
+        }
+    }
+
+    @Test func phase2EcologyAchievementsAwardXP() async {
+        let service = GamificationService()
+        let oral = MicrobeLabAchievements.oralBalanceKeeper
+        let skin = MicrobeLabAchievements.skinKindnessChampion
+        let soil = MicrobeLabAchievements.soilDecomposerWhisperer
+        let earned = service.evaluateAchievements { definition in
+            switch definition.id {
+            case oral.id, skin.id, soil.id: return true
+            default: return false
+            }
+        }
+        #expect(earned.count == 3)
+        let expectedXP = oral.xpValue + skin.xpValue + soil.xpValue
+        #expect(service.totalXP == expectedXP)
     }
 
     @Test func allDefinitionsCoversBothPhases() {
