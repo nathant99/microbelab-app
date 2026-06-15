@@ -1,0 +1,87 @@
+{
+  "id": "9DB2A1F0-FFFF-4008-A000-000000000008",
+  "slug": "soil-microbiome",
+  "title": "The Quiet Underground",
+  "summary": "How the soil microbiome works — the decomposers, nitrogen-fixers, and extremophiles that build the ground beneath every garden. Bridges microbiology to ecology and the broader cross-portfolio biome cast.",
+  "kitNumber": 8,
+  "questions": [
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000001",
+      "prompt": "The soil microbiome is the community of microbes that live in…",
+      "choices": [
+        "Dirt, compost, and the spaces between grains of soil",
+        "Only inside trees",
+        "Only on top of the ground, never beneath",
+        "Only in deep ocean water"
+      ],
+      "correctIndex": 0,
+      "explanation": "A single teaspoon of healthy soil contains more microbes than there are people on Earth. They live in the tiny spaces between grains, sharing nutrients with roots.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000002",
+      "prompt": "Decomposer microbes like Loam fungi help the soil by…",
+      "choices": [
+        "Breaking down dead leaves and old wood into nutrients plants can use",
+        "Eating live tree trunks",
+        "Stealing energy from sunlight",
+        "Replacing soil with sand"
+      ],
+      "correctIndex": 0,
+      "explanation": "Decomposers are the recyclers of the ground. Every fallen leaf becomes part of next year's soil — that's their work.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000003",
+      "prompt": "Rhizobium bacteria live near plant roots and help by…",
+      "choices": [
+        "Pulling nitrogen from the air and turning it into a form plants can use",
+        "Stealing water from the plant",
+        "Blocking sunlight from reaching leaves",
+        "Eating the plant's roots"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plants can't use nitrogen from the air directly. Rhizobium does that work — a partnership that lets clover, beans, and peas grow strong.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000004",
+      "prompt": "Thermophile microbes are special because they…",
+      "choices": [
+        "Thrive in very hot environments where most life cannot",
+        "Live only in freezing snow",
+        "Cannot survive outside the human body",
+        "Eat metal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Thermophiles live in hot springs, deep-sea vents, and inside compost heaps. They show that life finds a way in places most creatures couldn't survive.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    },
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000005",
+      "prompt": "Compost-rich soil helps a garden grow because it…",
+      "choices": [
+        "Feeds a diverse community of microbes that release nutrients to roots",
+        "Adds plastic to the ground",
+        "Removes all microbes from the soil",
+        "Makes water disappear faster"
+      ],
+      "correctIndex": 0,
+      "explanation": "Diverse compost feeds diverse microbes. Diverse microbes feed roots in slow, steady ways — which is why a compost-rich garden often grows quieter and stronger.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    },
+    {
+      "id": "AAAAA008-0000-4008-8000-000000000006",
+      "prompt": "Soil microbes and plant roots usually work together in a way called…",
+      "choices": [
+        "Mutualism — both sides benefit",
+        "Predation — one eats the other",
+        "Competition — both lose",
+        "Isolation — neither notices the other"
+      ],
+      "correctIndex": 0,
+      "explanation": "Many soil microbes share nutrients with roots in exchange for sugars from the plant. It's one of nature's oldest partnerships — quiet, underground, and everywhere.",
+      "curriculumStandard": "NGSS MS-LS2-2"
+    }
+  ]
+}
