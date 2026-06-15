@@ -580,7 +580,8 @@ public struct AppRootView: View {
                         analytics: analytics,
                         sensory: sensory,
                         adaptiveProgress: adaptiveProgress,
-                        simplifyChallenge: settingsStore.settings.simplifyChallenge
+                        simplifyChallenge: settingsStore.settings.simplifyChallenge,
+                        catalog: catalog
                     )
                 }
             }
