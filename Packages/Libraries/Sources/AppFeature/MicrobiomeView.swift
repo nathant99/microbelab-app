@@ -22,6 +22,7 @@ public struct MicrobiomeView: View {
     @State private var showingAntibioticPrompt = false
     @State private var showingImmuneGame = false
     @State private var showingOralMicrobiome = false
+    @State private var showingSkinMicrobiome = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -127,6 +128,14 @@ public struct MicrobiomeView: View {
                         }
                         .accessibilityHint("Open the oral-cavity microbiome puzzle")
                     }
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingSkinMicrobiome = true
+                        } label: {
+                            Label("Skin microbiome", systemImage: "hand.raised.fill")
+                        }
+                        .accessibilityHint("Open the skin microbiome puzzle")
+                    }
                 }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
@@ -148,6 +157,18 @@ public struct MicrobiomeView: View {
             .navigationDestination(isPresented: $showingOralMicrobiome) {
                 if let catalog {
                     OralMicrobiomeView(
+                        catalog: catalog,
+                        mentor: mentor,
+                        gamification: gamification,
+                        celebration: celebration,
+                        analytics: analytics,
+                        sensory: sensory
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingSkinMicrobiome) {
+                if let catalog {
+                    SkinMicrobiomeView(
                         catalog: catalog,
                         mentor: mentor,
                         gamification: gamification,
