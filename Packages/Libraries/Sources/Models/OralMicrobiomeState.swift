@@ -81,4 +81,27 @@ public nonisolated struct OralMicrobiomeState: Codable, Sendable, Equatable {
             sugarLoad: .water
         )
     }
+
+    /// Per-tick advance of the oral-stable tick run.
+    ///
+    /// - **`.water` / `.fruit`** (gentle loads) → `prior + 1`. The oral
+    ///   community is holding balance; the stable run extends.
+    /// - **`.sugarSnack`** → `0`. Acid-makers tilt the ecology; the run
+    ///   resets. (Resetting is NOT shame — it's ecology, mirroring the
+    ///   per-load mentor copy in `OralMicrobiomeView.refreshMentorCue`.)
+    /// - **`.brush`** → `prior`. Brushing is care, not progress. Holding
+    ///   the run in place mirrors the kid's lived experience: brushing
+    ///   doesn't undo a sugar snack, but it also doesn't earn more credit
+    ///   than the kid already accumulated from earlier gentle loads.
+    ///
+    /// Load-bearing for the `oralBalanceKeeper` achievement criterion in
+    /// `OralMicrobiomeView`. Pure-value derivation so the threshold logic
+    /// is unit-testable without a GPU context.
+    public static func nextStableRun(prior: Int, sugarLoad: OralSugarLoad) -> Int {
+        switch sugarLoad {
+        case .water, .fruit: return prior + 1
+        case .sugarSnack: return 0
+        case .brush: return prior
+        }
+    }
 }

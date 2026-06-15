@@ -150,6 +150,7 @@ public struct MicrobiomeView: View {
                     OralMicrobiomeView(
                         catalog: catalog,
                         mentor: mentor,
+                        gamification: gamification,
                         celebration: celebration,
                         analytics: analytics,
                         sensory: sensory

@@ -25,12 +25,24 @@ import ForgeCelebration
 ///   the shared `MicrobiomeSimulator` so trauma-informed register applies
 ///   uniformly across all 3 ecology surfaces (gut / oral / skin / soil)
 public struct OralMicrobiomeView: View {
+    /// Threshold of consecutive gentle-load ticks that surfaces the
+    /// `oralBalanceKeeper` achievement. Calibrated separately from
+    /// `DifficultyAdjuster.microbiomeSteadyTickThreshold` (10) so the oral
+    /// surface unlocks faster — the oral microbiome has shorter dwell time
+    /// than the gut and the kid sees the result of food choices within a
+    /// shorter loop. Trauma-informed: low enough that holding gentle loads
+    /// for a single sub-session lands the recognition, never demands a
+    /// marathon to earn warmth.
+    public static let stableRunThreshold = 8
+
     @State private var scene: OralMicrobiomeScene
     @State private var sugarLoad: OralSugarLoad = .water
     @State private var tickCount: Int = 0
+    @State private var oralStableTickRun: Int = 0
     @State private var mentorMessage: String
 
     private let mentor: VeeMentor?
+    private let gamification: GamificationService?
     private let celebration: CelebrationCoordinator?
     private let analytics: AnalyticsService?
     private let sensory: SensoryPaletteCoordinator?
@@ -38,6 +50,7 @@ public struct OralMicrobiomeView: View {
     public init(
         catalog: MicrobeCatalogService,
         mentor: VeeMentor? = nil,
+        gamification: GamificationService? = nil,
         celebration: CelebrationCoordinator? = nil,
         analytics: AnalyticsService? = nil,
         sensory: SensoryPaletteCoordinator? = nil
@@ -54,6 +67,7 @@ public struct OralMicrobiomeView: View {
         )
         _scene = State(initialValue: initial)
         self.mentor = mentor
+        self.gamification = gamification
         self.celebration = celebration
         self.analytics = analytics
         self.sensory = sensory
@@ -119,31 +133,73 @@ public struct OralMicrobiomeView: View {
                 Button("Tick") {
                     scene.advanceOneTick()
                     tickCount = scene.state.tickCount
+                    oralStableTickRun = OralMicrobiomeState.nextStableRun(
+                        prior: oralStableTickRun,
+                        sugarLoad: sugarLoad
+                    )
                     if tickCount > 0, tickCount % 5 == 0 {
                         refreshMentorCue(for: sugarLoad)
-                        DebugLog.state("OralMicrobiomeView milestone tick=\(tickCount) load=\(sugarLoad.rawValue)")
+                        DebugLog.state("OralMicrobiomeView milestone tick=\(tickCount) load=\(sugarLoad.rawValue) stableRun=\(oralStableTickRun)")
                         if let analytics {
                             let captured = tickCount
                             Task { await analytics.track(.microbiomeMilestone(tickCount: captured)) }
                         }
                     }
+                    evaluateAchievements()
                 }
                 .buttonStyle(.glassProminent)
 
                 Button("Undo") {
                     scene.undo()
                     tickCount = scene.state.tickCount
+                    // Undo rewinds the simulator; clamp the stable run so a
+                    // future regression in the simulator's tick history can
+                    // never carry forward an over-credited stable run.
+                    oralStableTickRun = max(0, oralStableTickRun - 1)
                 }
                 .buttonStyle(.glass)
 
                 Button("Reset") {
                     scene.reset()
                     tickCount = 0
+                    oralStableTickRun = 0
                     sugarLoad = .water
                     refreshMentorCue(for: .water)
                 }
                 .buttonStyle(.glass)
             }
+        }
+    }
+
+    /// Evaluate Phase-2 per-ecology achievements against the running
+    /// criteria. Currently scopes to `oralBalanceKeeper` (≥
+    /// `stableRunThreshold` ticks under gentle loads); per-ecology siblings
+    /// (`skinKindnessChampion` / `soilDecomposerWhisperer`) wire from their
+    /// own per-ecology views.
+    ///
+    /// `GamificationService.evaluateAchievements` is idempotent — re-tap of
+    /// the same predicate is safe; the engine only emits an unlock the
+    /// first time. Proportional celebrations + sensory cues fire per
+    /// newly-unlocked achievement.
+    private func evaluateAchievements() {
+        guard let gamification else { return }
+        let newlyEarned = gamification.evaluateAchievements { definition in
+            switch definition.id {
+            case MicrobeLabAchievements.oralBalanceKeeper.id:
+                return oralStableTickRun >= Self.stableRunThreshold
+            default: return false
+            }
+        }
+        for definition in newlyEarned {
+            DebugLog.state("OralMicrobiomeView achievement \(definition.id) earned (+\(definition.xpValue) XP) stableRun=\(oralStableTickRun)")
+            celebration?.badgeEarned(title: definition.title)
+            if let analytics {
+                let capturedSlug = definition.id
+                Task { await analytics.track(.achievementEarned(slug: capturedSlug)) }
+            }
+        }
+        if !newlyEarned.isEmpty {
+            sensory?.fire(.achievement)
         }
     }
 
