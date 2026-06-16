@@ -101,7 +101,7 @@ Core microscope-zoom loop, 12-character microbe cast, freshwater microbiome simu
 - [ ] Wire Level 1 config from `spark-anvil-hub/Resources/HubContributions/microbelab.json` (Life Zone contribution) — labsmith-side handoff filed at `Docs/HANDOFF_FROM_APP_FORGEADVENTURE_LIFE_ZONE_PROPOSAL.md` (eighth-pass round, PR #74); waits on labsmith to author the canonical baseline JSON + ship the `ZoneID.lifeZone` case
 - [x] Implement `MicrobeLabHubContribution` Level 2 Swift overlay in `Packages/Libraries/Sources/AppFeature/HubContribution/` — **shipped PR #74** (eighth-pass auto-cycle sweep). `MicrobeLabHubContribution` (`nonisolated public struct`) conforms to `ForgeAdventure.HubContribution` with `themeAccent` = `#33CCBB` hero color per `Docs/TECHNICAL_DESIGN.md`, `mentorPersona` = `.microbeLabCilia` (`MentorPersona` extension with Cilia's canonical system-prompt header), `kitResources` = the 4 Phase-1 question kits already bundled via `QuestionKitService.phase1KitSlugs`, `engineCopy` carrying trauma-informed protection / agency / discovery copy for `.simulation` / `.defense` / `.quest`. `MicrobeLabHubChallengeAdapter` (SwiftUI adapter) renders a hub-friendly per-engine placeholder surface (icon + completion message + back-to-hub + wrap-up-today affordances). Targets `.scienceLabs` until labsmith ships `lifeZone` per the cross-repo handoff above
 - [/] Register mode-cards in `AdventureView` — partial: `MicrobeLabHubRegistrar.register(into:)` ships the async registrar helper AdventureHub-side integration calls when the hub orchestration lands. AdventureHub owns the canonical registry instance; this item closes fully when AdventureHub-side integration calls the registrar at hub startup
-- [ ] Wire `ForgeProgressionManager` gating across mode-cards — awaits hub-side ProgressionManager integration; gating semantics live in the Level 2 contribution's `kitResources` Bloom-band + grade-band metadata (already supplied)
+- [ ] Wire `ForgeProgressionManager` gating across mode-cards — awaits hub-side ProgressionManager integration; gating semantics live in the Level 2 contribution's `kitResources` Bloom-band + grade-band metadata (already supplied). **Twenty-first-pass round PR #137 shipped IN-APP `ProgressionService` (Services/Engagement/) wrapping `ForgeProgressionManager` for Phase 3+ in-app gates** (disease-story-immune / disease-story-microbiome / global-microbiome-tour) — this is DISTINCT from the hub-side mode-card gating which this checkbox tracks; hub-side wiring still blocked.
 
 ### Onboarding
 
@@ -150,6 +150,8 @@ Adaptive B-cell antibody-matching minigame, expanded microbiome ecology (oral + 
 
 Disease-narrative arcs (always trauma-informed; COVID-sensitive framing), vaccine mechanics, and historical-microbiology context cards.
 
+**Phase 3+ gate scaffolding shipped (PR #137, twenty-first-pass round)**: `Services/Engagement/ProgressionService` wraps `ForgeProgressionManager` with three canonical Phase 3+ gates (`disease-story-immune`: 5 sessions + 3 immune runs; `disease-story-microbiome`: 5 sessions + 5 microbiome scene visits; `global-microbiome-tour`: 8 sessions + 4 distinct ecologies). Trauma-informed register pinned. Consuming surfaces (the disease-story arc views, the global-tour view) wire to `ProgressionService.isUnlocked(_:)` / `.unlockHint(for:)` / `.unlockProgress(for:)` when authored.
+
 - [ ] Author 4 disease-story arcs (chosen for kid-developmental safety; coordinate with SAMHSA register per `.claude/rules/trauma-informed-content.md`)
 - [ ] Implement vaccine-mechanism mini-explainer (antibody-priming visualization)
 - [ ] Bundle historical context cards (Pasteur / Koch / Salk / portfolio cast)
@@ -167,6 +169,8 @@ Disease-narrative arcs (always trauma-informed; COVID-sensitive framing), vaccin
 ## Phase 4: Microbiome Worlds + Classroom
 
 Cross-microbiome global tour, classroom integration, and App Store submission readiness.
+
+**Phase 4 feature-flag scaffolding shipped (PR #136, twenty-first-pass round)**: `Services/Engagement/ExperimentsService` wraps `ForgeExperiments.ExperimentAssigner` with two pilot experiments — `progressive_disclosure_v2` (staged-unlock cadence; `earlyUnlockTicks: 2` parameter) and `seasonal_content_gate` (Phase 4 seasonal pack gate). Both default 100% control / 0% treatment until a focused Phase 4 round flips the variant weights. Deterministic SHA256(seed|experimentID) bucketing — same kid sees the same variant across launches without persisting.
 
 - [ ] Implement global-microbiome tour (Yellowstone hot-spring / deep-sea vent / human gut comparison)
 - [ ] Add extremophile microbe characters (4 more — 24 total)
