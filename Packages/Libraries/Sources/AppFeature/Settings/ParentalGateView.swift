@@ -1,3 +1,4 @@
+import Services
 import SwiftUI
 
 /// Simple math-problem parental gate. Used to confirm an adult is present
@@ -6,10 +7,12 @@ import SwiftUI
 /// Per `.claude/rules/age-assurance.md`, parental gates are required for
 /// external links and data-sharing permissions. The problem is intentionally
 /// adult-tier (two-digit subtraction + a wrong-attempt cooldown) so a kid
-/// guessing wouldn't pass.
+/// guessing wouldn't pass. Answer validation routes through
+/// `Services.ParentalGateMathProblem`, which wraps ForgeMath's
+/// `AnswerValidator` so equivalent answer forms ("55" / "55.0" / "5 + 50")
+/// all pass without per-call-site parsing.
 public struct ParentalGateView: View {
-    @State private var firstNumber: Int
-    @State private var secondNumber: Int
+    @State private var problem: ParentalGateMathProblem
     @State private var answerText: String = ""
     @State private var wrongAttempts: Int = 0
     @State private var isLocked: Bool = false
@@ -19,10 +22,7 @@ public struct ParentalGateView: View {
     public let onCancel: () -> Void
 
     public init(onPassed: @escaping () -> Void, onCancel: @escaping () -> Void) {
-        let first = Int.random(in: 12...49)
-        let second = Int.random(in: 5...11)
-        _firstNumber = State(initialValue: first)
-        _secondNumber = State(initialValue: second)
+        _problem = State(initialValue: ParentalGateMathProblem.random())
         self.onPassed = onPassed
         self.onCancel = onCancel
     }
@@ -39,7 +39,7 @@ public struct ParentalGateView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
-            Text(verbatim: "\(firstNumber) − \(secondNumber) = ?")
+            Text(verbatim: problem.promptText)
                 .font(.title.weight(.semibold).monospacedDigit())
                 .padding(.vertical, 6)
 
@@ -86,11 +86,7 @@ public struct ParentalGateView: View {
     }
 
     private func handleConfirm() {
-        guard let value = Int(answerText.trimmingCharacters(in: .whitespaces)) else {
-            wrongAttempts += 1
-            return
-        }
-        if value == firstNumber - secondNumber {
+        if problem.isAccepted(answerText: answerText) {
             onPassed()
         } else {
             wrongAttempts += 1
@@ -103,8 +99,7 @@ public struct ParentalGateView: View {
                     isLocked = false
                     wrongAttempts = 0
                     // New problem, fresh attempts.
-                    firstNumber = Int.random(in: 12...49)
-                    secondNumber = Int.random(in: 5...11)
+                    problem = ParentalGateMathProblem.random()
                 }
             }
         }
