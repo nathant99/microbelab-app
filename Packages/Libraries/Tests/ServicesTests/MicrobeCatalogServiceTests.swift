@@ -11,9 +11,10 @@ nonisolated struct MicrobeCatalogServiceTests {
         case .failure(let error):
             Issue.record("Bundled catalog should load but errored: \(error)")
         case .success(let service):
-            // Phase 2 expansion: 12 → 20 (8 added covering skin / soil / stomach
-            // / oralCavity ecology gaps). See microbes.json notes.
-            #expect(service.microbes.count == 20)
+            // Phase 4 extremophile pack: 20 → 24 (4 added bridging the
+            // global-microbiome tour — Crenarch / Acido / Cryo / Baro).
+            // See microbes.json notes.
+            #expect(service.microbes.count == 24)
         }
     }
 
@@ -42,6 +43,43 @@ nonisolated struct MicrobeCatalogServiceTests {
         }
     }
 
+    @Test func phase4ExtremophilePackPresent() throws {
+        guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
+            Issue.record("Catalog should have loaded")
+            return
+        }
+        // Phase 4 extremophile pack (4 microbes closing the FEATURE_PLAN
+        // checkbox). Bridges to the global-microbiome tour (Yellowstone /
+        // deep-sea / glacial ice / acidic mine drainage).
+        let phase4 = ["crenarch", "acido", "cryo", "baro"]
+        for slug in phase4 {
+            #expect(service.microbe(forSlug: slug) != nil,
+                    "Missing Phase 4 extremophile slug: \(slug)")
+        }
+    }
+
+    @Test func phase4ExtremophilesTraumaSafeRegister() throws {
+        guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
+            Issue.record("Catalog should have loaded")
+            return
+        }
+        // Extremophile cast members ship the wonder-and-adaptation framing per
+        // the trauma-informed posture: never threat / never struggle / never
+        // doom. Pinned by a stoplist applied to catchphrase + factCard +
+        // voiceLines for the 4 Phase 4 entries.
+        let stoplist = ["scary", "dangerous", "deadly", "kill", "horror",
+                        "doom", "suffer", "violent", "attack"]
+        let phase4Slugs: Set<String> = ["crenarch", "acido", "cryo", "baro"]
+        for microbe in service.microbes where phase4Slugs.contains(microbe.slug) {
+            let combined = (microbe.catchphrase + " " + microbe.factCard + " "
+                            + microbe.voiceLines.joined(separator: " ")).lowercased()
+            for word in stoplist {
+                #expect(!combined.contains(word),
+                        "Phase 4 extremophile '\(microbe.slug)' must not surface '\(word)' (trauma-safe register).")
+            }
+        }
+    }
+
     @Test func phase2EcologyCoverageExpanded() throws {
         guard case .success(let service) = MicrobeCatalogService.loadBundled() else {
             Issue.record("Catalog should have loaded")
@@ -67,13 +105,16 @@ nonisolated struct MicrobeCatalogServiceTests {
         }
         let beneficial = service.microbes(role: .beneficial)
         // Per CLAUDE.md trauma-informed posture: beneficial microbes are
-        // foregrounded. Post Phase-2 expansion the floor rises to ≥ 10 (≥ 50%
-        // of the 20-microbe catalog), preserving the beneficial-first ratio.
+        // foregrounded. Post Phase-4 expansion the absolute floor stays at
+        // ≥ 10 (the 4 extremophiles all ship as neutral, not beneficial — they
+        // demonstrate adaptation, not symbiosis). Beneficial-first ratio drops
+        // to ~46% at the 24-microbe scale but the absolute beneficial count
+        // remains ≥ 10 which is the load-bearing trauma-informed invariant.
         #expect(beneficial.count >= 10,
-                "Beneficial-microbe foregrounding requires ≥10 beneficial cast members at 20-microbe scale.")
+                "Beneficial-microbe foregrounding requires ≥10 beneficial cast members at 24-microbe scale.")
         let pathogens = service.microbes(role: .pathogenic)
         #expect(pathogens.isEmpty,
-                "Phase 2 expansion preserves the no-pathogenic-cast trauma-informed posture.")
+                "Phase 4 expansion preserves the no-pathogenic-cast trauma-informed posture.")
     }
 
     @Test func uniqueSlugs() throws {

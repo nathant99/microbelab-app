@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "generatedAt": "2026-06-13",
-  "notes": "20-microbe Phase 2 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Next 6 are Phase 1 codex-supporting microbes. Final 8 (Sebu / Demi / Halo / Pylo / Sweet / Nodu / Therm / Loam) close FEATURE_PLAN.md § Phase 2 'Bundle 8 additional microbe characters' — skin (+2), soil (+4), stomach (+1), oralCavity (+1) ecology coverage to unblock Phase 2 oral/skin/soil microbiome scenes. Beneficial-first framing preserved (11 beneficial / 7 neutral / 2 opportunistic = 55% beneficial). Trauma-safe authoring per .claude/rules/trauma-informed-content.md (eczema-safe skin framing; Demodex face mites framed as quiet cleaners; H. pylori framed as 'most are quiet'; no pandemic-era pathogen names). v2 adds per-character voiceLines (3-5 sample dialogue lines per DN-S voice-register card).",
+  "generatedAt": "2026-06-16",
+  "notes": "24-microbe Phase 4 catalog. First 6 are canonical DN cast per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md (Wave 32b). Next 6 are Phase 1 codex-supporting microbes. Phase 2 added 8 (Sebu / Demi / Halo / Pylo / Sweet / Nodu / Therm / Loam) closing the 'Bundle 8 additional microbe characters' checkbox. Phase 4 adds 4 extremophile entries (Crenarch / Acido / Cryo / Baro) closing FEATURE_PLAN.md § Phase 4 'Add extremophile microbe characters (4 more — 24 total)' — bridges to the global-microbiome tour (Yellowstone hot-spring / deep-sea vent / glacial ice / acidic mine drainage). Beneficial-first framing preserved (11 beneficial / 11 neutral / 2 opportunistic = 46% beneficial-first + 92% non-pathogenic). Trauma-safe authoring per .claude/rules/trauma-informed-content.md (eczema-safe skin framing; Demodex face mites framed as quiet cleaners; H. pylori framed as 'most are quiet'; no pandemic-era pathogen names; extremophiles framed as wonder + adaptation, never threat). v2 adds per-character voiceLines (3-5 sample dialogue lines per DN-S voice-register card).",
   "microbes": [
     {
       "id": "9DB2A1F0-1111-4001-8000-000000000001",
@@ -341,6 +341,74 @@
         "Nothing in a forest goes to waste — I see to that.",
         "Give me a fallen log and a year. Watch what happens.",
         "Decay isn't the end of a story. It's how the next chapter starts."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-4444-4015-8000-000000000015",
+      "slug": "crenarch",
+      "displayName": "Crenarch",
+      "kingdom": "archaea",
+      "role": "neutral",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.6 },
+      "catchphrase": "Boiling water is my front porch.",
+      "factCard": "Crenarchaeota archaea live in volcanic hot springs, near deep-sea vents, and in other very hot places. They've adapted to temperatures most life can't survive.",
+      "firstKit": 13,
+      "voiceLines": [
+        "Where you see steam rising from a hot spring, that's where I'm at home.",
+        "Hot enough to cook an egg? That's a comfortable bath for me.",
+        "I help scientists understand how life can survive in extreme places."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-4444-4016-8000-000000000016",
+      "slug": "acido",
+      "displayName": "Acido",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "stomach",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.4, "onBalanced": 0.3, "onNone": 0.2 },
+      "catchphrase": "Sour is my favorite flavor.",
+      "factCard": "Acidophilic bacteria thrive in very acidic places — some live in acid mine drainage at pH 2, some live happily in stomach acid. They show how flexible life can be.",
+      "firstKit": 13,
+      "voiceLines": [
+        "Most living things would dissolve in my neighborhood. Not me.",
+        "Lemon juice? That's a soft drink where I'm from.",
+        "Adapting to a tough place is how a microbe becomes interesting."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-4444-4017-8000-000000000017",
+      "slug": "cryo",
+      "displayName": "Cryo",
+      "kingdom": "bacteria",
+      "role": "neutral",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.1, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.5 },
+      "catchphrase": "Frozen is fine. I'll wait.",
+      "factCard": "Psychrophilic bacteria live in sea ice, glaciers, and frozen tundra soil. They keep working slowly at temperatures where most life would pause completely.",
+      "firstKit": 13,
+      "voiceLines": [
+        "Scientists found me living inside Antarctic ice.",
+        "Slow doesn't mean stopped. I'm just on my own clock.",
+        "When everything else freezes, I'm still here, quietly busy."
+      ]
+    },
+    {
+      "id": "9DB2A1F0-4444-4018-8000-000000000018",
+      "slug": "baro",
+      "displayName": "Baro",
+      "kingdom": "archaea",
+      "role": "neutral",
+      "preferredEnvironment": "soil",
+      "growthRate": { "onFiber": 0.2, "onSugar": 0.1, "onBalanced": 0.2, "onNone": 0.5 },
+      "catchphrase": "The pressure suits me.",
+      "factCard": "Barophilic archaea live in deep-sea sediment under crushing pressure — the deeper the water, the better they thrive. At the bottom of the Mariana Trench, they're right at home.",
+      "firstKit": 13,
+      "voiceLines": [
+        "The deepest part of the ocean? That's my front yard.",
+        "Pressure that would crush a submarine is just regular weather for me.",
+        "Most life never visits where I live. That's part of what makes me interesting."
       ]
     }
   ]
