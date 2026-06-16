@@ -1,14 +1,33 @@
 ---
-status: open
+status: open-monitoring (in-app side: READY; hub-side: BLOCKED on labsmith ZoneID.lifeZone case)
 direction: app → labsmith
-last-updated: 2026-06-12
+last-updated: 2026-06-16
+freshness-horizon: 30 days
 ---
 
-## Eighth-pass rule-restatement summary (top-of-doc per the eight-pass invariant)
+## Twenty-second-pass rule-restatement summary (top-of-doc per the canonical-invariant tier)
 
-> **Rule** (verbatim user-direct, repeated EIGHT times in one calendar day 2026-06-12 — now the all-time portfolio record for any single rule): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. staging and committing is ok."*
+> **Rule** (verbatim user-direct, restated TWENTY-TWO times across 2026-06-12 → 2026-06-16; canonical-invariant tier — class-level invariant of the in-IDE agent across the portfolio): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. Instead, file a handoff doc with the user to do Xcode UI work. staging and committing Xcode-managed files is ok."*
 >
 > **Scope**: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`.
+>
+> **Quadruple-binding**: rule lives in `CLAUDE.md` + `.claude/rules/xcode-agent-safety.md` + round-doc prologues + persistent-memory file. Any one can drift; the other three preserve the constitutional check.
+
+## Current state (refreshed 2026-06-16, twenty-second-pass round)
+
+| Side | Status |
+|---|---|
+| **In-app contribution** | ✅ SHIPPED (PR #74, eighth-pass round) — `MicrobeLabHubContribution` + `MicrobeLabHubRegistrar` + `MicrobeLabHubChallengeAdapter` all wired |
+| **In-app Phase 3+ session gates** | ✅ SHIPPED (PR #137, twenty-first-pass round) — `ProgressionService` wraps `ForgeProgressionManager` for `disease-story-immune` / `disease-story-microbiome` / `global-microbiome-tour` gates (distinct from this handoff's hub-side gating; both can coexist) |
+| **In-app `ForgeStateMachine` wiring** | ✅ SHIPPED (PR #142, twenty-second-pass round) — `ZoomMachine` adopts the canonical `ViewMachine` protocol per `.claude/rules/state-machines.md` |
+| **In-app SeasonalEventService** | ✅ SHIPPED (PR #143, twenty-second-pass round) — pairs with `ExperimentsService.seasonal_content_gate` pilot for Phase 4 surface |
+| **Hub-side `ZoneID.lifeZone` case in ForgeKit** | ⛔ BLOCKED — labsmith has not added the case to `forgekit/Sources/Client/ForgeAdventure/Hub/HubTypes.swift` |
+| **Hub-side AdventureHub registry orchestration** | ⛔ BLOCKED — AdventureHub repo has not called `MicrobeLabHubRegistrar.register(into:)` at startup |
+| **Cluster naming coordination** (life-zone slug) | ⛔ BLOCKED — labsmith has not coordinated naming with bioforge / creaturecare / wildlens cohort |
+
+**In-app side is at "ready when hub flips" status**: the moment labsmith ships the `ZoneID.lifeZone` case + bumps a ForgeKit release, this app's session retargets `MicrobeLabHubContribution.init` from `.scienceLabs` to `.lifeZone` in a single-line SPM-only PR (per the canonical-invariant tier, no managed-file edits required).
+
+**Re-verification cadence** (ADR-011 Rule 4 freshness horizon = 30 days from 2026-06-16): re-check by 2026-07-16. If still BLOCKED on the hub side, this handoff stays open-monitoring; no in-app action required.
 
 # Handoff to Labsmith — ForgeAdventure Life Zone proposal
 
