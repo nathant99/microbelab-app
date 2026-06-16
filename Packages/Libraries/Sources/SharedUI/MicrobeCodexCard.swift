@@ -17,6 +17,13 @@ public struct MicrobeCodexCard: View {
     /// Kept optional so existing callers + tests don't need to thread the
     /// graph through.
     public let livesNearDisplayNames: [String]
+    /// Display names of same-kingdom cohort surfaced via the
+    /// `MicrobeKnowledgeGraph.relatedByKingdom(...)` accessor (e.g., kingdom
+    /// = `.bacteria` → other discovered bacteria). When `isDiscovered` AND
+    /// non-empty, the card renders a small "Same kind: A, B" caption below
+    /// the "Lives near" line. Kept optional so existing callers + tests
+    /// don't need to thread the cohort through.
+    public let sameKindDisplayNames: [String]
     /// True when the microbe has a bundled DN-S chapter the codex reader
     /// can surface. Discovered cards with a chapter render a small book
     /// glyph + accessibility hint so the kid knows the tap opens a story.
@@ -26,11 +33,13 @@ public struct MicrobeCodexCard: View {
         microbe: MicrobeCharacter,
         isDiscovered: Bool,
         livesNearDisplayNames: [String] = [],
+        sameKindDisplayNames: [String] = [],
         hasChapter: Bool = false
     ) {
         self.microbe = microbe
         self.isDiscovered = isDiscovered
         self.livesNearDisplayNames = livesNearDisplayNames
+        self.sameKindDisplayNames = sameKindDisplayNames
         self.hasChapter = hasChapter
     }
 
@@ -56,6 +65,9 @@ public struct MicrobeCodexCard: View {
             if isDiscovered, !livesNearDisplayNames.isEmpty {
                 livesNearLine
             }
+            if isDiscovered, !sameKindDisplayNames.isEmpty {
+                sameKindLine
+            }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -77,10 +89,28 @@ public struct MicrobeCodexCard: View {
         }
     }
 
+    private var sameKindLine: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Image(systemName: "circle.hexagongrid")
+                .imageScale(.small)
+                .foregroundStyle(.tint)
+            Text(verbatim: "Same kind: \(sameKindDisplayNames.joined(separator: ", "))")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+    }
+
     private var accessibilityLabelText: String {
-        let base = "\(microbe.displayName), \(microbe.role.rawValue) microbe"
-        guard isDiscovered, !livesNearDisplayNames.isEmpty else { return base }
-        return "\(base). Lives near \(livesNearDisplayNames.joined(separator: ", "))"
+        var pieces = ["\(microbe.displayName), \(microbe.role.rawValue) microbe"]
+        if isDiscovered, !livesNearDisplayNames.isEmpty {
+            pieces.append("Lives near \(livesNearDisplayNames.joined(separator: ", "))")
+        }
+        if isDiscovered, !sameKindDisplayNames.isEmpty {
+            pieces.append("Same kind \(sameKindDisplayNames.joined(separator: ", "))")
+        }
+        return pieces.joined(separator: ". ")
     }
 
     private var accessibilityHintText: String {

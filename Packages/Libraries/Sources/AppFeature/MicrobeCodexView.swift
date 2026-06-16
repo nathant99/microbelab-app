@@ -75,6 +75,7 @@ public struct MicrobeCodexView: View {
                                 microbe: microbe,
                                 isDiscovered: isDiscovered(microbe),
                                 livesNearDisplayNames: livesNearDisplayNames(for: microbe),
+                                sameKindDisplayNames: sameKindDisplayNames(for: microbe),
                                 hasChapter: chapters.chapter(for: microbe.slug) != nil
                             )
                         }
@@ -211,6 +212,25 @@ public struct MicrobeCodexView: View {
         let discoveredNeighbors = related.filter { isDiscovered($0) }
         // Cap to 2 display names so the card stays scannable.
         return Array(discoveredNeighbors.prefix(2).map(\.displayName))
+    }
+
+    /// Returns the names of same-kingdom cohort members surfaced via
+    /// `MicrobeKnowledgeGraph.relatedByKingdom(...)`. Filters to the kid's
+    /// discovered set + excludes any name already surfaced on the "Lives
+    /// near" line so the two captions don't repeat each other (a microbe
+    /// in the same habitat AND same kingdom only appears once, on the
+    /// "Lives near" line — that's the stronger relation for the kid's
+    /// mental model). Cap to 2 display names so the card stays scannable.
+    /// Returns an empty array for undiscovered cards (the card hides the
+    /// line itself based on `isDiscovered`).
+    private func sameKindDisplayNames(for microbe: MicrobeCharacter) -> [String] {
+        guard isDiscovered(microbe), let graph = knowledgeGraph else { return [] }
+        let already = Set(livesNearDisplayNames(for: microbe))
+        let cohort = graph.relatedByKingdom(to: microbe, limit: 4)
+        let discoveredCohort = cohort.filter {
+            isDiscovered($0) && !already.contains($0.displayName)
+        }
+        return Array(discoveredCohort.prefix(2).map(\.displayName))
     }
 
     /// True iff the discovery store contains the microbe's slug. When no
