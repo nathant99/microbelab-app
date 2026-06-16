@@ -86,6 +86,7 @@ let package = Package(
             dependencies: [
                 "Models",
                 .product(name: "ForgeGameEngine", package: "forgekit"),
+                .product(name: "ForgeStateMachine", package: "forgekit"),
             ],
             swiftSettings: defaultSwiftSettings
         ),

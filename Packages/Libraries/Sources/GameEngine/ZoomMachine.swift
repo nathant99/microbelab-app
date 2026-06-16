@@ -1,17 +1,25 @@
 import Foundation
 import Models
+import ForgeStateMachine
 
 /// View-local state machine driving the microscope-zoom UX.
 ///
-/// Per `.claude/rules/state-machines.md` § `*Machine` Structs. Pure value type;
-/// `nonisolated` so it can be carried across MainActor boundaries (e.g. into
-/// SpriteKit scenes when staging the LOD swap).
+/// Per `.claude/rules/state-machines.md` § `*Machine` Structs + ForgeKit's
+/// `ForgeStateMachine.ViewMachine` protocol (portfolio convention for
+/// view-local machines). Pure value type; `nonisolated` so it can be carried
+/// across MainActor boundaries (e.g. into SpriteKit scenes when staging the
+/// LOD swap).
+///
+/// Adopts `ViewMachine` for protocol-driven uniformity: any code expecting
+/// the canonical `init()` + `reset()` shape (e.g. architecture tests that
+/// validate every `*Machine` struct's contract) can target `ViewMachine`
+/// rather than concretely listing every machine.
 ///
 /// State carries:
 /// - the current `ZoomTier`
 /// - a continuous in-tier scrub value (0 ... 1) for pinch-snap UX
 /// - a `pendingTransition` marker the scene reads to decide when to swap LOD
-public nonisolated struct ZoomMachine: Sendable, Equatable {
+public nonisolated struct ZoomMachine: ViewMachine, Equatable {
     public var currentTier: ZoomTier
     /// Fractional zoom within the current tier — 0 at the lower boundary,
     /// 1 at the upper boundary. The scene uses this for smooth camera scaling
@@ -24,6 +32,17 @@ public nonisolated struct ZoomMachine: Sendable, Equatable {
         case zoomingOut(from: ZoomTier, to: ZoomTier)
     }
 
+    /// Zero-arg init required by `ForgeStateMachine.ViewMachine`. Equivalent
+    /// to the default-args init below — split out so the protocol conformance
+    /// check resolves the signature literally rather than via default-arg
+    /// inference (Swift 6 protocol-witness lookup doesn't synthesize an
+    /// `init()` from a default-args initializer).
+    public init() {
+        self.currentTier = .unaided
+        self.inTierProgress = 0
+        self.pendingTransition = nil
+    }
+
     public init(
         currentTier: ZoomTier = .unaided,
         inTierProgress: Double = 0,
@@ -34,7 +53,8 @@ public nonisolated struct ZoomMachine: Sendable, Equatable {
         self.pendingTransition = pendingTransition
     }
 
-    /// Reset to baseline naked-eye state.
+    /// Reset to baseline naked-eye state. Per `ViewMachine.reset()` default,
+    /// this assigns `self = Self()`.
     public mutating func reset() {
         self = ZoomMachine()
     }
