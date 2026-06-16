@@ -59,6 +59,7 @@ let package = Package(
                 .product(name: "ForgeSpotlight", package: "forgekit"),
                 .product(name: "ForgeExperiments", package: "forgekit"),
                 .product(name: "ForgeProgression", package: "forgekit"),
+                .product(name: "ForgeEvents", package: "forgekit"),
                 .product(name: "ForgeModels", package: "forgekit"),
             ],
             resources: [
