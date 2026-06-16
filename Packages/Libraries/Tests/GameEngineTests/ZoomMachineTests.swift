@@ -1,4 +1,5 @@
 import Testing
+import ForgeStateMachine
 @testable import GameEngine
 @testable import Models
 
@@ -9,6 +10,22 @@ nonisolated struct ZoomMachineTests {
         #expect(machine.currentTier == .unaided)
         #expect(machine.inTierProgress == 0)
         #expect(machine.pendingTransition == nil)
+    }
+
+    @Test("conforms to ForgeStateMachine.ViewMachine — protocol-witness `init()` + `reset()` resolve cleanly")
+    func conformsToViewMachine() {
+        // Compile-time check: any local that satisfies the ViewMachine
+        // protocol witness can be constructed via `init()` and reset via
+        // `mutating func reset()`. If the protocol witness ever drifted
+        // (e.g., the zero-arg init was deleted), this would fail to compile.
+        func acceptViewMachine<M: ViewMachine>(_ machine: inout M) {
+            machine.reset()
+        }
+        var m = ZoomMachine(currentTier: .light, inTierProgress: 0.5)
+        acceptViewMachine(&m)
+        #expect(m.currentTier == .unaided)
+        #expect(m.inTierProgress == 0)
+        #expect(m.pendingTransition == nil)
     }
 
     @Test func pinchInClimbsTiers() {
