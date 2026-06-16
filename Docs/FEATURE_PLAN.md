@@ -172,6 +172,8 @@ Cross-microbiome global tour, classroom integration, and App Store submission re
 
 **Phase 4 feature-flag scaffolding shipped (PR #136, twenty-first-pass round)**: `Services/Engagement/ExperimentsService` wraps `ForgeExperiments.ExperimentAssigner` with two pilot experiments — `progressive_disclosure_v2` (staged-unlock cadence; `earlyUnlockTicks: 2` parameter) and `seasonal_content_gate` (Phase 4 seasonal pack gate). Both default 100% control / 0% treatment until a focused Phase 4 round flips the variant weights. Deterministic SHA256(seed|experimentID) bucketing — same kid sees the same variant across launches without persisting.
 
+**Phase 4 seasonal-event consuming surface shipped (PR #143, twenty-second-pass round)**: `Services/Engagement/SeasonalEventService` (MainActor `@Observable`) wraps `ForgeEvents.ForgeEventEngine`. Default packs are culturally neutral (`.seasons` + `.globalCelebrations`); region/religion packs ship opt-in only via `setEnabledPacks(_:)` after a parent-gated handoff. Surface API: `registerBuiltIns()` / `refresh(on:)` / `hasActiveEvent` / `streakEmoji` / `currencyEmoji`. Pairs with the `ExperimentsService.seasonal_content_gate` pilot — the experiment flag flips a treatment weight; the service is the consuming surface that views read.
+
 - [ ] Implement global-microbiome tour (Yellowstone hot-spring / deep-sea vent / human gut comparison)
 - [ ] Add extremophile microbe characters (4 more — 24 total)
 - [ ] Implement seasonal-microbiome simulation (winter cold + spring allergy seasons — trauma-safe framing)
