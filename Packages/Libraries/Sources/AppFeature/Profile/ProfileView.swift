@@ -35,18 +35,25 @@ public struct ProfileView: View {
     /// `PhaseBoundaryExplainerView` can compute per-note gate-open state.
     private let progressionService: ProgressionService?
 
+    /// Shared `AgeAssuranceService`. Threaded through so the SettingsView's
+    /// new `SystemAgeVerificationCard` (live behind the parental gate) can
+    /// drive the Declared Age Range request + record the result.
+    private let ageAssuranceService: AgeAssuranceService?
+
     public init(
         progressReportSnapshot: ProgressReportSnapshot? = nil,
         consentService: ParentalConsentService? = nil,
         weeklySummaryService: WeeklySummaryService? = nil,
         phaseBoundaryExplainer: PhaseBoundaryExplainerService? = nil,
-        progressionService: ProgressionService? = nil
+        progressionService: ProgressionService? = nil,
+        ageAssuranceService: AgeAssuranceService? = nil
     ) {
         self.progressReportSnapshot = progressReportSnapshot
         self.consentService = consentService
         self.weeklySummaryService = weeklySummaryService
         self.phaseBoundaryExplainer = phaseBoundaryExplainer
         self.progressionService = progressionService
+        self.ageAssuranceService = ageAssuranceService
     }
 
     public var body: some View {
@@ -79,7 +86,8 @@ public struct ProfileView: View {
                             consentService: consentService,
                             weeklySummaryService: weeklySummaryService,
                             phaseBoundaryExplainer: phaseBoundaryExplainer,
-                            progressionService: progressionService
+                            progressionService: progressionService,
+                            ageAssuranceService: ageAssuranceService
                         )
                     } label: {
                         Label("All settings", systemImage: "gear")

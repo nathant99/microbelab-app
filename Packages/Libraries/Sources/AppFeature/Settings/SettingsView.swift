@@ -41,13 +41,23 @@ public struct SettingsView: View {
     /// PhaseBoundaryExplainerView can compute per-note gate-open state.
     private let progressionService: ProgressionService?
 
+    /// Shared `AgeAssuranceService` instance. When non-nil + the parental
+    /// gate has passed, the "About" section surfaces the new
+    /// `SystemAgeVerificationCard` — the actual system path driver behind
+    /// the previously-passive `ageAssuranceCapabilityRow`. The card
+    /// remains gated by `service.isCapable` so the entitlement probe
+    /// continues to govern whether the "Verify with Apple" button is
+    /// usable. Optional so existing previews / tests still compile.
+    private let ageAssuranceService: AgeAssuranceService?
+
     public init(
         store: AppSettingsStore? = nil,
         progressReportSnapshot: ProgressReportSnapshot? = nil,
         consentService: ParentalConsentService? = nil,
         weeklySummaryService: WeeklySummaryService? = nil,
         phaseBoundaryExplainer: PhaseBoundaryExplainerService? = nil,
-        progressionService: ProgressionService? = nil
+        progressionService: ProgressionService? = nil,
+        ageAssuranceService: AgeAssuranceService? = nil
     ) {
         _store = State(initialValue: store ?? AppSettingsStore())
         self.progressReportSnapshot = progressReportSnapshot
@@ -55,6 +65,7 @@ public struct SettingsView: View {
         self.weeklySummaryService = weeklySummaryService
         self.phaseBoundaryExplainer = phaseBoundaryExplainer
         self.progressionService = progressionService
+        self.ageAssuranceService = ageAssuranceService
     }
 
     public var body: some View {
@@ -353,6 +364,10 @@ public struct SettingsView: View {
             }
             .accessibilityHint("Opens the plain-language privacy policy")
             ageAssuranceCapabilityRow
+            if let ageAssuranceService, hasPassedGate {
+                SystemAgeVerificationCard(service: ageAssuranceService)
+                    .accessibilityHint("System-path Declared Age Range verification — sits behind the parental gate")
+            }
             Label("Acknowledgements", systemImage: "doc.text")
                 .foregroundStyle(.secondary)
                 .accessibilityHint("Placeholder — wired in a follow-up PR")
