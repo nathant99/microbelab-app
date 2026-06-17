@@ -106,13 +106,16 @@ struct GamificationServiceTests {
         let expected = MicrobeLabAchievements.phase1.count
             + MicrobeLabAchievements.phase2.count
             + MicrobeLabAchievements.phase3.count
+            + MicrobeLabAchievements.phase4.count
         #expect(all.count == expected)
-        // Spot-check all three phases land in the aggregate.
+        // Spot-check all four phases land in the aggregate.
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstZoom.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstShapeMatch.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.librarianOfShapes.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.handwashHero.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.outbreakHelper.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.extremophileExplorer.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.synthesisFinish.id }))
     }
 
     @Test func phase2IDsAreUnique() {
@@ -229,5 +232,90 @@ struct GamificationServiceTests {
         // the same value because the service flushes after the async update.
         #expect(store.currentStreak == 1)
         #expect(store.lastRecordedAt != nil)
+    }
+
+    // MARK: - Phase 4 advanced milestones
+
+    @Test func phase4SetHasEightAchievements() {
+        #expect(MicrobeLabAchievements.phase4.count == 8)
+    }
+
+    @Test func phase4IDsAreUnique() {
+        let ids = MicrobeLabAchievements.phase4.map(\.id)
+        #expect(Set(ids).count == ids.count, "Phase-4 achievement IDs must be unique")
+    }
+
+    @Test func phase4XPBandHonored() {
+        // Phase-4 achievements stay in the 60-160 XP band — slight upper-end
+        // stretch over Phase 3's 60-120 since these are Phase-4-late
+        // cumulative-arc milestones (microbeStudent at 120 + synthesisFinish
+        // at 160). Floor stays at 60 (seasonalAwareness + quietSteward) to
+        // match the Phase 2/3 minimum.
+        for achievement in MicrobeLabAchievements.phase4 {
+            #expect(achievement.xpValue >= 60,
+                    "\(achievement.id) below the Phase-4 XP floor (60)")
+            #expect(achievement.xpValue <= 160,
+                    "\(achievement.id) above the Phase-4 XP ceiling (160)")
+        }
+    }
+
+    @Test func phase4AchievementsTraumaSafeRegister() {
+        // Phase-4 advanced milestones inherit the SAMHSA + cultural-respect
+        // register from Phase 2/3 + .claude/rules/distributed-narrative.md
+        // § cultural-sensitivity gates. Titles + descriptions must avoid:
+        // warfare lexicon, shame lexicon, victory-framing
+        // ("finally" / "at last") inherited from the Phase 2 register, and
+        // threat-induction lexicon. The cumulative-arc tier ("Tended the
+        // Cast" / "Quiet Steward of Wonder") recognizes self-paced
+        // stewardship over grind, never frames the journey as a contest.
+        let stoplist = [
+            // Warfare
+            "fight", "attack", "defeat", "battle", "weapon", "kill",
+            " war", "enemy", "soldier", "warrior",
+            // Shame
+            "failure", "should ", "must ", "behind", "almost", "fell short",
+            "compared", "better than",
+            // Victory framing
+            "finally", "at last",
+            // Threat
+            "scary", "germ", "panic", "horror", "danger", "deadly",
+        ]
+        for achievement in MicrobeLabAchievements.phase4 {
+            let combined = (achievement.title + " " + achievement.description).lowercased()
+            for word in stoplist {
+                #expect(!combined.contains(word),
+                        "Phase-4 achievement '\(achievement.id)' must not surface '\(word.trimmingCharacters(in: .whitespaces))' (trauma-safe register).")
+            }
+        }
+    }
+
+    @Test func phase4SpotlightAchievementsPresent() {
+        // Sanity: each canonical Phase 4 surface has its named achievement.
+        // Catching accidental drop-on-rename — if a future PR renames a
+        // surface variable, this test pins the canonical id namespace.
+        let phase4IDs = Set(MicrobeLabAchievements.phase4.map(\.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.extremophileExplorer.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.extremophileQuartet.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.globalTourist.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.seasonalAwareness.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.researchSeed.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.synthesisFinish.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.microbeStudent.id))
+        #expect(phase4IDs.contains(MicrobeLabAchievements.quietSteward.id))
+    }
+
+    @Test func phase4AchievementsAwardXP() async {
+        let service = GamificationService()
+        let explorer = MicrobeLabAchievements.extremophileExplorer
+        let synthesis = MicrobeLabAchievements.synthesisFinish
+        let earned = service.evaluateAchievements { definition in
+            switch definition.id {
+            case explorer.id, synthesis.id: return true
+            default: return false
+            }
+        }
+        #expect(earned.count == 2)
+        let expectedXP = explorer.xpValue + synthesis.xpValue
+        #expect(service.totalXP == expectedXP)
     }
 }

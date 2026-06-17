@@ -203,12 +203,105 @@ public nonisolated enum MicrobeLabAchievements {
         handwashHero, vaccinePrimer, antibioticSteward, outbreakHelper,
     ]
 
+    // MARK: - Phase 4 (8 advanced milestones — paired with Phase 4 surfaces)
+
+    /// First extremophile cast member discovered (Crenarch / Acido / Cryo /
+    /// Baro from PR #151). Recognizes the kid's curiosity at the edges of the
+    /// catalog, never frames un-discovered extremophiles as a deficit.
+    public static let extremophileExplorer = AchievementDefinition(
+        id: "ml.extremophile-explorer",
+        title: "Edge Explorer",
+        description: "You met a microbe that thrives where the air is hot — or cold, or salty, or deep.",
+        iconAssetName: "thermometer.sun",
+        xpValue: 80
+    )
+
+    /// All 4 extremophile cast members discovered. Wonder + adaptation pride
+    /// register per ADR-016 — never frames pre-meeting as failure.
+    public static let extremophileQuartet = AchievementDefinition(
+        id: "ml.extremophile-quartet",
+        title: "Wonder at the Edge",
+        description: "You met all four edge-dwellers — Crenarch, Acido, Cryo, and Baro. The catalog has corners now.",
+        iconAssetName: "globe.americas",
+        xpValue: 140
+    )
+
+    /// All 4 global-microbiome tour stops visited. Bridges to bioforge /
+    /// ecosphere per the cross-portfolio cluster framing. Predicate wiring
+    /// lands when the global-tour view ships.
+    public static let globalTourist = AchievementDefinition(
+        id: "ml.global-tourist",
+        title: "Cross-World Traveler",
+        description: "You saw what lives in a hot spring, a deep-sea vent, a human gut, and the soil underground.",
+        iconAssetName: "map.fill",
+        xpValue: 120
+    )
+
+    /// First seasonal active event observed (winter cold / spring allergy /
+    /// summer warm / autumn settle). Recognition of seasonal noticing.
+    public static let seasonalAwareness = AchievementDefinition(
+        id: "ml.seasonal-awareness",
+        title: "Season Settler",
+        description: "You noticed how the microbiome shifts as the seasons change. The body keeps a calendar too.",
+        iconAssetName: "leaf.circle",
+        xpValue: 60
+    )
+
+    /// Completion of kit 15 microbiome-research (anti-credentialism register
+    /// per CQ CONTENT_STYLE_GUIDE.md § 4.5). Fires only after the kit lands
+    /// reviewer-signed-off per ADR-016.
+    public static let researchSeed = AchievementDefinition(
+        id: "ml.research-seed",
+        title: "First Notebook Page",
+        description: "You asked a microbe a question — and watched patient observation answer it.",
+        iconAssetName: "book.fill",
+        xpValue: 100
+    )
+
+    /// Completion of kit 16 synthesis (cumulative-arc warmth register).
+    /// Fires only after the kit lands reviewer-signed-off per ADR-016.
+    public static let synthesisFinish = AchievementDefinition(
+        id: "ml.synthesis-finish",
+        title: "Field Naturalist",
+        description: "You noticed something across every part of the microbe world. A whole-system noticing.",
+        iconAssetName: "binoculars.fill",
+        xpValue: 160
+    )
+
+    /// Full 24-microbe cast discovered (cast-master at 24/24 — auto-rescales
+    /// from PR #119 12-cast → PR #151 24-cast via catalog.microbes.count).
+    /// Same warm register as PR #76's codex axis.
+    public static let microbeStudent = AchievementDefinition(
+        id: "ml.microbe-student",
+        title: "Tended the Cast",
+        description: "Every microbe in the catalog knows you now. The whole community has met you.",
+        iconAssetName: "person.3.fill",
+        xpValue: 120
+    )
+
+    /// 30 sessions completed without ever hitting the daily cap (recognition
+    /// of self-paced exploration over grind). Predicate-wiring against
+    /// DailyTimeCoordinator + SessionCountStore lands when the surface ships.
+    public static let quietSteward = AchievementDefinition(
+        id: "ml.quiet-steward",
+        title: "Quiet Steward of Wonder",
+        description: "You came back, looked, and let the microbes be. That's stewardship — quiet kind.",
+        iconAssetName: "hand.raised.fill",
+        xpValue: 80
+    )
+
+    public static let phase4: [AchievementDefinition] = [
+        extremophileExplorer, extremophileQuartet, globalTourist,
+        seasonalAwareness, researchSeed, synthesisFinish, microbeStudent,
+        quietSteward,
+    ]
+
     /// Aggregate accessor — every shipped achievement across all phases.
     /// Consumers wanting the full set (Progress tab, ForgeReporting
     /// snapshots, achievement-engine registration) prefer this over
     /// concatenating per-phase arrays.
     public static var allDefinitions: [AchievementDefinition] {
-        phase1 + phase2 + phase3
+        phase1 + phase2 + phase3 + phase4
     }
 }
 
