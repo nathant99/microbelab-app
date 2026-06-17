@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4014-A000-000000000014",
+  "slug": "global-microbiome",
+  "title": "Microbes near and far",
+  "summary": "How microbe communities live in dramatically different habitats — Yellowstone hot springs / deep-sea vents / human gut / soil underground — and what each community teaches about the others. Cultural-respect register per .claude/rules/distributed-narrative.md § cultural-sensitivity gates: TEK / Indigenous-knowledge credit framing required where relevant; NEVER appropriative / decontextualizing lexicon. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase4Kits().",
+  "kitNumber": 14,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA014-0000-4014-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 4 global-microbiome kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once cultural-respect register review completes per ADR-016 + .claude/rules/distributed-narrative.md § cultural-sensitivity gates.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    }
+  ]
+}

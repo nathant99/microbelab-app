@@ -52,13 +52,28 @@ public nonisolated struct QuestionKitService: Sendable {
         "public-health"
     ]
 
+    /// Slugs of every Phase-4 kit bundled to date. Kits 13-16 ship as
+    /// `.draftAwaitingReview` placeholders mirroring the Phase 3 pattern.
+    /// Kit 14 (global microbiome) additionally cites the cultural-respect
+    /// gate from `.claude/rules/distributed-narrative.md` § cultural-sensitivity
+    /// gates because Yellowstone TEK + deep-sea exploration framing falls under
+    /// the Indigenous-knowledge-credit register. `loadAllPhase4Kits()` filters
+    /// out any kit whose `authoring != .reviewerSignedOff`, so draft content
+    /// NEVER surfaces to a kid. Order is canonical kit order.
+    public static let phase4KitSlugs: [String] = [
+        "extremophiles",
+        "global-microbiome",
+        "microbiome-research",
+        "synthesis"
+    ]
+
     /// Convenience union: every shipped kit slug in canonical order. Used by
-    /// new UI surfaces that span both phases (e.g., the Codex → Quizzes Menu).
+    /// new UI surfaces that span all phases (e.g., the Codex → Quizzes Menu).
     /// Note: this returns SLUGS regardless of authoring state — consumer
     /// surfaces that should hide draft content must call
     /// `loadAllShippedKits()` instead so unreviewed kits get filtered out.
     public static var allKitSlugs: [String] {
-        phase1KitSlugs + phase2KitSlugs + phase3KitSlugs
+        phase1KitSlugs + phase2KitSlugs + phase3KitSlugs + phase4KitSlugs
     }
 
     public init() {}
@@ -129,11 +144,31 @@ public nonisolated struct QuestionKitService: Sendable {
         }
     }
 
+    /// Convenience: load every Phase-4 kit slug that has reached
+    /// reviewer-signoff. Kits still in `.placeholder` or
+    /// `.draftAwaitingReview` are silently dropped so unreviewed content
+    /// NEVER surfaces to a kid. Same drop-on-error semantics as
+    /// `loadAllPhase1Kits()`. Returns an empty array until the first Phase-4
+    /// kit ships reviewer-signed-off (this is the canonical state at the
+    /// scaffold round; mirrors `loadAllPhase3Kits()` exactly).
+    public func loadAllPhase4Kits() -> [QuestionKit] {
+        Self.phase4KitSlugs.compactMap { slug in
+            switch loadKit(slug: slug) {
+            case .success(let kit):
+                guard kit.authoring == .reviewerSignedOff else { return nil }
+                return kit
+            case .failure(let error):
+                DebugLog.data("QuestionKitService.loadAllPhase4Kits failed for \(slug): \(error)")
+                return nil
+            }
+        }
+    }
+
     /// Convenience: load every shipped kit across all phases, filtering out
-    /// Phase-3 kits that are still in placeholder / draft authoring. This is
-    /// the canonical accessor for UI surfaces that span phases (Codex →
-    /// Quizzes Menu, ProgressReport snapshots).
+    /// Phase-3 + Phase-4 kits that are still in placeholder / draft
+    /// authoring. This is the canonical accessor for UI surfaces that span
+    /// phases (Codex → Quizzes Menu, ProgressReport snapshots).
     public func loadAllShippedKits() -> [QuestionKit] {
-        loadAllPhase1Kits() + loadAllPhase2Kits() + loadAllPhase3Kits()
+        loadAllPhase1Kits() + loadAllPhase2Kits() + loadAllPhase3Kits() + loadAllPhase4Kits()
     }
 }

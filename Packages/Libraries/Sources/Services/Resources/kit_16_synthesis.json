@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4016-A000-000000000016",
+  "slug": "synthesis",
+  "title": "What you noticed across the whole community",
+  "summary": "Synthesis kit — ties together what the kid has noticed across the 15 prior kits (microbiology / microbiomes / immune system / disease stories / public health / extremophiles / global / research). Frames the cumulative learning as 'a naturalist's noticing' rather than a test of recall; recognition over performance. Trauma-informed register per ADR-016 + .claude/rules/distributed-narrative.md § cumulative-arc warmth. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase4Kits().",
+  "kitNumber": 16,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA016-0000-4016-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 4 synthesis kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once trauma-informed cumulative-arc register review completes per ADR-016.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    }
+  ]
+}

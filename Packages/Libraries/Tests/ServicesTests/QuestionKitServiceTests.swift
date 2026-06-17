@@ -262,6 +262,7 @@ nonisolated struct QuestionKitServiceTests {
         let expected = QuestionKitService.phase1KitSlugs
             + QuestionKitService.phase2KitSlugs
             + QuestionKitService.phase3KitSlugs
+            + QuestionKitService.phase4KitSlugs
         #expect(all == expected)
         // Uniqueness across phases — no kit slug should appear twice.
         #expect(Set(all).count == all.count)
@@ -331,14 +332,105 @@ nonisolated struct QuestionKitServiceTests {
 
     @Test func loadAllShippedKitsCoversPhase1AndPhase2OnlyUntilReviewerSignoff() {
         // The cross-phase accessor returns Phase 1 + Phase 2 kits only while
-        // Phase 3 sits in draft. This is the canonical accessor for UI
-        // surfaces that span phases — they get the shipped surface only.
+        // Phase 3 + Phase 4 sit in draft. This is the canonical accessor for
+        // UI surfaces that span phases — they get the shipped surface only.
         let service = QuestionKitService()
         let shipped = service.loadAllShippedKits()
         let expectedSize = QuestionKitService.phase1KitSlugs.count
             + QuestionKitService.phase2KitSlugs.count
         #expect(shipped.count == expectedSize,
-                "loadAllShippedKits must drop Phase 3 drafts until reviewer signoff.")
+                "loadAllShippedKits must drop Phase 3 + Phase 4 drafts until reviewer signoff.")
+    }
+
+    // MARK: - Phase 4 placeholder scaffolds (kits 13-16)
+
+    @Test func phase4KitSlugsCoversFourCanonicalSlots() {
+        // Phase 4 ships kits 13-16 per Docs/FEATURE_PLAN.md § Phase 4.
+        // They ship as placeholders (.draftAwaitingReview) until external
+        // reviewer signoff lands per ADR-016 (kits 13/15/16) and ADR-016 +
+        // distributed-narrative.md § cultural-sensitivity gates (kit 14).
+        #expect(QuestionKitService.phase4KitSlugs.count == 4)
+        #expect(QuestionKitService.phase4KitSlugs == [
+            "extremophiles",
+            "global-microbiome",
+            "microbiome-research",
+            "synthesis"
+        ])
+    }
+
+    @Test func phase4KitsShipAsDraftAwaitingReview() {
+        // The 4 Phase 4 kits MUST ship as placeholder content gated behind
+        // reviewer signoff. Same convention as Phase 3 — flipping to
+        // .reviewerSignedOff means real content has landed and must come
+        // with matching test updates.
+        let service = QuestionKitService()
+        for slug in QuestionKitService.phase4KitSlugs {
+            guard case .success(let kit) = service.loadKit(slug: slug) else {
+                Issue.record("Phase 4 kit \(slug) failed to load")
+                continue
+            }
+            #expect(kit.authoring == .draftAwaitingReview,
+                    "Phase 4 kit \(slug) must ship as draftAwaitingReview until reviewer signoff lands.")
+        }
+    }
+
+    @Test func phase4KitsHavePlaceholderQuestionStubs() {
+        // Each scaffold kit ships a 1-question stub with a deterministic
+        // "Reviewer-signoff pending" body. Same convention as Phase 3.
+        let service = QuestionKitService()
+        for slug in QuestionKitService.phase4KitSlugs {
+            guard case .success(let kit) = service.loadKit(slug: slug) else {
+                Issue.record("Phase 4 kit \(slug) failed to load")
+                continue
+            }
+            #expect(kit.questions.count == 1,
+                    "Phase 4 placeholder \(slug) ships a 1-question stub.")
+            for question in kit.questions {
+                #expect(question.prompt.contains("Reviewer-signoff pending"),
+                        "Placeholder question must surface the reviewer-signoff sentinel.")
+                #expect(question.explanation.contains("Reviewer-signoff pending"),
+                        "Placeholder explanation must surface the reviewer-signoff sentinel.")
+            }
+        }
+    }
+
+    @Test func loadAllPhase4KitsFiltersOutUnreviewedDrafts() {
+        // The canonical accessor MUST drop any kit that isn't
+        // .reviewerSignedOff. With the current scaffold all 4 Phase 4 kits
+        // are .draftAwaitingReview, so the returned array is empty — the
+        // kid surface never sees unreviewed content.
+        let service = QuestionKitService()
+        #expect(service.loadAllPhase4Kits().isEmpty,
+                "Phase 4 kits in draft state must be filtered out of the load accessor.")
+    }
+
+    @Test func phase4KitsTraumaInformedSummaryRegisterStoplist() {
+        // Pin trauma-informed register on the summary copy of each Phase 4
+        // kit. Summary copy is reader-facing (it's the title-card summary
+        // rendered above the kid surface when the kit unlocks) so the same
+        // stoplist that covers Phase 2 ecology kits + Phase 3 disease arcs
+        // applies to the Phase 4 surface.
+        let service = QuestionKitService()
+        let stoplist = [
+            // warfare
+            "fight", "attack", "destroy", "kill", "war", "enemy", "battle",
+            "weapon", "soldier", "warrior",
+            // shame / body-image
+            "gross", "filthy", "ashamed", "ugly",
+            // threat / fear-induction
+            "scary", "deadly", "dangerous"
+        ]
+        for slug in QuestionKitService.phase4KitSlugs {
+            guard case .success(let kit) = service.loadKit(slug: slug) else {
+                Issue.record("Phase 4 kit \(slug) failed to load")
+                continue
+            }
+            let blob = kit.summary.lowercased()
+            for forbidden in stoplist {
+                #expect(!blob.contains(forbidden),
+                        "Phase 4 kit \(slug) summary contains forbidden token '\(forbidden)'")
+            }
+        }
     }
 
     @Test func phase3KitsAuthoringRoundTripsViaCodable() throws {
