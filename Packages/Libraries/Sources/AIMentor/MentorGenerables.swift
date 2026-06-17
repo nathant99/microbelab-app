@@ -235,6 +235,71 @@ public struct HistoricalContextReflection: Codable, Sendable, Equatable {
     }
 }
 
+/// Tour stop the mentor scaffolds during the Phase 4 global-microbiome tour
+/// (`Models/GlobalMicrobiomeTourStop`). The four cases align 1:1 with the
+/// canonical tour stops in the load-bearing wonder-forward order:
+/// Yellowstone hot spring → deep-sea vent → human gut → soil underground.
+///
+/// Per `Docs/TECHNICAL_DESIGN.md` § Phase 4 + `.claude/rules/distributed-narrative.md`
+/// § cultural-sensitivity gates: the Yellowstone surface MUST credit
+/// Indigenous TEK (Crow, Eastern Shoshone, Northern Arapaho, Bannock,
+/// Blackfeet, Confederated Salish-Kootenai); the deep-sea vent surface
+/// frames extremophile adaptation as wonder + adaptation pride; the gut
+/// surface bridges back to Phase 1 / 2 ecology math at world scale; the
+/// soil surface bridges to bioforge/ecosphere as a thriving system NEVER
+/// "dirt".
+public nonisolated enum GlobalMicrobiomeTourScenario: String, Codable, Sendable, CaseIterable {
+    /// Pairs with `GlobalMicrobiomeTourStop.yellowstoneHotSpring` —
+    /// thermophilic ecosystem + Indigenous TEK credit. Featured cast:
+    /// Crenarch + Therm.
+    case yellowstoneHotSpring
+    /// Pairs with `GlobalMicrobiomeTourStop.deepSeaVent` — chemosynthesis +
+    /// extremophile adaptation. The deep sea is a thriving system, NEVER
+    /// a dark scary place. Featured cast: Crenarch + Baro.
+    case deepSeaVent
+    /// Pairs with `GlobalMicrobiomeTourStop.humanGut` — host-microbiome
+    /// mutualism reviewed at world scale. Bridges back to Phase 1 / 2
+    /// ecology scenes. Featured cast: Lacto + Akker + Bifido.
+    case humanGut
+    /// Pairs with `GlobalMicrobiomeTourStop.soilUnderground` — decomposer
+    /// ecology + nitrogen fixation. Cross-portfolio bridge to bioforge /
+    /// ecosphere. Featured cast: Loam + Nodu + Halo.
+    case soilUnderground
+}
+
+/// Mentor reaction surfaced during the Phase 4 global-microbiome tour view
+/// (`AppFeature/GlobalMicrobiomeTourView`).
+///
+/// Property order matters per `.claude/rules/foundationmodels.md` — the
+/// LLM writes `wonderObservation` first so the testable
+/// `connectionToCast` can reference the same wonder language without re-
+/// deriving it.
+///
+/// Trauma-informed + cultural-respect register (per
+/// `Docs/TECHNICAL_DESIGN.md` + `.claude/rules/distributed-narrative.md`):
+/// - Wonder-forward framing — extremophiles are pride + adaptation, never
+///   "scary" / "deadly" / "horror" / "doom".
+/// - Yellowstone surface MUST surface Indigenous TEK credit.
+/// - Deep-sea surface frames the vent community as a thriving system.
+/// - Gut surface bridges to Phase 1 / 2 ecology math the kid already knows.
+/// - Soil surface frames soil as a thriving system NEVER "dirt".
+///
+/// Authored fallback content (`VeeMentor.fallbackGlobalMicrobiomeTourCue`)
+/// is always available so the mentor surfaces calmly even when
+/// FoundationModels is unavailable or paused.
+@Generable
+public struct GlobalMicrobiomeTourCue: Codable, Sendable, Equatable {
+    @Guide(description: "Open-ended wonder-observation question framed around adaptation + thriving (never warfare or fear). Age 9-14 register, hedging language only.")
+    public let wonderObservation: String
+    @Guide(description: "One connection back to a named cast microbe at this stop, framed as recognition + ecology bridge (the same ecology math the kid already knows applies here too). Trauma-safe: never frames the cast as scary or threatening.")
+    public let connectionToCast: String
+
+    public init(wonderObservation: String, connectionToCast: String) {
+        self.wonderObservation = wonderObservation
+        self.connectionToCast = connectionToCast
+    }
+}
+
 /// Mentor reaction surfaced during the Phase 3 disease-story arc surfaces.
 ///
 /// Property order matters per `.claude/rules/foundationmodels.md` — the
