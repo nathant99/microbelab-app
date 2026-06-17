@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4015-A000-000000000015",
+  "slug": "microbiome-research",
+  "title": "How scientists ask microbes questions",
+  "summary": "Pathways through microbiology — what makes a question testable; how observation + patience build evidence; how research mistakes (Marshall self-inoculation for H. pylori) become the patient observation that pays off. Anti-credentialism register per CQ CONTENT_STYLE_GUIDE.md § 4.5: foreground the doing-the-work side, NEVER hero-myth lexicon. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase4Kits().",
+  "kitNumber": 15,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA015-0000-4015-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 4 microbiome-research kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once anti-credentialism review completes per ADR-016 + .claude/rules/trauma-informed-content.md.",
+      "curriculumStandard": "NGSS MS-LS1-1"
+    }
+  ]
+}

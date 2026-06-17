@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4013-A000-000000000013",
+  "slug": "extremophiles",
+  "title": "Life at the edge of where you'd think",
+  "summary": "How the extremophile cast members (Crenarch / Acido / Cryo / Baro) live calmly in conditions a human body would find difficult — hot springs, deep-sea vents, sea ice, deep-sea pressure. Trauma-informed register per ADR-016: wonder + adaptation pride framing, NEVER scary / dangerous / hostile lexicon. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase4Kits().",
+  "kitNumber": 13,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA013-0000-4013-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 4 extremophile kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once trauma-informed register review completes per ADR-016.",
+      "curriculumStandard": "NGSS MS-LS2-3"
+    }
+  ]
+}
