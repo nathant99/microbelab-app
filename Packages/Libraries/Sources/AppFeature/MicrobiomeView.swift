@@ -25,6 +25,7 @@ public struct MicrobiomeView: View {
     @State private var showingSkinMicrobiome = false
     @State private var showingSoilMicrobiome = false
     @State private var showingGlobalTour = false
+    @State private var showingSeasonalMicrobiome = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -59,6 +60,14 @@ public struct MicrobiomeView: View {
     /// the scaffold "not yet" copy; AppRootView injects the canonical
     /// instance so the gate hint reflects the kid's actual session count.
     private let progression: ProgressionService?
+    /// Phase 4 seasonal-microbiome surface gate. When non-nil, surfaces the
+    /// seasonal-microbiome toolbar item; the seasonal scene + view inherit
+    /// the same trauma-informed register applied across oral / skin / soil
+    /// per `Models/SeasonalMicrobiomeState.swift`. The service itself is
+    /// already wired for the streak / currency emoji affordances; passing
+    /// it through here makes the seasonal sub-puzzle reachable when the
+    /// experiment flag flips ON.
+    private let seasonalEvents: SeasonalEventService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -72,7 +81,8 @@ public struct MicrobiomeView: View {
         simplifyChallenge: Bool = false,
         catalog: MicrobeCatalogService? = nil,
         globalTour: GlobalMicrobiomeTourService? = nil,
-        progression: ProgressionService? = nil
+        progression: ProgressionService? = nil,
+        seasonalEvents: SeasonalEventService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -90,6 +100,7 @@ public struct MicrobiomeView: View {
         self.catalog = catalog
         self.globalTour = globalTour
         self.progression = progression
+        self.seasonalEvents = seasonalEvents
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -169,6 +180,16 @@ public struct MicrobiomeView: View {
                         .accessibilityHint("Open the global microbiome tour — Yellowstone, deep-sea vents, your gut, the soil")
                     }
                 }
+                if seasonalEvents != nil, catalog != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingSeasonalMicrobiome = true
+                        } label: {
+                            Label("Seasonal", systemImage: "calendar.badge.clock")
+                        }
+                        .accessibilityHint("Open the seasonal microbiome — watch the gut shift through cold, pollen, summer warmth, and autumn settling")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -228,6 +249,18 @@ public struct MicrobiomeView: View {
                         tour: globalTour,
                         progression: progression,
                         catalog: catalog
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingSeasonalMicrobiome) {
+                if let catalog {
+                    SeasonalMicrobiomeView(
+                        catalog: catalog,
+                        mentor: mentor,
+                        gamification: gamification,
+                        celebration: celebration,
+                        analytics: analytics,
+                        sensory: sensory
                     )
                 }
             }

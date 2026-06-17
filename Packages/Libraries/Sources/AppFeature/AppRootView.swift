@@ -107,6 +107,17 @@ public struct AppRootView: View {
     // actual session-day count. Pre-Phase-3 surfaces remain unaffected
     // because their consumer paths don't read the service.
     @State private var progression = ProgressionService()
+    // Phase 4 seasonal-event orchestration. The service wraps
+    // `ForgeEvents.ForgeEventEngine`; default packs are culturally neutral
+    // (`.seasons` + `.globalCelebrations`) so first launch never assumes
+    // the kid's culture per `.claude/rules/distributed-narrative.md` §
+    // cultural-respect + `.claude/rules/age-assurance.md` § COPPA. Threads
+    // through MicrobiomeView so the seasonal-microbiome sub-puzzle
+    // (`SeasonalMicrobiomeView`) is reachable when the toolbar item
+    // surfaces. Trauma-informed posture per `Models/SeasonalMicrobiomeState`:
+    // cold = "immune library busy" NOT "sick"; allergy = sensory NOT
+    // enemy. Per-load mentor copy stoplist-pinned by the view's tests.
+    @State private var seasonalEvents = SeasonalEventService()
     // Local weekly-summary notification coordinator. Closes the
     // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
     // Opt-in by default per FTC 2026; the SettingsView toggle is gated
@@ -595,7 +606,8 @@ public struct AppRootView: View {
                         simplifyChallenge: settingsStore.settings.simplifyChallenge,
                         catalog: catalog,
                         globalTour: globalTour,
-                        progression: progression
+                        progression: progression,
+                        seasonalEvents: seasonalEvents
                     )
                 }
             }
