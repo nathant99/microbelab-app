@@ -1,9 +1,13 @@
 import SwiftUI
 import Models
 
-/// One codex grid entry. Renders a portrait placeholder + name + role chip +
-/// catchphrase. Portrait WebPs land in a follow-up labsmith asset wave per
-/// `.claude/rules/forgekit.md` § Asset generation ownership.
+/// One codex grid entry. Renders the cast portrait (via shared
+/// `MicrobePortraitView` — auto-falls-back to SF-Symbol + role-tint when
+/// the bundled WebP is absent) + name + role chip + catchphrase. Portrait
+/// WebPs land in a follow-up labsmith asset wave per `.claude/rules/forgekit.md`
+/// § Asset generation ownership; the shared portrait view is the single
+/// rendering seam so every consumer surface inherits the asset arrival in
+/// one place.
 ///
 /// Per `.claude/rules/liquid-glass.md` § per-surface matrix, codex grid cards
 /// are **nav-grid cards** (Category C) — tap to drill into the per-microbe
@@ -45,7 +49,8 @@ public struct MicrobeCodexCard: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            portraitPlaceholder
+            MicrobePortraitView(microbe: microbe, isDiscovered: isDiscovered)
+                .frame(height: 120)
             HStack(alignment: .firstTextBaseline) {
                 Text(isDiscovered ? microbe.displayName : "???")
                     .font(.headline)
@@ -117,17 +122,6 @@ public struct MicrobeCodexCard: View {
         if !isDiscovered { return "Not yet discovered — zoom in to find me" }
         if hasChapter { return "Tap to read this microbe's story" }
         return "Tap to view codex entry"
-    }
-
-    private var portraitPlaceholder: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.secondary.opacity(0.15))
-            Image(systemName: isDiscovered ? "microbe.circle.fill" : "questionmark.circle")
-                .font(.system(size: 44, weight: .light))
-                .foregroundStyle(.tint)
-        }
-        .frame(height: 120)
     }
 
     private var roleChip: some View {
