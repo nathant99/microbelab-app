@@ -125,6 +125,14 @@ public struct AppRootView: View {
     // `.authoringPending` / `.gatedBehindProgression` / `.gatedBehindConsent`
     // affordances so the kid path is complete the moment prose ships.
     @State private var diseaseStory = DiseaseStoryService()
+    // Phase 3 boundary-explainer catalog (parent-facing). Ships all 3
+    // canonical notes (disease-story / historical context / global tour)
+    // as `.placeholder`; the consumer view (`PhaseBoundaryExplainerView`)
+    // surfaces them through SettingsView "For parents" behind the
+    // existing parental-gate math wall. Body prose stays reviewer-blocked
+    // per ADR-016 — `.readyToInvite` rows show "Coming soon" until the
+    // reviewer pathway lands signed-off body copy.
+    @State private var phaseBoundaryExplainer = PhaseBoundaryExplainerService()
     // Local weekly-summary notification coordinator. Closes the
     // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
     // Opt-in by default per FTC 2026; the SettingsView toggle is gated
@@ -635,7 +643,9 @@ public struct AppRootView: View {
                     ProfileView(
                         progressReportSnapshot: progressReportSnapshot,
                         consentService: consent,
-                        weeklySummaryService: weeklySummary
+                        weeklySummaryService: weeklySummary,
+                        phaseBoundaryExplainer: phaseBoundaryExplainer,
+                        progressionService: progression
                     )
                 }
             }

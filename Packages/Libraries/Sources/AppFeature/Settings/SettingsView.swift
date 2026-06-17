@@ -31,16 +31,30 @@ public struct SettingsView: View {
     /// authorization + consent + scheduling.
     private let weeklySummaryService: WeeklySummaryService?
 
+    /// Shared `PhaseBoundaryExplainerService` instance. When non-nil + the
+    /// parental gate has passed, the "For parents" section surfaces a
+    /// "Boundary explainers" NavigationLink to `PhaseBoundaryExplainerView`.
+    /// Closes `Docs/FEATURE_PLAN.md` Phase 3 line 163 consumer-view half.
+    private let phaseBoundaryExplainer: PhaseBoundaryExplainerService?
+
+    /// Shared `ProgressionService` instance. Threaded through so the
+    /// PhaseBoundaryExplainerView can compute per-note gate-open state.
+    private let progressionService: ProgressionService?
+
     public init(
         store: AppSettingsStore? = nil,
         progressReportSnapshot: ProgressReportSnapshot? = nil,
         consentService: ParentalConsentService? = nil,
-        weeklySummaryService: WeeklySummaryService? = nil
+        weeklySummaryService: WeeklySummaryService? = nil,
+        phaseBoundaryExplainer: PhaseBoundaryExplainerService? = nil,
+        progressionService: ProgressionService? = nil
     ) {
         _store = State(initialValue: store ?? AppSettingsStore())
         self.progressReportSnapshot = progressReportSnapshot
         self.consentService = consentService
         self.weeklySummaryService = weeklySummaryService
+        self.phaseBoundaryExplainer = phaseBoundaryExplainer
+        self.progressionService = progressionService
     }
 
     public var body: some View {
@@ -162,7 +176,10 @@ public struct SettingsView: View {
     /// `.claude/rules/age-assurance.md` § 2026 FTC COPPA Rule Amendments.
     @ViewBuilder
     private var forParentsSection: some View {
-        if progressReportSnapshot != nil || consentService != nil || weeklySummaryService != nil {
+        if progressReportSnapshot != nil
+            || consentService != nil
+            || weeklySummaryService != nil
+            || phaseBoundaryExplainer != nil {
             Section {
                 if let snapshot = progressReportSnapshot {
                     progressReportRow(snapshot: snapshot)
@@ -179,11 +196,41 @@ public struct SettingsView: View {
                         snapshot: snapshot
                     )
                 }
+                if let explainer = phaseBoundaryExplainer {
+                    phaseBoundaryExplainerRow(explainer: explainer)
+                }
             } header: {
                 Text("For parents")
             } footer: {
                 Text("On-device only. The report covers session count, streak, XP, time, and the NGSS / NHES standards the Phase 1 kits address. Per-question detail stays local. Consents renew annually per the 2026 FTC COPPA Rule.")
                     .font(.caption)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func phaseBoundaryExplainerRow(explainer: PhaseBoundaryExplainerService) -> some View {
+        if hasPassedGate {
+            NavigationLink {
+                PhaseBoundaryExplainerView(
+                    explainer: explainer,
+                    progression: progressionService,
+                    consent: consentService
+                )
+            } label: {
+                Label("Boundary explainers", systemImage: "list.bullet.indent")
+            }
+            .accessibilityHint("Opens the parent-facing preview of what's about to land on your kid's surface")
+        } else {
+            HStack {
+                Label("Boundary explainers", systemImage: "list.bullet.indent")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Confirm adult") {
+                    showingGate = true
+                }
+                .font(.caption.weight(.semibold))
+                .buttonStyle(.borderless)
             }
         }
     }
