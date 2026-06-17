@@ -28,6 +28,7 @@ public struct MicrobiomeView: View {
     @State private var showingSeasonalMicrobiome = false
     @State private var showingDiseaseStoryArcs = false
     @State private var showingVaccineExplainer = false
+    @State private var showingHistoricalContext = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -87,6 +88,14 @@ public struct MicrobiomeView: View {
     /// surfaces. Shares the `disease-story-immune` gate + `diseaseStoryArcs`
     /// consent kind with the disease-story arcs per ADR-016.
     private let vaccineExplainer: VaccineExplainerService?
+    /// Phase 3 historical context cards orchestrator. When non-nil, surfaces
+    /// the historical-context toolbar item; the consumer view
+    /// (`HistoricalContextCardsView`) renders the canonical 4-card catalog
+    /// (Koch / Pasteur / Salk / Marshall) with per-card `CardPresentation`
+    /// surfaces. Shares the same gate + consent kind as the disease-story
+    /// arcs per ADR-016 — historical context cards build on the same
+    /// progression boundary as the immune arcs they curricularly accompany.
+    private let historicalContext: HistoricalContextService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -104,7 +113,8 @@ public struct MicrobiomeView: View {
         seasonalEvents: SeasonalEventService? = nil,
         diseaseStory: DiseaseStoryService? = nil,
         consent: ParentalConsentService? = nil,
-        vaccineExplainer: VaccineExplainerService? = nil
+        vaccineExplainer: VaccineExplainerService? = nil,
+        historicalContext: HistoricalContextService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -126,6 +136,7 @@ public struct MicrobiomeView: View {
         self.diseaseStory = diseaseStory
         self.consent = consent
         self.vaccineExplainer = vaccineExplainer
+        self.historicalContext = historicalContext
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -235,6 +246,16 @@ public struct MicrobiomeView: View {
                         .accessibilityHint("Open the vaccine explainer — the body's library practicing a new shape ahead of meeting it live")
                     }
                 }
+                if historicalContext != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingHistoricalContext = true
+                        } label: {
+                            Label("Historical context", systemImage: "person.crop.rectangle.stack")
+                        }
+                        .accessibilityHint("Open the historical context cards — scientists who watched microbes carefully")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -322,6 +343,15 @@ public struct MicrobiomeView: View {
                 if let vaccineExplainer {
                     VaccineExplainerView(
                         vaccineExplainer: vaccineExplainer,
+                        progression: progression,
+                        consent: consent
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingHistoricalContext) {
+                if let historicalContext {
+                    HistoricalContextCardsView(
+                        historicalContext: historicalContext,
                         progression: progression,
                         consent: consent
                     )

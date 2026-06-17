@@ -137,6 +137,18 @@ public struct AppRootView: View {
     // `MicrobiomeView` next to the disease-story toolbar item so the
     // adaptive-immunity → vaccine pedagogy bridge stays visually adjacent.
     @State private var vaccineExplainer = VaccineExplainerService()
+    // Phase 3 historical context cards catalog. Ships all 4 canonical
+    // figures (Koch → Pasteur → Salk → Marshall — methodology spine first)
+    // as `.placeholder`; the consumer view (`HistoricalContextCardsView`)
+    // renders per-card `.ready` / `.authoringPending` / `.gatedBehindProgression`
+    // / `.gatedBehindConsent` affordances + cross-portfolio bridge chips
+    // (Marshall ↔ curiosityquest kid-scientist register; Pasteur ↔ labsmith
+    // notebook register). Shares the same gate + consent kind as the
+    // disease-story arcs per ADR-016. Threaded through MicrobiomeView next
+    // to the vaccine-explainer + disease-story toolbar items so the
+    // pedagogy bridge (methodology spine → vaccine arcs → kid scientist)
+    // stays visually contiguous.
+    @State private var historicalContext = HistoricalContextService()
     // Phase 3 boundary-explainer catalog (parent-facing). Ships all 3
     // canonical notes (disease-story / historical context / global tour)
     // as `.placeholder`; the consumer view (`PhaseBoundaryExplainerView`)
@@ -688,7 +700,8 @@ public struct AppRootView: View {
                         seasonalEvents: seasonalEvents,
                         diseaseStory: diseaseStory,
                         consent: consent,
-                        vaccineExplainer: vaccineExplainer
+                        vaccineExplainer: vaccineExplainer,
+                        historicalContext: historicalContext
                     )
                 }
             }
