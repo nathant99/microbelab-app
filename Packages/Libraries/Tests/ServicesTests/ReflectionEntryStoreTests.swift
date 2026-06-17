@@ -141,4 +141,70 @@ struct ReflectionEntryStoreTests {
         #expect(store.entries.first?.modality == .skip)
         #expect(store.entries.first?.textValue == nil)
     }
+
+    // MARK: - Despair-signal screening (PR #167 — Phase 3 line 161)
+
+    @Test func calmReflectionLeavesPresentationNil() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(text: "I saw a Lacto today and it was warm"))
+        #expect(store.pendingDespairPresentation == nil)
+    }
+
+    @Test func emojiReflectionDoesNotTriggerScreening() {
+        // Emoji modality carries glyph codepoints, not despair-bearing text.
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(modality: .emoji, text: "😀"))
+        #expect(store.pendingDespairPresentation == nil)
+    }
+
+    @Test func skipReflectionDoesNotTriggerScreening() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        let skip = ReflectionEntry.skip(
+            promptID: "microbelab.reflection.sessionClose",
+            appIdentifier: "com.microbelab.app"
+        )
+        store.append(skip)
+        #expect(store.pendingDespairPresentation == nil)
+    }
+
+    @Test func crisisTextSurfacesCanonicalResources() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(text: "I want to die"))
+        let presentation = try #require(store.pendingDespairPresentation)
+        #expect(presentation.resources.map(\.id) == ["988", "childhelp", "crisis-text-line"])
+    }
+
+    @Test func distressTextSurfacesSofterHeader() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(text: "I feel alone today"))
+        let presentation = try #require(store.pendingDespairPresentation)
+        #expect(presentation.header.contains("heavy"))
+    }
+
+    @Test func acknowledgeClearsPendingPresentation() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(text: "I want to die"))
+        #expect(store.pendingDespairPresentation != nil)
+        store.acknowledgeDespairPresentation()
+        #expect(store.pendingDespairPresentation == nil)
+    }
+
+    @Test func emptyTextEntryDoesNotTriggerScreening() {
+        let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
+        store.append(Self.makeEntry(text: ""))
+        #expect(store.pendingDespairPresentation == nil)
+    }
+
+    @Test func pendingPresentationDoesNotPersistAcrossInstances() {
+        // The pending presentation is reactive-only — the entry persists +
+        // re-screens on consumer demand, but the in-memory presentation
+        // resets on cold launch so the kid doesn't re-see a stale alert.
+        let defaults = Self.makeIsolatedDefaults()
+        let store = ReflectionEntryStore(defaults: defaults)
+        store.append(Self.makeEntry(text: "I want to die"))
+        #expect(store.pendingDespairPresentation != nil)
+        let cold = ReflectionEntryStore(defaults: defaults)
+        #expect(cold.pendingDespairPresentation == nil)
+        #expect(cold.entries.count == 1, "entry itself should persist for parent surface")
+    }
 }
