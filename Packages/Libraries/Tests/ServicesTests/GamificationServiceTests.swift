@@ -101,18 +101,83 @@ struct GamificationServiceTests {
         #expect(service.totalXP == expectedXP)
     }
 
-    @Test func allDefinitionsCoversBothPhases() {
+    @Test func allDefinitionsCoversAllPhases() {
         let all = MicrobeLabAchievements.allDefinitions
-        #expect(all.count == MicrobeLabAchievements.phase1.count + MicrobeLabAchievements.phase2.count)
-        // Spot-check both phases land in the aggregate.
+        let expected = MicrobeLabAchievements.phase1.count
+            + MicrobeLabAchievements.phase2.count
+            + MicrobeLabAchievements.phase3.count
+        #expect(all.count == expected)
+        // Spot-check all three phases land in the aggregate.
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstZoom.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.firstShapeMatch.id }))
         #expect(all.contains(where: { $0.id == MicrobeLabAchievements.librarianOfShapes.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.handwashHero.id }))
+        #expect(all.contains(where: { $0.id == MicrobeLabAchievements.outbreakHelper.id }))
     }
 
     @Test func phase2IDsAreUnique() {
         let ids = MicrobeLabAchievements.phase2.map(\.id)
         #expect(Set(ids).count == ids.count, "Phase-2 achievement IDs must be unique")
+    }
+
+    @Test func phase3SetHasFourAchievements() {
+        #expect(MicrobeLabAchievements.phase3.count == 4)
+    }
+
+    @Test func phase3IDsAreUnique() {
+        let ids = MicrobeLabAchievements.phase3.map(\.id)
+        #expect(Set(ids).count == ids.count, "Phase-3 achievement IDs must be unique")
+    }
+
+    @Test func phase3XPBandHonored() {
+        // Phase-3 achievements stay in the 60-120 XP band, matching the
+        // Phase-2 spread. Avoid epic-tier inflation as we extend the set.
+        for achievement in MicrobeLabAchievements.phase3 {
+            #expect(achievement.xpValue >= 60,
+                    "\(achievement.id) below the Phase-3 XP floor (60)")
+            #expect(achievement.xpValue <= 120,
+                    "\(achievement.id) above the Phase-3 XP ceiling (120)")
+        }
+    }
+
+    @Test func phase3AchievementsTraumaSafeRegister() {
+        // Phase-3 disease-story achievements ship under the SAMHSA register
+        // per ADR-016 + .claude/rules/trauma-informed-content.md. The titles +
+        // descriptions must avoid: warfare lexicon (fight / attack / defeat /
+        // battle / weapon / kill / war / enemy), shame lexicon (failure /
+        // should / must / behind / almost / fell short), threat lexicon
+        // (scary / germ / panic / horror / danger).
+        let stoplist = [
+            // Warfare
+            "fight", "attack", "defeat", "battle", "weapon", "kill",
+            " war", "enemy", "soldier", "warrior",
+            // Shame
+            "failure", "should ", "must ", "behind", "almost", "fell short",
+            // Threat
+            "scary", "germ", "panic", "horror", "danger",
+        ]
+        for achievement in MicrobeLabAchievements.phase3 {
+            let combined = (achievement.title + " " + achievement.description).lowercased()
+            for word in stoplist {
+                #expect(!combined.contains(word),
+                        "Phase-3 achievement '\(achievement.id)' must not surface '\(word.trimmingCharacters(in: .whitespaces))' (trauma-safe register).")
+            }
+        }
+    }
+
+    @Test func phase3AchievementsAwardXP() async {
+        let service = GamificationService()
+        let hero = MicrobeLabAchievements.handwashHero
+        let primer = MicrobeLabAchievements.vaccinePrimer
+        let earned = service.evaluateAchievements { definition in
+            switch definition.id {
+            case hero.id, primer.id: return true
+            default: return false
+            }
+        }
+        #expect(earned.count == 2)
+        let expectedXP = hero.xpValue + primer.xpValue
+        #expect(service.totalXP == expectedXP)
     }
 
     @Test func allDefinitionsHaveUniqueIDs() {

@@ -156,12 +156,59 @@ public nonisolated enum MicrobeLabAchievements {
         oralBalanceKeeper, skinKindnessChampion, soilDecomposerWhisperer,
     ]
 
+    // MARK: - Phase 3 (Disease Stories + Vaccines)
+    //
+    // 4 disease-themed achievements pair 1:1 with the 4 Phase 3 disease-story
+    // arcs scaffolded in PR #141 (`Models/DiseaseStoryArc`). Per
+    // .claude/rules/trauma-informed-content.md the arcs themselves are
+    // reviewer-gated; the achievements share the same SAMHSA-register
+    // posture — names recognize care + curiosity + stewardship, never
+    // victory / failure-recovery / threat-resolution framing.
+    //
+    // Title + description copy intentionally avoids: warfare lexicon
+    // (`fight` / `attack` / `defeat` / `battle` / `weapon`), shame lexicon
+    // (`failure` / `should` / `must` / `behind`), threat lexicon (`scary` /
+    // `germ` / `panic`). Pinned by phase3AchievementsTraumaSafeRegister
+    // stoplist test. XP band 60-120 matches the Phase 2 spread.
+    public static let handwashHero = AchievementDefinition(
+        id: "ml.handwash-hero",
+        title: "Hands That Care",
+        description: "You learned how a quiet wash keeps the microbiome neighborhood balanced.",
+        iconAssetName: "hands.sparkles.fill",
+        xpValue: 60
+    )
+    public static let vaccinePrimer = AchievementDefinition(
+        id: "ml.vaccine-primer",
+        title: "Library Primer",
+        description: "You watched the B-cell library learn a new shape — that's how a vaccine works.",
+        iconAssetName: "books.vertical.fill",
+        xpValue: 80
+    )
+    public static let antibioticSteward = AchievementDefinition(
+        id: "ml.antibiotic-steward",
+        title: "Quiet Steward",
+        description: "You let the microbiome recover after antibiotic care — slow is wise.",
+        iconAssetName: "leaf.fill",
+        xpValue: 100
+    )
+    public static let outbreakHelper = AchievementDefinition(
+        id: "ml.outbreak-helper",
+        title: "Helper at the Window",
+        description: "You learned how a community looks after each other when the microbiome shifts.",
+        iconAssetName: "person.2.fill",
+        xpValue: 120
+    )
+
+    public static let phase3: [AchievementDefinition] = [
+        handwashHero, vaccinePrimer, antibioticSteward, outbreakHelper,
+    ]
+
     /// Aggregate accessor — every shipped achievement across all phases.
     /// Consumers wanting the full set (Progress tab, ForgeReporting
     /// snapshots, achievement-engine registration) prefer this over
     /// concatenating per-phase arrays.
     public static var allDefinitions: [AchievementDefinition] {
-        phase1 + phase2
+        phase1 + phase2 + phase3
     }
 }
 
