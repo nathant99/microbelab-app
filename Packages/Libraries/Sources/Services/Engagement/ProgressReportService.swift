@@ -57,18 +57,19 @@ public nonisolated struct ProgressReportSnapshot: Sendable, Equatable {
 /// `ProgressReportSnapshot`. Wraps `ForgeReporting.ForgeReportGenerator` per
 /// `.claude/rules/forgekit.md` § Module Catalog → ForgeReporting.
 ///
-/// **Standards exposure** (Phase 1): the 4 bundled question kits ship with
-/// `curriculumStandard` tags spanning NGSS MS-LS1-1 / MS-LS1-2 / MS-LS1-3 /
-/// MS-LS2-3 + NHES 1 / 7. The `phase1Standards` list mirrors the bundled
-/// kits' tag set so the parent surface stays in sync without a runtime scan.
-/// Per-standard proficiency stays empty for Phase 1 (per-question attempt
-/// logs land in a follow-up — see `Docs/FEATURE_PLAN.md` § Reporting); the
+/// **Standards exposure** (Phases 1-4): each phase's `phaseNStandards`
+/// constant mirrors the standards tagged by that phase's bundled question
+/// kits. `allShippedStandards` returns the deduplicated union (by `code`)
+/// of every phase shipped to date so the parent surface stays in sync
+/// without a runtime scan. Per-standard proficiency stays empty until the
+/// kid has answered a tagged question (see `QuestionAttemptStore`); the
 /// `ForgeReportGenerator.parentConferenceReport(_:)` text gracefully skips
 /// the Strengths / Growth Areas sections when proficiencies are empty.
 public nonisolated struct ProgressReportService: Sendable {
     /// Phase 1 question-kit standards (kept in sync with the bundled JSON in
-    /// `Services/Resources/kit_0*.json`). Standalone constant so the parent
-    /// surface can list "Standards covered" without re-scanning the bundle.
+    /// `Services/Resources/kit_0[1-4]*.json`). Standalone constant so the
+    /// parent surface can list "Standards covered" without re-scanning the
+    /// bundle.
     public static let phase1Standards: [StandardAlignment] = [
         StandardAlignment(
             standard: .ngss,
@@ -101,6 +102,74 @@ public nonisolated struct ProgressReportService: Sendable {
             description: "Demonstrate the ability to practice health-enhancing behaviors."
         ),
     ]
+
+    /// Phase 2 question-kit standards (kits 05 adaptive immunity + 06 oral
+    /// + 07 skin + 08 soil microbiomes). New canonical entry: MS-LS2-2
+    /// (interactions in ecosystems) — surfaced by the 3 microbiome ecology
+    /// kits per their `curriculumStandard` tags. MS-LS1-3 is also re-used
+    /// from Phase 1 (the adaptive-immunity kit anchors on the immune-
+    /// subsystem standard).
+    public static let phase2Standards: [StandardAlignment] = [
+        StandardAlignment(
+            standard: .ngss,
+            code: "MS-LS1-3",
+            description: "Use argument to support that the body is a system of interacting subsystems."
+        ),
+        StandardAlignment(
+            standard: .ngss,
+            code: "MS-LS2-2",
+            description: "Construct an explanation that predicts patterns of interactions among organisms across multiple ecosystems."
+        ),
+    ]
+
+    /// Phase 3 question-kit standards (kits 09 vaccines + 10 herd immunity +
+    /// 11 hygiene + 12 public health). All four kits anchor on MS-LS1-3
+    /// (immune subsystem) per their `curriculumStandard` JSON tags. Real
+    /// prose remains reviewer-blocked per ADR-016; the standards list ships
+    /// so the parent surface can describe what the kit set covers
+    /// curricularly without committing to reviewer-blocked prose.
+    public static let phase3Standards: [StandardAlignment] = [
+        StandardAlignment(
+            standard: .ngss,
+            code: "MS-LS1-3",
+            description: "Use argument to support that the body is a system of interacting subsystems."
+        ),
+    ]
+
+    /// Phase 4 question-kit standards (kits 13 extremophiles + 14 global
+    /// microbiome + 15 microbiome research + 16 synthesis). Kits 13 + 14
+    /// anchor on MS-LS2-3 (matter + energy cycling across ecosystems —
+    /// extremophile habitats + global tour); kits 15 + 16 anchor on
+    /// MS-LS1-1 (the foundational cells-as-living-things standard, used as
+    /// the synthesis-arc bridge). Real prose remains reviewer-blocked.
+    public static let phase4Standards: [StandardAlignment] = [
+        StandardAlignment(
+            standard: .ngss,
+            code: "MS-LS1-1",
+            description: "Conduct an investigation to provide evidence that living things are made of cells."
+        ),
+        StandardAlignment(
+            standard: .ngss,
+            code: "MS-LS2-3",
+            description: "Develop a model to describe the cycling of matter and flow of energy among living and nonliving parts of an ecosystem."
+        ),
+    ]
+
+    /// Deduplicated union (by `code`) of every standard covered by the
+    /// shipped question kits across all four phases. Stable order: Phase 1
+    /// standards first, then Phase 2 additions, then Phase 3 + Phase 4
+    /// additions. The parent surface uses this list to render the
+    /// "Standards covered" affordance without re-scanning the bundle.
+    public static var allShippedStandards: [StandardAlignment] {
+        var seenCodes = Set<String>()
+        var result: [StandardAlignment] = []
+        for alignment in phase1Standards + phase2Standards + phase3Standards + phase4Standards {
+            guard !seenCodes.contains(alignment.code) else { continue }
+            seenCodes.insert(alignment.code)
+            result.append(alignment)
+        }
+        return result
+    }
 
     public init() {}
 
