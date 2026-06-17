@@ -73,6 +73,9 @@ public struct DiseaseStoryArcView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .navigationDestination(for: DiseaseStoryArc.self) { arc in
+            DiseaseStoryNarrativeView(arc: arc)
+        }
     }
 
     private var introCopy: String {
@@ -118,11 +121,15 @@ public struct DiseaseStoryArcView: View {
         switch presentation {
         case .ready:
             // Reviewer-signoff has landed; the structural body renders a
-            // placeholder line until per-arc prose ships in a focused round
-            // (per ADR-016). When prose arrives, swap this for the rendered
-            // body content.
-            Text(verbatim: "Story ready. Tap the arc to read.")
-                .foregroundStyle(.secondary)
+            // NavigationLink to the per-arc narrative beat surface
+            // (DiseaseStoryNarrativeView) which steps the kid through the
+            // 4 canonical beats (introduction / witness / action /
+            // reflection). The narrative view itself renders the per-beat
+            // body when reviewer-signoff lands at the beat tier.
+            NavigationLink(value: record.arc) {
+                Text(verbatim: "Open story — 4 beats")
+                    .foregroundStyle(.secondary)
+            }
         case .authoringPending:
             Text(verbatim: "Coming soon — a reviewer is reading this story now.")
                 .foregroundStyle(.secondary)
