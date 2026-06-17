@@ -35,6 +35,13 @@ public final class ExperimentsService {
 
     public static let progressiveDisclosureV2ID = "progressive_disclosure_v2"
     public static let seasonalContentGateID = "seasonal_content_gate"
+    /// `cast_voicing` — gates the DN-S AI-mentor voicing surface (per
+    /// `Docs/HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md`). When the
+    /// `enabled` variant flips on, `VeeMentor` dispatches utterances through
+    /// the per-cast `CastDialog` actor instead of the default Socratic
+    /// surface. Default 100% control until the focused DN-S voicing round
+    /// flips the weight + ships an in-app debug toggle for TestFlight.
+    public static let castVoicingID = "cast_voicing"
 
     private let experiments: [String: ExperimentDefinition]
     private let seed: String
@@ -129,6 +136,19 @@ public final class ExperimentsService {
                 variants: [
                     Variant(id: "control", name: "Year-round catalog (canonical)", weight: 100),
                     Variant(id: "enabled", name: "Seasonal pack enabled", weight: 0),
+                ],
+                startDate: now,
+                endDate: later,
+                minimumSessions: 30,
+                primaryMetric: .sessionsPerWeek
+            ),
+            ExperimentDefinition(
+                id: castVoicingID,
+                name: "DN-S AI-Mentor Voicing",
+                description: "Toggles whether VeeMentor dispatches utterances through the per-cast `CastDialog` actor (using the 6 `CastVoiceProfile` instances authored from the chapter MDs) instead of the default Socratic surface. Default 100% control; the focused DN-S voicing round flips weight + ships an in-app debug toggle for TestFlight per `Docs/HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md` § Implementation step 4.",
+                variants: [
+                    Variant(id: "control", name: "Default Socratic mentor (canonical)", weight: 100),
+                    Variant(id: "enabled", name: "Cast voicing enabled", weight: 0),
                 ],
                 startDate: now,
                 endDate: later,
