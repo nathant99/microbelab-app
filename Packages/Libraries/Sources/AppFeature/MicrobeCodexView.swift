@@ -63,6 +63,7 @@ public struct MicrobeCodexView: View {
     private struct PresentedChapter: Identifiable {
         let chapter: MicrobeChapter
         let microbeDisplayName: String
+        let microbe: MicrobeCharacter
         var id: String { chapter.slug }
     }
 
@@ -145,6 +146,8 @@ public struct MicrobeCodexView: View {
                 ChapterReaderSheet(
                     chapter: item.chapter,
                     microbeDisplayName: item.microbeDisplayName,
+                    microbe: item.microbe,
+                    isMicrobeDiscovered: true,
                     bundle: MicrobeChapterStore.resourcesBundle
                 )
             }
@@ -193,7 +196,8 @@ public struct MicrobeCodexView: View {
             if let chapter = chapters.chapter(for: microbe.slug) {
                 presentedChapter = PresentedChapter(
                     chapter: chapter,
-                    microbeDisplayName: microbe.displayName
+                    microbeDisplayName: microbe.displayName,
+                    microbe: microbe
                 )
                 DebugLog.state("MicrobeCodexView opened chapter reader: \(microbe.slug)")
             }
