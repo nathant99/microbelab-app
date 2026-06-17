@@ -43,5 +43,41 @@ public struct MicrobeLabAppShortcuts: AppShortcutsProvider {
             shortTitle: "Open Microbiome",
             systemImageName: "leaf"
         )
+        AppShortcut(
+            intent: OpenDiseaseStoriesIntent(),
+            phrases: [
+                "Open Disease Stories in \(.applicationName)",
+                "Show me the disease stories in \(.applicationName)"
+            ],
+            shortTitle: "Open Disease Stories",
+            systemImageName: "book.closed.fill"
+        )
+        AppShortcut(
+            intent: OpenVaccineExplainerIntent(),
+            phrases: [
+                "Open Vaccine Explainer in \(.applicationName)",
+                "Show me the vaccine explainer in \(.applicationName)"
+            ],
+            shortTitle: "Open Vaccine Explainer",
+            systemImageName: "syringe.fill"
+        )
+        AppShortcut(
+            intent: OpenHistoricalContextIntent(),
+            phrases: [
+                "Open Historical Context in \(.applicationName)",
+                "Show me the historical context cards in \(.applicationName)"
+            ],
+            shortTitle: "Open Historical Context",
+            systemImageName: "person.crop.rectangle.stack"
+        )
+        AppShortcut(
+            intent: OpenGlobalMicrobiomeTourIntent(),
+            phrases: [
+                "Open Global Tour in \(.applicationName)",
+                "Show me the global microbiome tour in \(.applicationName)"
+            ],
+            shortTitle: "Open Global Tour",
+            systemImageName: "globe.americas.fill"
+        )
     }
 }

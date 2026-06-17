@@ -41,6 +41,27 @@ public final class NavigationCoordinator {
     /// re-applies cleanly.
     public private(set) var requestedTab: MicrobeLabTab?
 
+    /// When non-nil, indicates an App Intent (or other system surface) has
+    /// requested the app navigate to a specific Phase 3 / Phase 4 sub-
+    /// surface that lives behind a top-level tab's toolbar. The matching
+    /// `requestedTab` is also set so `AppRootView` can switch the tab on
+    /// the same observation; the sub-surface is then consumed by the host
+    /// view (`MicrobiomeView` for the current 4 canonical surfaces) which
+    /// flips its `.navigationDestination(isPresented:)` flag.
+    ///
+    /// Per `Docs/FEATURE_PLAN.md` § Adventure Mode + the maximize-ForgeKit-
+    /// integration directive: this is the deep-link routing surface that
+    /// lets App Intents (Siri / Spotlight / Shortcuts) land the kid (or
+    /// parent setting up a Shortcut) directly on a Phase 3 / Phase 4
+    /// surface in one step. No Info.plist edits required — the
+    /// AppShortcutsProvider discovery uses runtime metadata.
+    ///
+    /// Trauma-informed posture: this field carries a navigation REQUEST
+    /// only. The per-surface ParentalConsentService + ProgressionService
+    /// gates still decide whether the surface's body content renders. The
+    /// intent NEVER backdoors past the canonical gates.
+    public private(set) var requestedSubSurface: MicrobeLabSubSurface?
+
     public init() {}
 
     /// Set the requested tab. Same value as the current value still
@@ -51,9 +72,39 @@ public final class NavigationCoordinator {
         requestedTab = tab
     }
 
-    /// Clear the pending request after the consumer has applied it.
-    /// Idempotent — calling when already nil is a no-op.
+    /// Set the requested sub-surface. Implies + sets the matching `hostTab`
+    /// so `AppRootView` can switch the tab on the same observation cycle;
+    /// the host view (`MicrobiomeView` for the current 4 canonical
+    /// surfaces) consumes the sub-surface field to push the inner
+    /// navigation. Idempotent — same value re-triggers the observer so
+    /// re-firing the same intent after the kid manually navigated still
+    /// re-routes cleanly.
+    ///
+    /// Per `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md` + the auto-cycle
+    /// pre-approval: the routing extension is SPM-only — no entitlement
+    /// provisioning required.
+    public func requestSubSurface(_ surface: MicrobeLabSubSurface) {
+        DebugLog.lifecycle("NavigationCoordinator requestSubSurface \(surface.rawValue) (hostTab=\(surface.hostTab.rawValue))")
+        requestedTab = surface.hostTab
+        requestedSubSurface = surface
+    }
+
+    /// Clear the pending tab request after the consumer has applied it.
+    /// Idempotent — calling when already nil is a no-op. Does NOT clear
+    /// the sub-surface request; the host view is responsible for clearing
+    /// that via `clearSubSurfaceRequest()` AFTER it has flipped its
+    /// `.navigationDestination(isPresented:)` flag. This two-step ordering
+    /// matters because `AppRootView` clears the tab request as soon as the
+    /// tab switch lands, but the host view's `.navigationDestination` flag
+    /// needs the sub-surface field to survive at least until the host
+    /// view's `.onChange` observer fires.
     public func clearRequest() {
         requestedTab = nil
+    }
+
+    /// Clear the pending sub-surface request after the host view has
+    /// applied it. Idempotent — calling when already nil is a no-op.
+    public func clearSubSurfaceRequest() {
+        requestedSubSurface = nil
     }
 }

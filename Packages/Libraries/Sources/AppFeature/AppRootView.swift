@@ -709,7 +709,8 @@ public struct AppRootView: View {
                         diseaseStory: diseaseStory,
                         consent: consent,
                         vaccineExplainer: vaccineExplainer,
-                        historicalContext: historicalContext
+                        historicalContext: historicalContext,
+                        navigationCoordinator: navigationCoordinator
                     )
                 }
             }
