@@ -118,6 +118,13 @@ public struct AppRootView: View {
     // cold = "immune library busy" NOT "sick"; allergy = sensory NOT
     // enemy. Per-load mentor copy stoplist-pinned by the view's tests.
     @State private var seasonalEvents = SeasonalEventService()
+    // Phase 3 disease-story arc catalog. Ships all 4 canonical arcs as
+    // `.placeholder` per ADR-016 (prose authoring stays reviewer-blocked).
+    // The structural surface lands via `DiseaseStoryArcView` reached from
+    // MicrobiomeView's toolbar; the view renders per-arc `.ready` /
+    // `.authoringPending` / `.gatedBehindProgression` / `.gatedBehindConsent`
+    // affordances so the kid path is complete the moment prose ships.
+    @State private var diseaseStory = DiseaseStoryService()
     // Local weekly-summary notification coordinator. Closes the
     // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
     // Opt-in by default per FTC 2026; the SettingsView toggle is gated
@@ -607,7 +614,9 @@ public struct AppRootView: View {
                         catalog: catalog,
                         globalTour: globalTour,
                         progression: progression,
-                        seasonalEvents: seasonalEvents
+                        seasonalEvents: seasonalEvents,
+                        diseaseStory: diseaseStory,
+                        consent: consent
                     )
                 }
             }
