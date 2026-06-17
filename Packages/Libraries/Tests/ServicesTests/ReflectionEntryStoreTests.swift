@@ -167,14 +167,14 @@ struct ReflectionEntryStoreTests {
         #expect(store.pendingDespairPresentation == nil)
     }
 
-    @Test func crisisTextSurfacesCanonicalResources() {
+    @Test func crisisTextSurfacesCanonicalResources() throws {
         let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
         store.append(Self.makeEntry(text: "I want to die"))
         let presentation = try #require(store.pendingDespairPresentation)
         #expect(presentation.resources.map(\.id) == ["988", "childhelp", "crisis-text-line"])
     }
 
-    @Test func distressTextSurfacesSofterHeader() {
+    @Test func distressTextSurfacesSofterHeader() throws {
         let store = ReflectionEntryStore(defaults: Self.makeIsolatedDefaults())
         store.append(Self.makeEntry(text: "I feel alone today"))
         let presentation = try #require(store.pendingDespairPresentation)
