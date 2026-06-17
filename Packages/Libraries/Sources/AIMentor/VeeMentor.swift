@@ -234,6 +234,68 @@ public final class VeeMentor {
         }
     }
 
+    /// Curriculum-safe static `VaccineMechanismCue` for the named scenario —
+    /// always available, never blocks. Trauma-safe register per
+    /// `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture + ADR-016:
+    /// vaccines are the body's library learning a new shape ahead of meeting
+    /// it live, never warfare. Pairs with `VaccineExplainerStep` 1:1 via the
+    /// enum cases.
+    public func fallbackVaccineMechanismCue(for scenario: VaccineMechanismScenario) -> VaccineMechanismCue {
+        switch scenario {
+        case .introduction:
+            return VaccineMechanismCue(
+                observation: "What might a vaccine be for the body's library of shapes?",
+                librariesHypothesis: "Often a vaccine is a kind helper that brings a new shape early — never a fear hook."
+            )
+        case .antibodyPriming:
+            return VaccineMechanismCue(
+                observation: "What might the B-cell library do with a brand-new shape it has not seen yet?",
+                librariesHypothesis: "Usually the library practices matching the shape ahead of time so it is ready when the live shape arrives."
+            )
+        case .memoryFormation:
+            return VaccineMechanismCue(
+                observation: "After the library practices, what might it keep for next time?",
+                librariesHypothesis: "Often the body keeps a small note of the matched shape so it recognizes it more quickly on a return visit."
+            )
+        case .boosterRationale:
+            return VaccineMechanismCue(
+                observation: "Why might a second dose help the library remember more steadily?",
+                librariesHypothesis: "Usually a booster is patient care — a gentle reminder that helps the note stay clear over time."
+            )
+        }
+    }
+
+    /// Curriculum-safe static `HistoricalContextReflection` for the named
+    /// scenario — always available, never blocks. Trauma-safe register per
+    /// CQ CONTENT_STYLE_GUIDE.md § 4.5 anti-credentialism gate + ADR-016:
+    /// figures framed as patient observers, NEVER hero-myth, NEVER mortality
+    /// framing on disease lexicon. Pairs with `HistoricalContextFigure` 1:1
+    /// via the enum cases.
+    public func fallbackHistoricalContextReflection(for scenario: HistoricalContextScenario) -> HistoricalContextReflection {
+        switch scenario {
+        case .pasteur:
+            return HistoricalContextReflection(
+                noticing: "What might Louis Pasteur have noticed across many quiet hours at his lab notebook?",
+                kidScientistTakeaway: "Often the careful notebook habit is the science — you can keep one too."
+            )
+        case .koch:
+            return HistoricalContextReflection(
+                noticing: "How might Robert Koch have figured out which microbe paired with which pattern?",
+                kidScientistTakeaway: "Usually patient pattern noticing is how the answer arrives — small careful steps over time."
+            )
+        case .salk:
+            return HistoricalContextReflection(
+                noticing: "What might a community discover when many people share care with each other?",
+                kidScientistTakeaway: "Often public-health wonder comes from a lot of people doing small careful things together."
+            )
+        case .marshall:
+            return HistoricalContextReflection(
+                noticing: "What might a quiet observer notice that the textbooks have not caught up to yet?",
+                kidScientistTakeaway: "Usually a long noticing plus a small careful experiment is enough — that is real science."
+            )
+        }
+    }
+
     /// Curriculum-safe static `EcologyHypothesis` — always available, never blocks.
     public func fallbackEcologyHypothesis(for mode: FeedingMode) -> EcologyHypothesis {
         switch mode {
@@ -377,6 +439,91 @@ public final class VeeMentor {
             return response.content
         } catch {
             return fallbackPublicHealthHypothesis(for: scenario)
+        }
+    }
+
+    /// Generate a Socratic `VaccineMechanismCue` for the named vaccine-explainer
+    /// step. Falls back to the static authored content when the model is
+    /// unavailable. Per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design
+    /// Posture + ADR-016, the prompt explicitly forbids warfare framing —
+    /// vaccines surface as the body's library learning a new shape ahead of
+    /// meeting it live.
+    public func vaccineMechanismCue(for scenario: VaccineMechanismScenario) async -> VaccineMechanismCue {
+        guard isAvailable, let session = makeSession() else {
+            return fallbackVaccineMechanismCue(for: scenario)
+        }
+        let stepHint: String
+        switch scenario {
+        case .introduction:
+            stepHint = "the gentle introduction step — vaccines as a kind helper, never a fear hook"
+        case .antibodyPriming:
+            stepHint = "the antibody-priming step — the B-cell library practices matching a new shape ahead of time"
+        case .memoryFormation:
+            stepHint = "the memory-formation step — the body keeps a note of the matched shape so it recognizes it next time"
+        case .boosterRationale:
+            stepHint = "the booster-rationale step — a second dose is patient care that helps the note stay clear"
+        }
+        do {
+            let response = try await session.respond(
+                to: """
+                The kid just stepped to \(stepHint) in the Phase 3 vaccine \
+                mini-explainer. Compose an open-ended observation question \
+                framed around the body's LIBRARY learning a shape (never \
+                warfare — no "fight" / "attack" / "destroy" / "kill" / "war" / \
+                "enemy" / "battle" / "weapon"; never fear-induction — no \
+                "scary" / "danger" / "panic" / "germ" / "horror"; never \
+                shame — no "should" / "must" / "failure"), and one testable \
+                prediction about how the antibody library or memory cells \
+                respond, framed as care + curiosity. Age 9-14 register, \
+                hedging language only ("often", "usually", "many").
+                """,
+                generating: VaccineMechanismCue.self
+            )
+            return response.content
+        } catch {
+            return fallbackVaccineMechanismCue(for: scenario)
+        }
+    }
+
+    /// Generate a Socratic `HistoricalContextReflection` for the named figure.
+    /// Falls back to the static authored content when the model is
+    /// unavailable. Per CQ CONTENT_STYLE_GUIDE.md § 4.5 anti-credentialism
+    /// gate + ADR-016, the prompt explicitly forbids hero-myth + mortality +
+    /// warfare framing — figures surface as patient observers taking small
+    /// careful steps the kid can also take.
+    public func historicalContextReflection(for scenario: HistoricalContextScenario) async -> HistoricalContextReflection {
+        guard isAvailable, let session = makeSession() else {
+            return fallbackHistoricalContextReflection(for: scenario)
+        }
+        let figureHint: String
+        switch scenario {
+        case .pasteur:
+            figureHint = "Louis Pasteur — patient experimental-notebook register, NEVER the rabid-dog drama"
+        case .koch:
+            figureHint = "Robert Koch — pattern-noticing methodology spine, NEVER mortality counting"
+        case .salk:
+            figureHint = "Jonas Salk — community made polio rare through care, NEVER panic recall"
+        case .marshall:
+            figureHint = "Barry Marshall — long noticing plus small careful experiments overturned consensus, NEVER bravado"
+        }
+        do {
+            let response = try await session.respond(
+                to: """
+                The kid just opened the historical context card for \
+                \(figureHint). Compose an open-ended question naming what the \
+                figure noticed across long careful observation (never hero- \
+                myth — no "genius" / "saved millions" / "legendary"; never \
+                mortality framing — no "killed" / "died" / "deadly"; never \
+                warfare lexicon — no "fight" / "battle" / "weapon"), and one \
+                kid-scientist takeaway the kid can carry into their own \
+                observation today, framed as small careful steps. Age 9-14 \
+                register, hedging language only ("often", "usually", "many").
+                """,
+                generating: HistoricalContextReflection.self
+            )
+            return response.content
+        } catch {
+            return fallbackHistoricalContextReflection(for: scenario)
         }
     }
 

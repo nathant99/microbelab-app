@@ -120,6 +120,121 @@ public nonisolated enum PublicHealthScenario: String, Codable, Sendable, CaseIte
     case outbreakRecovery
 }
 
+/// Vaccine-mechanism step the mentor scaffolds during the Phase 3 vaccine
+/// mini-explainer (`Models/VaccineExplainerStep`). The four cases align 1:1
+/// with the canonical 4-step pedagogy spine (introduction → antibodyPriming
+/// → memoryFormation → boosterRationale) so the mentor surface can refresh
+/// a per-step Socratic prompt when the kid steps through the explainer's
+/// segmented picker.
+///
+/// Per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture: the
+/// vaccine surface is the body's LIBRARY learning a new shape — never a
+/// warfare / battle / weapon register.
+public nonisolated enum VaccineMechanismScenario: String, Codable, Sendable, CaseIterable {
+    /// Pairs with `VaccineExplainerStep.introduction` — gentle framing of
+    /// vaccines as a kind helper, not a fear hook.
+    case introduction
+    /// Pairs with `VaccineExplainerStep.antibodyPriming` — the B-cell
+    /// library practices matching a new shape before the live antigen
+    /// arrives. Inherits the Phase 2 adaptive-immunity register.
+    case antibodyPriming
+    /// Pairs with `VaccineExplainerStep.memoryFormation` — the body keeps
+    /// a note of the matched shape so it recognizes it faster next time.
+    case memoryFormation
+    /// Pairs with `VaccineExplainerStep.boosterRationale` — why a second
+    /// dose helps the library remember more steadily. Framed as care +
+    /// patience, never failure of the first dose.
+    case boosterRationale
+}
+
+/// Mentor cue surfaced during the Phase 3 vaccine mini-explainer view
+/// (`AppFeature/Engagement/VaccineExplainerView`).
+///
+/// Property order matters per `.claude/rules/foundationmodels.md` — the
+/// LLM writes `observation` first so the testable `librariesHypothesis`
+/// can reference the same shape-matching language without re-deriving it.
+///
+/// Trauma-informed register (per `Docs/TECHNICAL_DESIGN.md` + ADR-016):
+/// - Vaccines are the body's library learning a shape ahead of meeting
+///   it live — NEVER warfare / battle / weapon framing.
+/// - The B-cell library is curious + patient, not anxious or fearful.
+/// - Booster doses are care + reinforcement, not corrections of failure.
+///
+/// Authored fallback content (`VeeMentor.fallbackVaccineMechanismCue`)
+/// is always available so the mentor surfaces calmly even when
+/// FoundationModels is unavailable or paused.
+@Generable
+public struct VaccineMechanismCue: Codable, Sendable, Equatable {
+    @Guide(description: "Open-ended observation question framed around the body's library learning a shape (never warfare). Age 9-14 register, hedging language only.")
+    public let observation: String
+    @Guide(description: "One testable prediction about how the antibody library or memory cells respond to vaccine-priming, framed as care + curiosity. Trauma-safe: never frames re-exposure as threat.")
+    public let librariesHypothesis: String
+
+    public init(observation: String, librariesHypothesis: String) {
+        self.observation = observation
+        self.librariesHypothesis = librariesHypothesis
+    }
+}
+
+/// Mentor reflection scaffolded during the Phase 3 historical context
+/// cards view (`AppFeature/Engagement/HistoricalContextCardsView`). The four
+/// cases align 1:1 with `Models/HistoricalContextFigure` (pasteur / koch /
+/// salk / marshall).
+///
+/// Per CQ CONTENT_STYLE_GUIDE.md § 4.5 anti-credentialism gate + ADR-016:
+/// figures are framed as PATIENT OBSERVERS taking small careful steps —
+/// never hero-myth, never mortality-anxiety, never warfare lexicon. The
+/// pedagogy register foregrounds the kid scientist way of being (long
+/// noticing + careful experiment) so kids see themselves in the work.
+public nonisolated enum HistoricalContextScenario: String, Codable, Sendable, CaseIterable {
+    /// Pairs with `HistoricalContextFigure.pasteur` — patient experimental
+    /// notebook register, NOT the rabid-dog drama. Bridges to labsmith via
+    /// `crossPortfolioBridges`.
+    case pasteur
+    /// Pairs with `HistoricalContextFigure.koch` — pattern-noticing
+    /// methodology spine, NOT mortality-counting of TB / cholera.
+    case koch
+    /// Pairs with `HistoricalContextFigure.salk` — community made polio
+    /// rare through care; public-health wonder, never panic-recall.
+    case salk
+    /// Pairs with `HistoricalContextFigure.marshall` — long noticing +
+    /// small careful experiments overturned consensus; bridges to the
+    /// Phase 2 Pylo cast member + curiosityquest kid-scientist register.
+    case marshall
+}
+
+/// Mentor reflection surfaced during the Phase 3 historical context cards
+/// view. Pairs each canonical figure with a reflection the kid can carry
+/// forward.
+///
+/// Property order matters per `.claude/rules/foundationmodels.md` — the
+/// LLM writes `noticing` first so the testable `kidScientistTakeaway` can
+/// reference the same patient-observation language without re-deriving it.
+///
+/// Trauma-informed register (per `Docs/TECHNICAL_DESIGN.md` + ADR-016 +
+/// CQ CONTENT_STYLE_GUIDE.md § 4.5):
+/// - Figures framed as PATIENT OBSERVERS, never as hero-myth.
+/// - Anti-credentialism: the kid can do this kind of work too.
+/// - No mortality framing on disease lexicon (Koch's TB, Salk's polio,
+///   Marshall's stomach-ulcer) — the work surfaces as pattern noticing.
+/// - No warfare / battle / weapon lexicon.
+///
+/// Authored fallback content (`VeeMentor.fallbackHistoricalContextReflection`)
+/// is always available so the mentor surfaces calmly even when
+/// FoundationModels is unavailable or paused.
+@Generable
+public struct HistoricalContextReflection: Codable, Sendable, Equatable {
+    @Guide(description: "Open-ended question naming what the figure noticed across long careful observation (never hero-myth, never mortality framing). Age 9-14 register, hedging language only.")
+    public let noticing: String
+    @Guide(description: "A kid-scientist takeaway the kid can carry into their own observation today, framed as small careful steps. Anti-credentialism: the kid can do this kind of work too.")
+    public let kidScientistTakeaway: String
+
+    public init(noticing: String, kidScientistTakeaway: String) {
+        self.noticing = noticing
+        self.kidScientistTakeaway = kidScientistTakeaway
+    }
+}
+
 /// Mentor reaction surfaced during the Phase 3 disease-story arc surfaces.
 ///
 /// Property order matters per `.claude/rules/foundationmodels.md` — the
