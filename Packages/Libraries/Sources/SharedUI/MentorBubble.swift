@@ -1,4 +1,5 @@
 import SwiftUI
+import Models
 
 /// Cilia mentor speech bubble. Surfaces static catchphrases + curriculum
 /// fact cards from `AIMentor.VeeMentor`. Real FoundationModels-driven
@@ -8,27 +9,62 @@ import SwiftUI
 /// `.thinMaterial` for a solid neutral fill. The app-level
 /// `forceReduceTransparency` toggle layers on top of the system env in
 /// `AppRootView`; the bubble itself only needs to read the resolved env.
+///
+/// **Featured-microbe turn-prefix** (optional, post PR #200 portrait seam):
+/// when `featuredMicrobe` is non-nil, the bubble surfaces a compact
+/// `MicrobePortraitView` to the left of the speech-bubble glyph + an
+/// "About \(displayName)" caption under the mentor name. The default
+/// `featuredMicrobe == nil` matches every existing call site so no
+/// caller migration is required. The seam is the consumer-side hook
+/// the future cast-voicing UI (DN-S Phase 1 Move D) plugs into.
 public struct MentorBubble: View {
     public let mentorName: String
     public let message: String
+    public let featuredMicrobe: MicrobeCharacter?
+    public let featuredMicrobeIsDiscovered: Bool
+    public let portraitBundle: Bundle
 
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
-    public init(mentorName: String = "Cilia", message: String) {
+    public init(
+        mentorName: String = "Cilia",
+        message: String,
+        featuredMicrobe: MicrobeCharacter? = nil,
+        featuredMicrobeIsDiscovered: Bool = true,
+        portraitBundle: Bundle = .main
+    ) {
         self.mentorName = mentorName
         self.message = message
+        self.featuredMicrobe = featuredMicrobe
+        self.featuredMicrobeIsDiscovered = featuredMicrobeIsDiscovered
+        self.portraitBundle = portraitBundle
     }
 
     public var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "bubble.left.fill")
-                .font(.title3)
-                .foregroundStyle(.tint)
+            if let microbe = featuredMicrobe {
+                MicrobePortraitView(
+                    microbe: microbe,
+                    isDiscovered: featuredMicrobeIsDiscovered,
+                    bundle: portraitBundle
+                )
+                .frame(width: 40, height: 40)
                 .padding(.top, 2)
+            } else {
+                Image(systemName: "bubble.left.fill")
+                    .font(.title3)
+                    .foregroundStyle(.tint)
+                    .padding(.top, 2)
+            }
             VStack(alignment: .leading, spacing: 4) {
                 Text(verbatim: mentorName)
                     .font(.caption.weight(.bold))
                     .foregroundStyle(.secondary)
+                if let microbe = featuredMicrobe {
+                    Text("About \(microbe.displayName)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
                 Text(message)
                     .font(.callout)
                     .multilineTextAlignment(.leading)
@@ -39,7 +75,14 @@ public struct MentorBubble: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(bubbleBackground)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(mentorName) says: \(message)")
+        .accessibilityLabel(accessibilityLabelText)
+    }
+
+    private var accessibilityLabelText: String {
+        if let microbe = featuredMicrobe {
+            return "\(mentorName) about \(microbe.displayName): \(message)"
+        }
+        return "\(mentorName) says: \(message)"
     }
 
     @ViewBuilder
