@@ -94,3 +94,58 @@ public struct AdaptiveImmuneHypothesis: Codable, Sendable, Equatable {
         self.memoryHypothesis = memoryHypothesis
     }
 }
+
+/// Public-health scenarios the mentor scaffolds across the Phase 3
+/// disease-story arcs (`Models/DiseaseStoryArc`). The four cases align
+/// 1:1 with the canonical arcs scaffolded in PR #141.
+///
+/// Per CLAUDE.md trauma-informed posture + `.claude/rules/trauma-informed-content.md`:
+/// the public-health pedagogy applies the SAMHSA register — handwashing
+/// is care (not moral test); vaccines are a library primer (not warfare);
+/// antibiotic recovery is patience (not failure); community response is
+/// helpers (not panic).
+public nonisolated enum PublicHealthScenario: String, Codable, Sendable, CaseIterable {
+    /// Handwashing surface — gentle care for the microbiome neighborhood,
+    /// NOT a moral test or shame surface for missed washes.
+    case handwashing
+    /// Vaccine-priming surface — the B-cell library learning a new shape
+    /// before it meets the live antigen, NEVER warfare framing.
+    case vaccinePriming
+    /// Antibiotic stewardship surface — the microbiome recovers slowly
+    /// after antibiotic care. Slow IS wise; recovery IS the lesson.
+    case antibioticStewardship
+    /// Outbreak recovery surface — community helpers framing per
+    /// SAMHSA TIP 57 (validate-then-inform / hold-space / refer-up).
+    /// Never panic / crisis / threat framing.
+    case outbreakRecovery
+}
+
+/// Mentor reaction surfaced during the Phase 3 disease-story arc surfaces.
+///
+/// Property order matters per `.claude/rules/foundationmodels.md` — the
+/// LLM writes `observation` first so the testable `healthHypothesis` can
+/// reference the same public-health language without re-deriving it.
+///
+/// Trauma-informed register (per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed
+/// Design Posture + ADR-016 SAMHSA TIP 57 framing):
+/// - Handwashing framed as CARE (not moral test, not shame).
+/// - Vaccines framed as the body's LIBRARY learning a new shape (not warfare).
+/// - Antibiotic recovery framed as PATIENCE and slow rebuilding (not failure).
+/// - Outbreak recovery framed as COMMUNITY HELPING each other (not panic /
+///   threat / crisis).
+///
+/// Authored fallback content (`VeeMentor.fallbackPublicHealthHypothesis`)
+/// is always available so the mentor surfaces calmly even when
+/// FoundationModels is unavailable or paused.
+@Generable
+public struct PublicHealthHypothesis: Codable, Sendable, Equatable {
+    @Guide(description: "Open-ended observation framed around care + curiosity + community (never warfare or threat). Age 9-14 register, hedging language only.")
+    public let observation: String
+    @Guide(description: "One testable prediction about how the microbiome or community responds, framed as ecology + recovery (never blame / shame / panic). Trauma-safe per SAMHSA TIP 57.")
+    public let healthHypothesis: String
+
+    public init(observation: String, healthHypothesis: String) {
+        self.observation = observation
+        self.healthHypothesis = healthHypothesis
+    }
+}
