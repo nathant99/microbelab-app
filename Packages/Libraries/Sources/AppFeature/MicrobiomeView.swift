@@ -27,6 +27,7 @@ public struct MicrobiomeView: View {
     @State private var showingGlobalTour = false
     @State private var showingSeasonalMicrobiome = false
     @State private var showingDiseaseStoryArcs = false
+    @State private var showingVaccineExplainer = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -80,6 +81,12 @@ public struct MicrobiomeView: View {
     /// Parental consent service — threaded through so `DiseaseStoryArcView`
     /// can compute the parent-opt-in branch of `presentation(for:gateOpen:parentConsented:)`.
     private let consent: ParentalConsentService?
+    /// Phase 3 vaccine mini-explainer orchestrator. When non-nil, surfaces the
+    /// vaccine-explainer toolbar item; the consumer view (`VaccineExplainerView`)
+    /// renders the canonical 4-beat catalog with per-beat `StepPresentation`
+    /// surfaces. Shares the `disease-story-immune` gate + `diseaseStoryArcs`
+    /// consent kind with the disease-story arcs per ADR-016.
+    private let vaccineExplainer: VaccineExplainerService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -96,7 +103,8 @@ public struct MicrobiomeView: View {
         progression: ProgressionService? = nil,
         seasonalEvents: SeasonalEventService? = nil,
         diseaseStory: DiseaseStoryService? = nil,
-        consent: ParentalConsentService? = nil
+        consent: ParentalConsentService? = nil,
+        vaccineExplainer: VaccineExplainerService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -117,6 +125,7 @@ public struct MicrobiomeView: View {
         self.seasonalEvents = seasonalEvents
         self.diseaseStory = diseaseStory
         self.consent = consent
+        self.vaccineExplainer = vaccineExplainer
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -216,6 +225,16 @@ public struct MicrobiomeView: View {
                         .accessibilityHint("Open the disease-story arcs menu — stories unlock as you play")
                     }
                 }
+                if vaccineExplainer != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingVaccineExplainer = true
+                        } label: {
+                            Label("Vaccine explainer", systemImage: "syringe.fill")
+                        }
+                        .accessibilityHint("Open the vaccine explainer — the body's library practicing a new shape ahead of meeting it live")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -294,6 +313,15 @@ public struct MicrobiomeView: View {
                 if let diseaseStory {
                     DiseaseStoryArcView(
                         diseaseStory: diseaseStory,
+                        progression: progression,
+                        consent: consent
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingVaccineExplainer) {
+                if let vaccineExplainer {
+                    VaccineExplainerView(
+                        vaccineExplainer: vaccineExplainer,
                         progression: progression,
                         consent: consent
                     )
