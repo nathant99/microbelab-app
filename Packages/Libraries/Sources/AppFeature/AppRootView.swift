@@ -4,6 +4,7 @@ import Services
 import SharedUI
 import GameEngine
 import AIMentor
+import ForgeAI
 import ForgeCelebration
 import ForgeUI
 
@@ -133,6 +134,14 @@ public struct AppRootView: View {
     // per ADR-016 — `.readyToInvite` rows show "Coming soon" until the
     // reviewer pathway lands signed-off body copy.
     @State private var phaseBoundaryExplainer = PhaseBoundaryExplainerService()
+    // DN-S AI-mentor voicing seam. Wires `ForgeAI.CastDialog` actor + 6
+    // `MicrobeCastVoiceProfiles` ONLY when the `cast_voicing` experiment
+    // (PR #173) returns `.enabled`. When `nil`, `VeeMentor.voicedRecallCue`
+    // falls back to the canonical static `recallCue(...)` so the default
+    // app behavior is unchanged. Closes
+    // `Docs/HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md` step 4 — the
+    // production-wiring half of the DN-S Integration Phase 1D rollout.
+    @State private var castDialog: CastDialog?
     // Local weekly-summary notification coordinator. Closes the
     // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
     // Opt-in by default per FTC 2026; the SettingsView toggle is gated
@@ -324,6 +333,7 @@ public struct AppRootView: View {
             evaluateWelcomeBack()
             evaluateStreakRescue()
             loadCatalog()
+            await wireCastVoicingIfEnabled()
             lastActive.recordSessionStart()
             // Increment AFTER welcome-back evaluation so the days-away
             // computation reads the prior timestamp, not the fresh one.
@@ -572,8 +582,50 @@ public struct AppRootView: View {
         }
     }
 
+    /// DN-S AI-mentor voicing wiring. Closes
+    /// `Docs/HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md` step 4: when
+    /// the `cast_voicing` experiment (PR #173) returns `.enabled` for this
+    /// install, build the `ForgeAI.CastDialog` actor and register the 6
+    /// canonical MicrobeLab cast profiles. Default behavior is **no wiring**
+    /// — the experiment ships 100% control / 0% enabled until the focused
+    /// follow-up round flips the variant weight.
+    ///
+    /// **Why so minimal**: per the handoff "Implementation step 4", the
+    /// production-wiring half lands as a feature-flag-gated seam so the
+    /// canonical scaffold can mature without touching the default app
+    /// behavior. The follow-up round bumps the variant weight + adds an
+    /// in-app debug toggle for TestFlight.
+    ///
+    /// **Trauma-informed posture**: every profile ships `reviewerGated: false`
+    /// per the handoff (`trauma-gating: NONE`); registration cannot surface
+    /// prose that hasn't been authored as a catchphrase + the LM output
+    /// moderation gate inside CastDialog enforces the per-trigger length +
+    /// self-audit-confidence floor.
+    private func wireCastVoicingIfEnabled() async {
+        guard castDialog == nil else { return }
+        // The experiment seed is per-install-stable. ExperimentsService's
+        // SHA256 bucketing means the same kid sees the same variant across
+        // launches without persisting; the seed only needs to be the same
+        // string each launch.
+        let seedString = "microbelab-cast-voicing"
+        let experiments = ExperimentsService(seed: seedString)
+        guard experiments.isEnabled(ExperimentsService.castVoicingID) else {
+            DebugLog.lifecycle("AppRootView — cast_voicing experiment OFF; skipping CastDialog wiring")
+            return
+        }
+        let dialog = CastDialog()
+        let registry = CastVoiceRegistry()
+        do {
+            let registeredCount = try await registry.register(into: dialog)
+            castDialog = dialog
+            DebugLog.lifecycle("AppRootView — cast_voicing ON; registered \(registeredCount) cast profile(s)")
+        } catch {
+            DebugLog.error("AppRootView — CastDialog registration failed", error: error)
+        }
+    }
+
     private func tabShell(catalog: MicrobeCatalogService) -> some View {
-        let mentor = VeeMentor(microbes: catalog.microbes)
+        let mentor = VeeMentor(microbes: catalog.microbes, castDialog: castDialog)
         let simulator = MicrobiomeSimulator(microbes: catalog.microbes)
         // Progressive disclosure: hide Microbiome / Progress / Profile until
         // the kid has launched enough sessions. Reduces day-1 decision

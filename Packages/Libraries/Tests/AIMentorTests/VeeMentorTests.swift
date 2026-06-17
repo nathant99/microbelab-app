@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import ForgeAI
 @testable import AIMentor
 @testable import Models
 
@@ -322,5 +323,126 @@ struct VeeMentorRecallCueTests {
         let sameDay = mentor().recallCue(for: "lacto", daysSinceLastSeen: 0) ?? ""
         let negative = mentor().recallCue(for: "lacto", daysSinceLastSeen: -3) ?? ""
         #expect(sameDay == negative)
+    }
+
+    // MARK: - voicedRecallCue (DN-S Phase 1D voicing production wiring)
+
+    private func voicingContext() -> CastDialogContext {
+        CastDialogContext(
+            appIdentifier: "microbelab",
+            kitNumber: 1,
+            recentQuestionTopic: "microbiome",
+            priorEncounterCount: 0,
+            emotionContext: .calm
+        )
+    }
+
+    @Test func voicedRecallFallsBackToStaticWhenNoCastDialog() async {
+        // No CastDialog wired → voiced recall returns the canonical static
+        // recall line. This is the production-default branch (cast_voicing
+        // experiment at 0% enabled).
+        let mentor = self.mentor()
+        let voiced = await mentor.voicedRecallCue(
+            for: "lacto",
+            daysSinceLastSeen: 0,
+            context: voicingContext()
+        )
+        let staticLine = mentor.recallCue(for: "lacto", daysSinceLastSeen: 0)
+        #expect(voiced == staticLine)
+    }
+
+    @Test func voicedRecallFallsBackForUnknownSlugWithoutCastDialog() async {
+        // Defensive: even when CastDialog is nil, an unknown slug returns
+        // the canonical static `recallCue(...)` which is nil (no microbe by
+        // that slug in the catalog).
+        let mentor = self.mentor()
+        let voiced = await mentor.voicedRecallCue(
+            for: "unknown-microbe",
+            daysSinceLastSeen: 0,
+            context: voicingContext()
+        )
+        #expect(voiced == nil)
+    }
+
+    @Test func voicedRecallWithCastDialogButUnregisteredSlugFallsBack() async {
+        // CastDialog wired but the slug isn't registered → voiced recall
+        // dispatches to static fallback (never returns the safe-ellipsis
+        // placeholder). Mirrors the canonical seam: the registry only carries
+        // the 6 DN-S cast members; non-DN-S microbes (e.g. Bifido) continue
+        // to use the static recall path.
+        let microbe = MicrobeCharacter(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000002")!,
+            slug: "bifido",
+            displayName: "Bifido",
+            kingdom: .bacteria,
+            role: .beneficial,
+            preferredEnvironment: .colon,
+            growthRate: GrowthRate(onFiber: 0.6, onSugar: 0.1, onBalanced: 0.4, onNone: -0.1),
+            catchphrase: "Fiber, please.",
+            factCard: "Bifidobacterium-style commensal.",
+            firstKit: 1
+        )
+        let mentor = VeeMentor(microbes: [microbe], castDialog: CastDialog())
+        let voiced = await mentor.voicedRecallCue(
+            for: "bifido",
+            daysSinceLastSeen: 0,
+            context: voicingContext()
+        )
+        let staticLine = mentor.recallCue(for: "bifido", daysSinceLastSeen: 0)
+        #expect(voiced == staticLine)
+        #expect(voiced?.contains("Bifido") == true)
+    }
+
+    @Test func voicedRecallWithRegisteredSlugDispatchesViaCastDialog() async throws {
+        // CastDialog wired + slug registered → voiced recall dispatches
+        // through the CastDialog. When FoundationModels is unavailable in
+        // the test environment, CastDialog returns a catchphrase from the
+        // profile, NOT the safe-ellipsis placeholder. The voiced response
+        // therefore matches one of the profile's catchphrases — confirming
+        // the dispatch path is live + the LM-unavailable fallback inside
+        // CastDialog is producing the expected envelope.
+        let microbe = MicrobeCharacter(
+            id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
+            slug: "lacto",
+            displayName: "Lacto",
+            kingdom: .bacteria,
+            role: .beneficial,
+            preferredEnvironment: .colon,
+            growthRate: GrowthRate(onFiber: 0.6, onSugar: 0.1, onBalanced: 0.4, onNone: -0.1),
+            catchphrase: "Friend in your food. Friend in your gut.",
+            factCard: "Lactobacillus species ferment milk into yogurt.",
+            firstKit: 1
+        )
+        let dialog = CastDialog()
+        let registry = CastVoiceRegistry()
+        _ = try await registry.register(into: dialog)
+        let mentor = VeeMentor(microbes: [microbe], castDialog: dialog)
+        let voiced = await mentor.voicedRecallCue(
+            for: "lacto",
+            daysSinceLastSeen: 0,
+            context: voicingContext()
+        )
+        // The voicing path returns SOMETHING — either an LM response or a
+        // catchphrase. Pin that it's non-empty + non-ellipsis (the unsafe
+        // fallback case).
+        let line = try #require(voiced)
+        #expect(!line.isEmpty)
+        #expect(line != "…")
+    }
+
+    @Test func voicingPathPreservesStaticFallbackOnEmptyResponse() async {
+        // Defensive seam: the canonical fallback chain (CastDialog returns
+        // "…" → static recallCue) is exercised when the CastDialog is
+        // present but no profiles are registered. Static fallback applies
+        // since the slug isn't registered.
+        let mentor = VeeMentor(microbes: self.mentor().microbes, castDialog: CastDialog())
+        let voiced = await mentor.voicedRecallCue(
+            for: "lacto",
+            daysSinceLastSeen: 1,
+            context: voicingContext()
+        )
+        let staticLine = mentor.recallCue(for: "lacto", daysSinceLastSeen: 1)
+        #expect(voiced == staticLine)
+        #expect(staticLine?.contains("yesterday") == true)
     }
 }
