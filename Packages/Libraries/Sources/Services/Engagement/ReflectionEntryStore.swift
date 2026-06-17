@@ -33,6 +33,19 @@ import Observation
 public final class ReflectionEntryStore {
     public private(set) var entries: [ReflectionEntry] = []
 
+    /// Pending crisis-resource surface presentation derived from the most
+    /// recent appended entry. Nil when the entry's text screened `.calm` OR
+    /// the consumer has already dismissed the previous presentation.
+    ///
+    /// Consumers observe + clear via `acknowledgeDespairPresentation()` so
+    /// a single elevated signal doesn't re-fire across re-renders.
+    ///
+    /// Closes Phase 3 FEATURE_PLAN line 161 (crisis-resource surfacing
+    /// if despair signals detected). Defense-in-depth alongside the
+    /// always-on Settings surface — the reactive layer surfaces support
+    /// the moment the kid authors the signal, never an extra hop.
+    public private(set) var pendingDespairPresentation: DespairSignalSurface.Presentation?
+
     /// Capacity ceiling per portfolio convention for UserDefaults-backed
     /// engagement stores (`RetentionMetricsStore` ring buffer cap 32 +
     /// `MentorRecallStore` cap 5 — MicrobeLab uses a 50 cap here because
@@ -44,6 +57,7 @@ public final class ReflectionEntryStore {
     private let key: String
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let despairDetector = DespairSignalDetector()
 
     public init(
         defaults: UserDefaults = .standard,
@@ -55,6 +69,12 @@ public final class ReflectionEntryStore {
     }
 
     /// Append a fresh entry. FIFO-evicts the oldest if at capacity.
+    ///
+    /// Side effect: if the entry's textual content matches a despair
+    /// signal, sets `pendingDespairPresentation` so the view layer can
+    /// surface the crisis-resource card. The text itself is never
+    /// persisted past the detector call (per
+    /// `.claude/rules/debug-logging.md` § Privacy by default).
     public func append(_ entry: ReflectionEntry) {
         var next = entries
         next.append(entry)
@@ -63,6 +83,24 @@ public final class ReflectionEntryStore {
         }
         entries = next
         flush()
+
+        // Screen the entry's text for despair signals. Only `.text`
+        // modality carries author text here; `.emoji` carries a glyph
+        // codepoint that's not despair-signal-bearing, `.skip` carries
+        // no payload, `.voice` / `.drawing` carry an asset URL only.
+        if entry.modality == .text, let text = entry.textValue, !text.isEmpty {
+            let severity = despairDetector.detect(in: text)
+            if let presentation = DespairSignalSurface.presentation(for: severity) {
+                pendingDespairPresentation = presentation
+            }
+        }
+    }
+
+    /// Clear the pending despair surface so the kid's next reflection
+    /// starts fresh. Consumer calls this when the kid dismisses the
+    /// crisis-resource card.
+    public func acknowledgeDespairPresentation() {
+        pendingDespairPresentation = nil
     }
 
     /// Return entries for the given prompt ID — useful when surfacing
