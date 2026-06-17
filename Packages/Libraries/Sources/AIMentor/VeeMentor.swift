@@ -149,6 +149,37 @@ public final class VeeMentor {
         }
     }
 
+    /// Curriculum-safe static `PublicHealthHypothesis` for the named
+    /// scenario — always available, never blocks. Trauma-safe register
+    /// per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design Posture +
+    /// ADR-016 SAMHSA TIP 57 framing: handwashing as care, vaccines as
+    /// library priming, antibiotic recovery as patience, outbreak as
+    /// community helpers.
+    public func fallbackPublicHealthHypothesis(for scenario: PublicHealthScenario) -> PublicHealthHypothesis {
+        switch scenario {
+        case .handwashing:
+            return PublicHealthHypothesis(
+                observation: "What happens to the skin neighborhood after a gentle wash?",
+                healthHypothesis: "Often the skin community settles back into a quiet balance — washing is care, not a moral test."
+            )
+        case .vaccinePriming:
+            return PublicHealthHypothesis(
+                observation: "What might the B-cell library do with a brand-new shape it has never seen?",
+                healthHypothesis: "Usually the body practices recognizing the shape ahead of time — that's how a vaccine helps the library get ready."
+            )
+        case .antibioticStewardship:
+            return PublicHealthHypothesis(
+                observation: "After antibiotic care, what do you notice as the microbiome takes time to rebuild?",
+                healthHypothesis: "Often the neighborhood comes back slowly, and slow IS wise — patience lets the gentle helpers return."
+            )
+        case .outbreakRecovery:
+            return PublicHealthHypothesis(
+                observation: "When the community shifts together, what do you notice the helpers doing?",
+                healthHypothesis: "Usually people look after each other — sharing care and quiet attention is how a community holds steady."
+            )
+        }
+    }
+
     /// Curriculum-safe static `EcologyHypothesis` — always available, never blocks.
     public func fallbackEcologyHypothesis(for mode: FeedingMode) -> EcologyHypothesis {
         switch mode {
@@ -249,6 +280,49 @@ public final class VeeMentor {
             return response.content
         } catch {
             return fallbackAdaptiveImmuneHypothesis(for: scenario)
+        }
+    }
+
+    /// Generate a Socratic `PublicHealthHypothesis` for the named scenario.
+    /// Falls back to the static authored content when the model is
+    /// unavailable. Per `Docs/TECHNICAL_DESIGN.md` § Trauma-Informed Design
+    /// Posture + ADR-016 SAMHSA TIP 57 framing, the prompt explicitly forbids
+    /// warfare + shame + threat framing — public-health pedagogy surfaces
+    /// as care + library + patience + community.
+    public func publicHealthHypothesis(for scenario: PublicHealthScenario) async -> PublicHealthHypothesis {
+        guard isAvailable, let session = makeSession() else {
+            return fallbackPublicHealthHypothesis(for: scenario)
+        }
+        let registerHint: String
+        switch scenario {
+        case .handwashing:
+            registerHint = "handwashing is CARE for the microbiome neighborhood, not a moral test"
+        case .vaccinePriming:
+            registerHint = "vaccines are the body's LIBRARY learning a new shape ahead of time"
+        case .antibioticStewardship:
+            registerHint = "antibiotic recovery is PATIENCE — the microbiome rebuilds slowly and slow IS wise"
+        case .outbreakRecovery:
+            registerHint = "outbreak recovery is COMMUNITY — helpers share care and attention"
+        }
+        do {
+            let response = try await session.respond(
+                to: """
+                The kid just hit the \(scenario.rawValue) beat in a Phase 3 \
+                disease-story arc. Frame: \(registerHint). Compose an open- \
+                ended observation question framed around CARE + CURIOSITY + \
+                COMMUNITY (never warfare — no "fight" / "attack" / "destroy" / \
+                "kill" / "war" / "enemy" / "battle" / "weapon"; never shame — \
+                no "should" / "must" / "failure" / "behind"; never threat — \
+                no "scary" / "panic" / "germ" / "horror" / "danger"), and \
+                one testable prediction framed as ecology + recovery. Age \
+                9-14 register, hedging language only ("often", "usually", \
+                "many").
+                """,
+                generating: PublicHealthHypothesis.self
+            )
+            return response.content
+        } catch {
+            return fallbackPublicHealthHypothesis(for: scenario)
         }
     }
 

@@ -151,6 +151,89 @@ struct VeeMentorTests {
         #expect(AdaptiveImmuneScenario.allCases.count == 3)
     }
 
+    @Test func fallbackPublicHealthHypothesisCoversAllScenarios() {
+        let mentor = fixture()
+        for scenario in PublicHealthScenario.allCases {
+            let hyp = mentor.fallbackPublicHealthHypothesis(for: scenario)
+            #expect(!hyp.observation.isEmpty)
+            #expect(!hyp.healthHypothesis.isEmpty)
+        }
+    }
+
+    @Test func fallbackPublicHealthHypothesisAvoidsWarfareAndShameAndThreatFraming() {
+        // Per ADR-016 SAMHSA TIP 57 framing, Phase 3 mentor output must
+        // never use:
+        // - warfare lexicon (fight / attack / destroy / kill / war / enemy /
+        //   battle / weapon / soldier / warrior),
+        // - shame lexicon (failure / should / must / behind / almost / fell
+        //   short),
+        // - threat lexicon (scary / germ / panic / horror / danger).
+        let stoplist = [
+            // Warfare
+            "fight", "attack", "destroy", "kill", " war",
+            "enemy", "battle", "weapon", "soldier", "warrior",
+            // Shame
+            "failure", "should ", "must ", "behind", "almost", "fell short",
+            // Threat
+            "scary", "germ", "panic", "horror", "danger",
+        ]
+        let mentor = fixture()
+        for scenario in PublicHealthScenario.allCases {
+            let hyp = mentor.fallbackPublicHealthHypothesis(for: scenario)
+            let combined = (hyp.observation + " " + hyp.healthHypothesis).lowercased()
+            for word in stoplist {
+                #expect(!combined.contains(word),
+                        "\(scenario) fallback must not surface '\(word.trimmingCharacters(in: .whitespaces))' (trauma-safe register).")
+            }
+        }
+    }
+
+    @Test func fallbackPublicHealthHypothesisUsesHedgingLanguage() {
+        // Per .claude/rules/foundationmodels.md + .claude/rules/ai-content.md:
+        // public-health fallback content uses hedging language ("often",
+        // "usually", "many", "most") — never absolute claims.
+        let hedges = ["often", "usually", "many", "most", "tends", "may"]
+        let mentor = fixture()
+        for scenario in PublicHealthScenario.allCases {
+            let hyp = mentor.fallbackPublicHealthHypothesis(for: scenario)
+            let body = hyp.healthHypothesis.lowercased()
+            let hasHedge = hedges.contains { body.contains($0) }
+            #expect(hasHedge,
+                    "\(scenario) hypothesis must use hedging language: \(hyp.healthHypothesis)")
+        }
+    }
+
+    @Test func fallbackPublicHealthHypothesisUsesCareCommunityRegister() {
+        // Per Docs/TECHNICAL_DESIGN.md § Trauma-Informed Design Posture,
+        // public-health pedagogy surfaces care + library + patience +
+        // community framing across the 4 scenarios.
+        let mentor = fixture()
+        let registerHints: [PublicHealthScenario: String] = [
+            .handwashing: "care",
+            .vaccinePriming: "library",
+            .antibioticStewardship: "patience",
+            .outbreakRecovery: "community",
+        ]
+        for (scenario, hint) in registerHints {
+            let hyp = mentor.fallbackPublicHealthHypothesis(for: scenario)
+            let combined = (hyp.observation + " " + hyp.healthHypothesis).lowercased()
+            #expect(combined.contains(hint),
+                    "\(scenario) fallback should surface the '\(hint)' register.")
+        }
+    }
+
+    @Test func publicHealthScenarioRawValuesAreStable() {
+        // Raw values are load-bearing because the async
+        // `publicHealthHypothesis` method interpolates them into the LLM
+        // prompt. Renaming a case would silently break the prompt's
+        // pedagogy framing.
+        #expect(PublicHealthScenario.handwashing.rawValue == "handwashing")
+        #expect(PublicHealthScenario.vaccinePriming.rawValue == "vaccinePriming")
+        #expect(PublicHealthScenario.antibioticStewardship.rawValue == "antibioticStewardship")
+        #expect(PublicHealthScenario.outbreakRecovery.rawValue == "outbreakRecovery")
+        #expect(PublicHealthScenario.allCases.count == 4)
+    }
+
     @Test func voiceLineFallsBackToCatchphraseWhenNoLinesAuthored() {
         // The fixture above doesn't set voiceLines — mentor must fall back
         // to the catchphrase.
