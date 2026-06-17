@@ -96,6 +96,27 @@ public struct MicrobiomeView: View {
     /// arcs per ADR-016 — historical context cards build on the same
     /// progression boundary as the immune arcs they curricularly accompany.
     private let historicalContext: HistoricalContextService?
+    /// Phase 3 / Phase 4 deep-link routing surface. When non-nil, the view
+    /// observes `requestedSubSurface` and flips the matching
+    /// `.navigationDestination(isPresented:)` flag so App Intents (Siri /
+    /// Spotlight / Shortcuts) can land the kid (or parent setting up a
+    /// Shortcut) directly on a Phase 3 / Phase 4 inner surface in one step.
+    /// `AppRootView` already handles the top-level tab switch via
+    /// `requestedTab`; this view consumes the sub-surface field for the
+    /// canonical 4 surfaces that live behind the Microbiome tab. The
+    /// observation also clears the sub-surface request via
+    /// `clearSubSurfaceRequest()` after the flag flip so re-firing the
+    /// same intent later (after the kid manually navigated away) re-routes
+    /// cleanly.
+    ///
+    /// Trauma-informed posture: this view consumes the routing request,
+    /// but the per-surface gate (`DiseaseStoryService` / `VaccineExplainerService`
+    /// / etc.) still owns the consent + progression-gated body rendering.
+    /// A Shortcut wired for `.diseaseStories` lands on the menu chrome but
+    /// the per-arc body stays `.gatedBehindProgression` or
+    /// `.gatedBehindConsent` until the canonical gates clear — never a
+    /// backdoor past the gates.
+    private let navigationCoordinator: NavigationCoordinator?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -114,7 +135,8 @@ public struct MicrobiomeView: View {
         diseaseStory: DiseaseStoryService? = nil,
         consent: ParentalConsentService? = nil,
         vaccineExplainer: VaccineExplainerService? = nil,
-        historicalContext: HistoricalContextService? = nil
+        historicalContext: HistoricalContextService? = nil,
+        navigationCoordinator: NavigationCoordinator? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -137,6 +159,7 @@ public struct MicrobiomeView: View {
         self.consent = consent
         self.vaccineExplainer = vaccineExplainer
         self.historicalContext = historicalContext
+        self.navigationCoordinator = navigationCoordinator
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -356,6 +379,49 @@ public struct MicrobiomeView: View {
                         consent: consent
                     )
                 }
+            }
+            .onChange(of: navigationCoordinator?.requestedSubSurface) { _, requested in
+                // App Intents → Phase 3 / Phase 4 sub-surface deep-link.
+                // The coordinator surfaces a requested sub-surface (Disease
+                // Stories / Vaccine Explainer / Historical Context / Global
+                // Tour); we apply it by flipping the matching `showing*`
+                // flag IFF the consuming service is non-nil (the per-surface
+                // gate decides whether the body content renders). Then clear
+                // the sub-surface request so the same intent can re-fire
+                // later (after the kid manually navigated away) and re-route
+                // cleanly.
+                guard let target = requested else { return }
+                switch target {
+                case .diseaseStories:
+                    if diseaseStory != nil {
+                        showingDiseaseStoryArcs = true
+                        DebugLog.lifecycle("MicrobiomeView — intent-driven sub-surface push → \(target.rawValue)")
+                    } else {
+                        DebugLog.lifecycle("MicrobiomeView — intent requested sub-surface \(target.rawValue) but service not wired; ignored")
+                    }
+                case .vaccineExplainer:
+                    if vaccineExplainer != nil {
+                        showingVaccineExplainer = true
+                        DebugLog.lifecycle("MicrobiomeView — intent-driven sub-surface push → \(target.rawValue)")
+                    } else {
+                        DebugLog.lifecycle("MicrobiomeView — intent requested sub-surface \(target.rawValue) but service not wired; ignored")
+                    }
+                case .historicalContext:
+                    if historicalContext != nil {
+                        showingHistoricalContext = true
+                        DebugLog.lifecycle("MicrobiomeView — intent-driven sub-surface push → \(target.rawValue)")
+                    } else {
+                        DebugLog.lifecycle("MicrobiomeView — intent requested sub-surface \(target.rawValue) but service not wired; ignored")
+                    }
+                case .globalMicrobiomeTour:
+                    if globalTour != nil {
+                        showingGlobalTour = true
+                        DebugLog.lifecycle("MicrobiomeView — intent-driven sub-surface push → \(target.rawValue)")
+                    } else {
+                        DebugLog.lifecycle("MicrobiomeView — intent requested sub-surface \(target.rawValue) but service not wired; ignored")
+                    }
+                }
+                navigationCoordinator?.clearSubSurfaceRequest()
             }
         }
     }

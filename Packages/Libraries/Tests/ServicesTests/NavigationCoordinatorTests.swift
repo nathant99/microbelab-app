@@ -82,4 +82,74 @@ struct NavigationCoordinatorTests {
         let second = NavigationCoordinator.shared
         #expect(first === second)
     }
+
+    // MARK: - Phase 3 / Phase 4 deep-link sub-surface routing
+
+    @Test("Init defaults requestedSubSurface to nil")
+    func initDefaultsSubSurface() {
+        let coordinator = NavigationCoordinator()
+        #expect(coordinator.requestedSubSurface == nil)
+    }
+
+    @Test("requestSubSurface sets both the sub-surface and the host tab")
+    func requestSubSurfaceImpliesHostTab() {
+        // Per Models/MicrobeLabSubSurface.hostTab: every canonical Phase 3
+        // / Phase 4 sub-surface lives behind the Microbiome tab. The
+        // coordinator MUST set requestedTab = .microbiome AND
+        // requestedSubSurface = surface so AppRootView + MicrobiomeView
+        // both observe the right slot in one update cycle.
+        let coordinator = NavigationCoordinator()
+        coordinator.requestSubSurface(.diseaseStories)
+        #expect(coordinator.requestedSubSurface == .diseaseStories)
+        #expect(coordinator.requestedTab == .microbiome)
+    }
+
+    @Test("All sub-surface cases route to the Microbiome tab")
+    func allSubSurfacesRouteToMicrobiome() {
+        let coordinator = NavigationCoordinator()
+        for surface in MicrobeLabSubSurface.allCases {
+            coordinator.requestSubSurface(surface)
+            #expect(coordinator.requestedSubSurface == surface)
+            #expect(coordinator.requestedTab == surface.hostTab)
+        }
+    }
+
+    @Test("clearSubSurfaceRequest clears only the sub-surface, not the tab")
+    func clearSubSurfaceLeavesTab() {
+        // The two-step clearing is intentional: AppRootView clears the
+        // tab as soon as the tab switch lands, but MicrobiomeView needs
+        // the sub-surface field to survive at least until its own
+        // .onChange observer fires. Clearing one MUST NOT clear the other.
+        let coordinator = NavigationCoordinator()
+        coordinator.requestSubSurface(.vaccineExplainer)
+        coordinator.clearSubSurfaceRequest()
+        #expect(coordinator.requestedSubSurface == nil)
+        #expect(coordinator.requestedTab == .microbiome)
+    }
+
+    @Test("clearRequest clears only the tab, not the sub-surface")
+    func clearTabLeavesSubSurface() {
+        let coordinator = NavigationCoordinator()
+        coordinator.requestSubSurface(.historicalContext)
+        coordinator.clearRequest()
+        #expect(coordinator.requestedTab == nil)
+        #expect(coordinator.requestedSubSurface == .historicalContext)
+    }
+
+    @Test("clearSubSurfaceRequest is idempotent when already nil")
+    func clearSubSurfaceIdempotent() {
+        let coordinator = NavigationCoordinator()
+        coordinator.clearSubSurfaceRequest()
+        coordinator.clearSubSurfaceRequest()
+        #expect(coordinator.requestedSubSurface == nil)
+    }
+
+    @Test("requestSubSurface overwrites a prior sub-surface request")
+    func requestSubSurfaceOverwritesPrior() {
+        let coordinator = NavigationCoordinator()
+        coordinator.requestSubSurface(.diseaseStories)
+        coordinator.requestSubSurface(.globalMicrobiomeTour)
+        #expect(coordinator.requestedSubSurface == .globalMicrobiomeTour)
+        #expect(coordinator.requestedTab == .microbiome)
+    }
 }
