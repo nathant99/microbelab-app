@@ -1,5 +1,6 @@
 import Foundation
 import FoundationModels
+import ForgeAI
 import Models
 
 /// Cilia (formerly Vee) — the Socratic mentor for MicrobeLab.
@@ -29,8 +30,21 @@ public final class VeeMentor {
     private let model = SystemLanguageModel.default
     @ObservationIgnored private var cachedSession: LanguageModelSession?
 
-    public init(microbes: [MicrobeCharacter]) {
+    /// Optional `CastDialog` actor for the DN-S voicing surface. When non-nil,
+    /// `voicedRecallCue(for:daysSinceLastSeen:context:)` dispatches utterances
+    /// through the per-cast voice profile so a kid revisiting an "old friend"
+    /// microbe hears the cast member's authored voice register instead of the
+    /// generic mentor recall line. Wired by `AppRootView` when the
+    /// `cast_voicing` experiment flag (PR #173) is `.enabled`. Stays nil for
+    /// the default control variant + the legacy call sites unaffected.
+    public let castDialog: CastDialog?
+
+    public init(
+        microbes: [MicrobeCharacter],
+        castDialog: CastDialog? = nil
+    ) {
         self.microbes = microbes
+        self.castDialog = castDialog
     }
 
     /// Whether the on-device model is ready to serve generation requests.
@@ -63,6 +77,46 @@ public final class VeeMentor {
         guard !microbe.voiceLines.isEmpty else { return microbe.catchphrase }
         let index = abs(rotation) % microbe.voiceLines.count
         return microbe.voiceLines[index]
+    }
+
+    /// DN-S voiced recall variant. When `castDialog` is non-nil AND the
+    /// microbe's slug is registered against the CastDialog AND CastDialog's
+    /// response isn't the safe-ellipsis fallback (`"…"`), returns the
+    /// cast-voiced utterance. Otherwise returns the canonical static
+    /// `recallCue(for:daysSinceLastSeen:)` so the caller never sees a regression
+    /// when voicing is unavailable, the flag is OFF, or FoundationModels is
+    /// down.
+    ///
+    /// Per `Docs/HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md` step 4:
+    /// the voicing path is opt-in via the `cast_voicing` experiment flag.
+    /// `AppRootView` wires the `CastDialog` instance + registers profiles
+    /// when the flag is `.enabled`; the per-microbe slug-to-profile mapping
+    /// is canonical (`MicrobeCastVoiceProfiles.Slug.all` mirrors
+    /// `MicrobeCharacter.slug` for the 6 DN-S cast members).
+    ///
+    /// **Trauma-informed posture preserved**: the trigger is `.greeting`,
+    /// which CastDialog's prompt scaffold renders as a warm welcome — never
+    /// loss-aversion / "you abandoned us" framing. The output-moderation
+    /// pipeline inside CastDialog additionally guards against warfare /
+    /// shame / threat language regardless of FoundationModels output.
+    public func voicedRecallCue(
+        for slug: String,
+        daysSinceLastSeen: Int,
+        context: CastDialogContext
+    ) async -> String? {
+        let staticFallback = recallCue(for: slug, daysSinceLastSeen: daysSinceLastSeen)
+        guard let castDialog else { return staticFallback }
+        let isRegistered = await castDialog.isRegistered(slug)
+        guard isRegistered else { return staticFallback }
+        let response = await castDialog.respond(
+            as: slug,
+            trigger: .greeting,
+            context: context
+        )
+        if response == "…" || response.isEmpty {
+            return staticFallback
+        }
+        return response
     }
 
     /// Warm callback line referencing a microbe the kid has met before. The
