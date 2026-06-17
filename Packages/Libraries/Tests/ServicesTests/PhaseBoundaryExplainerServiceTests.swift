@@ -36,7 +36,7 @@ struct PhaseBoundaryExplainerServiceTests {
         #expect(gateIDs.contains("global-microbiome-tour"))
     }
 
-    @Test func consentRequirementMatchesADR016() {
+    @Test func consentRequirementMatchesADR016() throws {
         // ADR-016 trauma-gated story-axis: disease-story + historical
         // context require parental consent; global-microbiome tour
         // does not (ecology + adaptation framing).
@@ -49,7 +49,7 @@ struct PhaseBoundaryExplainerServiceTests {
         #expect(!tourNote.requiresConsent)
     }
 
-    @Test func presentationNotReachedWhenGateClosed() {
+    @Test func presentationNotReachedWhenGateClosed() throws {
         let service = PhaseBoundaryExplainerService()
         let record = try #require(service.record(for: .diseaseStoryArcs))
         let result = service.presentation(for: record, gateOpen: false, parentConsented: false)
@@ -59,7 +59,7 @@ struct PhaseBoundaryExplainerServiceTests {
         }
     }
 
-    @Test func presentationAwaitingConsentWhenGateOpenButNoConsent() {
+    @Test func presentationAwaitingConsentWhenGateOpenButNoConsent() throws {
         let service = PhaseBoundaryExplainerService()
         let record = try #require(service.record(for: .diseaseStoryArcs))
         let result = service.presentation(for: record, gateOpen: true, parentConsented: false)
@@ -69,7 +69,7 @@ struct PhaseBoundaryExplainerServiceTests {
         }
     }
 
-    @Test func presentationReadyToInviteWhenGateOpenAndConsentGranted() {
+    @Test func presentationReadyToInviteWhenGateOpenAndConsentGranted() throws {
         let service = PhaseBoundaryExplainerService()
         let record = try #require(service.record(for: .diseaseStoryArcs))
         let result = service.presentation(for: record, gateOpen: true, parentConsented: true)
@@ -79,7 +79,7 @@ struct PhaseBoundaryExplainerServiceTests {
         }
     }
 
-    @Test func presentationReadyToInviteForNonConsentNoteWithoutConsent() {
+    @Test func presentationReadyToInviteForNonConsentNoteWithoutConsent() throws {
         // Global-microbiome tour has requiresConsent = false. Even if the
         // grown-up hasn't granted disease-story consent, the tour boundary
         // surfaces as .readyToInvite once the gate opens.
@@ -92,7 +92,7 @@ struct PhaseBoundaryExplainerServiceTests {
         }
     }
 
-    @Test func acknowledgeCollapsesToAlreadyAccepted() {
+    @Test func acknowledgeCollapsesToAlreadyAccepted() throws {
         let service = PhaseBoundaryExplainerService()
         let record = try #require(service.record(for: .globalMicrobiomeTour))
         service.acknowledge(.globalMicrobiomeTour)
@@ -110,7 +110,7 @@ struct PhaseBoundaryExplainerServiceTests {
         #expect(service.hasAcknowledged(.globalMicrobiomeTour))
     }
 
-    @Test func resetAcknowledgementsRestoresReadyState() {
+    @Test func resetAcknowledgementsRestoresReadyState() throws {
         let service = PhaseBoundaryExplainerService()
         service.acknowledge(.globalMicrobiomeTour)
         service.resetAcknowledgements()

@@ -117,7 +117,7 @@ struct DespairSignalDetectorTests {
         #expect(DespairSignalSurface.presentation(for: .calm) == nil)
     }
 
-    @Test func presentationForDistressSurfacesCanonicalResources() {
+    @Test func presentationForDistressSurfacesCanonicalResources() throws {
         let presentation = DespairSignalSurface.presentation(for: .elevatedDistress)
         let unwrapped = try #require(presentation)
         // Trauma-informed validate-then-inform header copy.
@@ -128,7 +128,7 @@ struct DespairSignalDetectorTests {
         #expect(unwrapped.resources.map(\.id) == ["988", "childhelp", "crisis-text-line"])
     }
 
-    @Test func presentationForCrisisSurfacesCanonicalResources() {
+    @Test func presentationForCrisisSurfacesCanonicalResources() throws {
         let presentation = DespairSignalSurface.presentation(for: .elevatedCrisis)
         let unwrapped = try #require(presentation)
         // Trauma-informed framing: validate the kid's experience FIRST,
@@ -140,7 +140,7 @@ struct DespairSignalDetectorTests {
         #expect(unwrapped.resources.map(\.id) == ["988", "childhelp", "crisis-text-line"])
     }
 
-    @Test func presentationCopyAvoidsAlarmFramingStoplist() {
+    @Test func presentationCopyAvoidsAlarmFramingStoplist() throws {
         // SAMHSA TIP 57 validate-then-inform register — the surfaced copy
         // must never use alarm / shame / failure language. Per
         // .claude/rules/trauma-informed-content.md.
