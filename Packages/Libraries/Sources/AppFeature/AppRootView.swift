@@ -82,6 +82,13 @@ public struct AppRootView: View {
     // QuestionAttempt row through to UserDefaults; the parent-facing
     // report consumes the log via `proficiencies(matching:)`.
     @State private var attemptStore = QuestionAttemptStore()
+    // Per-microbe mastery service wrapping `ForgeMasteryEngine.MasteryGraph`
+    // over the bundled catalog. Lazily instantiated inside `loadCatalog()`
+    // once the catalog is in hand (the service needs the microbe list at
+    // construction); nil before then. Threaded into `MicrobeCodexView` so the
+    // codex surfaces a "Ready to look closer at: X" caption when the FSRS-6
+    // mastery picker has a frontier recommendation.
+    @State private var mastery: MicrobeMasteryService?
     // Phase 2 adaptive-immunity progression counter (innate runs +
     // perfect-innate runs). Drives `AdaptiveImmunityUnlock` so the B-cell
     // antibody-matching surface unlocks on the canonical curve. Persisted
@@ -679,7 +686,8 @@ public struct AppRootView: View {
                     celebration: celebration,
                     sensory: sensory,
                     discovery: discovery,
-                    attemptStore: attemptStore
+                    attemptStore: attemptStore,
+                    mastery: mastery
                 )
             }
             if disclosure.showsMicrobiome {
@@ -791,6 +799,14 @@ public struct AppRootView: View {
             // dedupes by `spotlightID` so repeated launches are no-ops.
             let microbes = service.microbes
             Task { await spotlight.indexCatalog(microbes) }
+            // Per-microbe mastery service — needs the catalog at init so
+            // the underlying ForgeMasteryEngine graph topology can be
+            // frozen. Skip if already built (cold-launch idempotency).
+            if mastery == nil {
+                let service = MicrobeMasteryService(catalog: microbes)
+                mastery = service
+                DebugLog.startup("AppRootView mastery service built: \(service.habitatPrerequisites.count) topics")
+            }
             // Enrich the welcome-back card with a recap of previously-met
             // microbes (best-effort — no-op when overlay isn't surfacing
             // or when discovery store is empty).
