@@ -126,6 +126,17 @@ public struct AppRootView: View {
     // `.authoringPending` / `.gatedBehindProgression` / `.gatedBehindConsent`
     // affordances so the kid path is complete the moment prose ships.
     @State private var diseaseStory = DiseaseStoryService()
+    // Phase 3 vaccine mini-explainer catalog. Ships all 4 canonical pedagogy
+    // beats (`.introduction` / `.antibodyPriming` / `.memoryFormation` /
+    // `.boosterRationale`) as `.placeholder`; the consumer view
+    // (`VaccineExplainerView`) renders per-beat `.ready` / `.authoringPending`
+    // / `.gatedBehindProgression` / `.gatedBehindConsent` affordances so the
+    // kid path is complete the moment prose ships. Shares the
+    // `disease-story-immune` gate + `.diseaseStoryArcs` parental-consent
+    // surface with the disease-story arcs per ADR-016. Threaded through
+    // `MicrobiomeView` next to the disease-story toolbar item so the
+    // adaptive-immunity → vaccine pedagogy bridge stays visually adjacent.
+    @State private var vaccineExplainer = VaccineExplainerService()
     // Phase 3 boundary-explainer catalog (parent-facing). Ships all 3
     // canonical notes (disease-story / historical context / global tour)
     // as `.placeholder`; the consumer view (`PhaseBoundaryExplainerView`)
@@ -676,7 +687,8 @@ public struct AppRootView: View {
                         progression: progression,
                         seasonalEvents: seasonalEvents,
                         diseaseStory: diseaseStory,
-                        consent: consent
+                        consent: consent,
+                        vaccineExplainer: vaccineExplainer
                     )
                 }
             }
