@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4011-A000-000000000011",
+  "slug": "hygiene",
+  "title": "Care for the microbiome neighborhood",
+  "summary": "How gentle hygiene helps the microbiome stay balanced. Trauma-informed register per ADR-016 SAMHSA TIP 57: care + gentleness framing — handwashing as kindness, NEVER moral test or shame surface. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase3Kits().",
+  "kitNumber": 11,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA011-0000-4011-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 3 hygiene kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once SAMHSA TIP 57 register review completes per ADR-016.",
+      "curriculumStandard": "NHES 1"
+    }
+  ]
+}
