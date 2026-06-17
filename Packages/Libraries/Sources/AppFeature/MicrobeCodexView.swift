@@ -22,6 +22,7 @@ public struct MicrobeCodexView: View {
     private let sensory: SensoryPaletteCoordinator?
     private let discovery: DiscoveryStore?
     private let attemptStore: QuestionAttemptStore?
+    private let mastery: MicrobeMasteryService?
     private let chapters: MicrobeChapterStore
     @State private var availableKits: [QuestionKit] = []
     @State private var presentedKit: QuestionKit?
@@ -42,6 +43,7 @@ public struct MicrobeCodexView: View {
         sensory: SensoryPaletteCoordinator? = nil,
         discovery: DiscoveryStore? = nil,
         attemptStore: QuestionAttemptStore? = nil,
+        mastery: MicrobeMasteryService? = nil,
         chapters: MicrobeChapterStore = MicrobeChapterStore()
     ) {
         self.catalog = catalog
@@ -51,6 +53,7 @@ public struct MicrobeCodexView: View {
         self.sensory = sensory
         self.discovery = discovery
         self.attemptStore = attemptStore
+        self.mastery = mastery
         self.chapters = chapters
     }
 
@@ -66,6 +69,21 @@ public struct MicrobeCodexView: View {
     public var body: some View {
         NavigationStack {
             ScrollView {
+                if let recommendedName = recommendedNextDisplayName() {
+                    HStack(spacing: 8) {
+                        Image(systemName: "sparkles")
+                            .font(.caption)
+                            .foregroundStyle(.tint)
+                        Text("Ready to look closer at: \(recommendedName)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(Text("Suggested next microbe: \(recommendedName)"))
+                }
                 LazyVGrid(columns: gridColumns, spacing: 12) {
                     ForEach(catalog.microbes) { microbe in
                         Button {
@@ -166,6 +184,12 @@ public struct MicrobeCodexView: View {
     /// existing no-op behavior.
     private func handleCardTap(microbe: MicrobeCharacter) {
         if isDiscovered(microbe) {
+            // Re-meeting a microbe through the codex counts as a reinforcement
+            // encounter for the mastery model — the FSRS-6 rolling-window
+            // accuracy updates, the recommendation picker re-ranks. The
+            // recordEncounter call no-ops when `mastery` is nil OR the slug
+            // isn't in the graph.
+            mastery?.recordEncounter(slug: microbe.slug, wasCorrect: true)
             if let chapter = chapters.chapter(for: microbe.slug) {
                 presentedChapter = PresentedChapter(
                     chapter: chapter,
@@ -177,12 +201,32 @@ public struct MicrobeCodexView: View {
         }
         guard let discovery else { return }
         discovery.markDiscovered(slug: microbe.slug)
+        // First encounter on this microbe — record against the mastery
+        // surface so the FSRS-6 retention curve begins tracking.
+        mastery?.recordEncounter(slug: microbe.slug, wasCorrect: true)
         // Per-discovery sensory cue — distinct from the mastery moment
         // celebration; this gives the kid a small confirmation that the
         // tap landed without overloading the every-tap surface.
         sensory?.fire(.achievement)
         DebugLog.state("MicrobeCodexView marked discovered: \(microbe.slug); total now \(discovery.discoveredSlugs.count)/\(catalog.microbes.count)")
         evaluateCodexMastery()
+    }
+
+    /// Returns the display name of the recommended-next-to-deepen microbe
+    /// from `MicrobeMasteryService.recommendedNextMicrobe(among:)`. Returns
+    /// `nil` when no recommendation exists (mastery service absent / no
+    /// discoveries yet / no frontier candidates / kid has discovered ≤ 1
+    /// microbe — the caption only surfaces after the kid has built a small
+    /// discovery set so the recommendation feels earned). Trauma-informed
+    /// posture: caption never frames recommendation as deficiency.
+    private func recommendedNextDisplayName() -> String? {
+        guard let mastery, let discovery else { return nil }
+        // Hide the caption until the kid has at least 2 discoveries — the
+        // single-microbe case can only ever surface the microbe they JUST
+        // discovered, which reads as redundant nudging.
+        guard discovery.discoveredSlugs.count >= 2 else { return nil }
+        guard let slug = mastery.recommendedNextMicrobe(among: discovery.discoveredSlugs) else { return nil }
+        return catalog.microbes.first { $0.slug == slug }?.displayName
     }
 
     /// Run the codex mastery check. Fires `.codexMaster` exactly once per
