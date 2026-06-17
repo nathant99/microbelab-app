@@ -5,15 +5,15 @@ last-updated: 2026-06-16
 freshness-horizon: 30 days
 ---
 
-## Twenty-second-pass rule-restatement summary (top-of-doc per the canonical-invariant tier)
+## Twenty-third-pass rule-restatement summary (top-of-doc per the canonical-invariant tier)
 
-> **Rule** (verbatim user-direct, restated TWENTY-TWO times across 2026-06-12 → 2026-06-16; canonical-invariant tier — class-level invariant of the in-IDE agent across the portfolio): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. Instead, file a handoff doc with the user to do Xcode UI work. staging and committing Xcode-managed files is ok."*
+> **Rule** (verbatim user-direct, restated TWENTY-THREE times across 2026-06-12 → 2026-06-16; canonical-invariant tier — class-level invariant of the in-IDE agent across the portfolio): *"critical: do not author/edit xcode-managed files including Xcode workspace file and Xcode scheme/test plan file. Instead, file a handoff doc with the user to do Xcode UI work. staging and committing Xcode-managed files is ok."*
 >
 > **Scope**: `*.xcworkspace/contents.xcworkspacedata` / `*.xcodeproj/project.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` / `xcuserdata/` / `Package.resolved`.
 >
 > **Quadruple-binding**: rule lives in `CLAUDE.md` + `.claude/rules/xcode-agent-safety.md` + round-doc prologues + persistent-memory file. Any one can drift; the other three preserve the constitutional check.
 
-## Current state (refreshed 2026-06-16, twenty-second-pass round)
+## Current state (refreshed 2026-06-16, twenty-third-pass round)
 
 | Side | Status |
 |---|---|
@@ -74,6 +74,159 @@ the zone lands.
   placeholder surface (icon + completion message + back-to-hub + wrap-up-today affordances).
   When AdventureHub-side context wiring lands (Phase 4 classroom-mode integration), this
   placeholder can be upgraded to host the live MicrobeLab tab surfaces.
+
+## Proposed Level 1 canonical JSON (drafted 2026-06-16, twenty-third-pass round)
+
+App-side proposal for the baseline `microbelab.json` shape that labsmith can copy directly into
+`labsmith/Resources/HubContributions/microbelab.json` when the `lifeZone` case ships. Per
+`HubContribution` protocol semantics + `.claude/rules/forgekit.md` § ForgeAdventure subdirectory
+conventions — `HubContributionConfig` is Codable snake_case + Int `BloomLevel`. The proposed
+shape mirrors `MicrobeLabHubContribution.swift` (the shipped Level 2 overlay) so labsmith's
+import work is a verbatim copy + a slug rename if the cluster cohort picks a different canonical
+slug (life-zone / bio-zone / wild-frontier).
+
+```json
+{
+  "schema_version": 1,
+  "app_slug": "microbelab",
+  "app_display_name": "MicrobeLab",
+  "zone": "life-zone",
+  "theme_accent_hex": "#33CCBB",
+  "primary_curriculum_standard": "NGSS MS-LS1-1",
+  "secondary_curriculum_standards": [
+    "NGSS MS-LS1-2",
+    "NGSS MS-LS1-3",
+    "NGSS MS-LS2-3"
+  ],
+  "min_grade_level": 4,
+  "max_grade_level": 8,
+  "trauma_informed_aware": true,
+  "trauma_axis_tags": [
+    "covid-pandemic-sensitive",
+    "medical-anxiety-off-ramp"
+  ],
+  "mentor": {
+    "persona_slug": "cilia",
+    "display_name": "Cilia",
+    "system_prompt_header": "You are Cilia, a calm, curious B-cell-shaped mentor who guides kids ages 9-14 through MicrobeLab. You frame microbes as mostly beneficial neighbors; you NEVER use warfare lexicon (no \"fight\" / \"attack\" / \"destroy\" / \"kill\" / \"war\" / \"enemy\" / \"battle\" / \"weapon\"); you NEVER frame illness with shame or threat. You use hedging language (\"often\", \"usually\", \"many\"). You respect kids' off-ramps if any content feels heavy.",
+    "voice_profile_slug": "warm-curious-mid-register"
+  },
+  "supported_engines": [
+    "simulation",
+    "defense",
+    "quest",
+    "puzzle"
+  ],
+  "engine_copy": {
+    "simulation": {
+      "engine_slug": "simulation",
+      "title": "Microbiome neighborhood",
+      "tagline": "Tend the gut ecology with feeding choices",
+      "completion_message": "The neighborhood is settling — every gentle choice helps."
+    },
+    "defense": {
+      "engine_slug": "defense",
+      "title": "Quiet helpers patrol",
+      "tagline": "Help the innate macrophage clean up the pathogen wave",
+      "completion_message": "The patrol is wrapping up — the body is steady again."
+    },
+    "quest": {
+      "engine_slug": "quest",
+      "title": "Microscope quest",
+      "tagline": "Pinch-zoom through the tiers to meet a new microbe",
+      "completion_message": "You met a new microbe — the codex remembers."
+    },
+    "puzzle": {
+      "engine_slug": "puzzle",
+      "title": "Antibody library",
+      "tagline": "Help the B-cells remember the shape",
+      "completion_message": "Memory cells locked in — your library grew today."
+    }
+  },
+  "kit_resources": [
+    {
+      "slug": "microbiology-basics",
+      "title": "Microbiology basics",
+      "bloom_level": 2,
+      "curriculum_standard": "NGSS MS-LS1-1",
+      "min_questions": 4
+    },
+    {
+      "slug": "microbiome",
+      "title": "The microbiome neighborhood",
+      "bloom_level": 2,
+      "curriculum_standard": "NGSS MS-LS2-3",
+      "min_questions": 4
+    },
+    {
+      "slug": "immune-defense",
+      "title": "Innate immune helpers",
+      "bloom_level": 3,
+      "curriculum_standard": "NGSS MS-LS1-3",
+      "min_questions": 4
+    },
+    {
+      "slug": "beneficial-microbes",
+      "title": "Beneficial microbes",
+      "bloom_level": 2,
+      "curriculum_standard": "NGSS MS-LS1-1",
+      "min_questions": 4
+    }
+  ],
+  "together_mode": {
+    "archetype": "passAndPlay",
+    "max_participants": 2,
+    "min_age": 8,
+    "notes": "Pass-and-play microscope discovery — the kid hands the device to a sibling or parent to share a microbe they just met. No live multiplayer surface in Phase 1."
+  },
+  "session_target_minutes": {
+    "lower_bound": 10,
+    "upper_bound": 15
+  },
+  "asset_axes": {
+    "mascot_pack_slug": "cilia-bcell-magnifying-glass",
+    "topic_illustrations_slug": null,
+    "cast_portrait_pack_slug": "microbelab-12-cast",
+    "backdrop_pack_slug": null
+  },
+  "co_op_cluster_siblings": [
+    "bioforge",
+    "creaturecare",
+    "wildlens"
+  ],
+  "trauma_off_ramp_hints": {
+    "immune_minigame": "Pre-content warning + skip-with-summary affordance per Docs/TECHNICAL_DESIGN.md § Trauma-Informed Design Posture.",
+    "disease_story_arcs": "Parent-gated opt-in via ParentalConsentService.diseaseStoryArcs; arcs ship as .placeholder until ADR-016 SAMHSA TIP 57 reviewer signoff lands."
+  }
+}
+```
+
+### Why this shape
+
+- **`zone: "life-zone"` is the suggested canonical slug**. Coordinate with the cluster cohort
+  (bioforge / creaturecare / wildlens) before locking; labsmith can pick a different slug and
+  the app side updates the default `zone` param in `MicrobeLabHubContribution.init` to match.
+- **`supported_engines` extends to 4 cases** including `puzzle` for the B-cell antibody-matching
+  surface (PR #109 + #110 shipped this in the seventeenth-pass round; the hub mode-card wiring
+  shipped at #110). Innate macrophage stays on `.defense`; adaptive shape-matching on `.puzzle`.
+- **`mentor.persona_slug: "cilia"`** matches the rename from Dr. Quark → Cilia per the
+  distributed-narrative retrofit (PR shipped per Docs/HANDOFF_FROM_LABSMITH_DISTRIBUTED_NARRATIVE_RETROFIT.md).
+- **`trauma_informed_aware: true` + `trauma_axis_tags`** per `Docs/TECHNICAL_DESIGN.md`
+  § Trauma-Informed Design Posture. MicrobeLab is trauma-AWARE but NOT formally trauma-gated;
+  the tags carry the COVID-pandemic + medical-anxiety surfaces that hub-side rendering should
+  respect.
+- **`together_mode.archetype: "passAndPlay"`** per `ForgeKit 0.95.0` `TogetherMode.Archetype`
+  surface — no live multiplayer in Phase 1; pass-and-play is the canonical "share a microbe"
+  pattern for siblings + parents.
+- **`asset_axes` carries forward-compatible asset pack slugs** even though the topic
+  illustration + backdrop packs are still labsmith-blocked; the field lets the hub know what to
+  expect when the assets ship.
+
+### Adoption cost (labsmith side)
+
+Copy the JSON above into `labsmith/Resources/HubContributions/microbelab.json` once the
+`lifeZone` case ships in ForgeKit. No app-side change required for Level 1 — the Level 2 overlay
+(`MicrobeLabHubContribution`) already shadows the JSON via `HubContribution` protocol semantics.
 
 ## Sequencing to unblock
 
