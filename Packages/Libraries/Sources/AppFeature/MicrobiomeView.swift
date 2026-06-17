@@ -26,6 +26,7 @@ public struct MicrobiomeView: View {
     @State private var showingSoilMicrobiome = false
     @State private var showingGlobalTour = false
     @State private var showingSeasonalMicrobiome = false
+    @State private var showingDiseaseStoryArcs = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -68,6 +69,17 @@ public struct MicrobiomeView: View {
     /// it through here makes the seasonal sub-puzzle reachable when the
     /// experiment flag flips ON.
     private let seasonalEvents: SeasonalEventService?
+    /// Phase 3 disease-story arc orchestrator. When non-nil, surfaces the
+    /// disease-story arcs toolbar item; the consumer view (`DiseaseStoryArcView`)
+    /// renders the canonical 4-arc catalog with per-arc `ArcPresentation`
+    /// surfaces (`.ready` / `.authoringPending` / `.gatedBehindProgression`
+    /// / `.gatedBehindConsent`). Prose body stays reviewer-blocked per
+    /// ADR-016; the structural surface lands now so the kid path is
+    /// complete the moment prose ships.
+    private let diseaseStory: DiseaseStoryService?
+    /// Parental consent service — threaded through so `DiseaseStoryArcView`
+    /// can compute the parent-opt-in branch of `presentation(for:gateOpen:parentConsented:)`.
+    private let consent: ParentalConsentService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -82,7 +94,9 @@ public struct MicrobiomeView: View {
         catalog: MicrobeCatalogService? = nil,
         globalTour: GlobalMicrobiomeTourService? = nil,
         progression: ProgressionService? = nil,
-        seasonalEvents: SeasonalEventService? = nil
+        seasonalEvents: SeasonalEventService? = nil,
+        diseaseStory: DiseaseStoryService? = nil,
+        consent: ParentalConsentService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -101,6 +115,8 @@ public struct MicrobiomeView: View {
         self.globalTour = globalTour
         self.progression = progression
         self.seasonalEvents = seasonalEvents
+        self.diseaseStory = diseaseStory
+        self.consent = consent
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -190,6 +206,16 @@ public struct MicrobiomeView: View {
                         .accessibilityHint("Open the seasonal microbiome — watch the gut shift through cold, pollen, summer warmth, and autumn settling")
                     }
                 }
+                if diseaseStory != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingDiseaseStoryArcs = true
+                        } label: {
+                            Label("Disease stories", systemImage: "book.closed.fill")
+                        }
+                        .accessibilityHint("Open the disease-story arcs menu — stories unlock as you play")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -261,6 +287,15 @@ public struct MicrobiomeView: View {
                         celebration: celebration,
                         analytics: analytics,
                         sensory: sensory
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingDiseaseStoryArcs) {
+                if let diseaseStory {
+                    DiseaseStoryArcView(
+                        diseaseStory: diseaseStory,
+                        progression: progression,
+                        consent: consent
                     )
                 }
             }
