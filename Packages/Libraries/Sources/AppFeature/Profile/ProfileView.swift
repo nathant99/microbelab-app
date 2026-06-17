@@ -27,14 +27,26 @@ public struct ProfileView: View {
     /// the opt-in weekly summary toggle behind the parental gate.
     private let weeklySummaryService: WeeklySummaryService?
 
+    /// Shared `PhaseBoundaryExplainerService`. When non-nil, `SettingsView`
+    /// surfaces the "Boundary explainers" row behind the parental gate.
+    private let phaseBoundaryExplainer: PhaseBoundaryExplainerService?
+
+    /// Shared `ProgressionService`. Threaded through so the
+    /// `PhaseBoundaryExplainerView` can compute per-note gate-open state.
+    private let progressionService: ProgressionService?
+
     public init(
         progressReportSnapshot: ProgressReportSnapshot? = nil,
         consentService: ParentalConsentService? = nil,
-        weeklySummaryService: WeeklySummaryService? = nil
+        weeklySummaryService: WeeklySummaryService? = nil,
+        phaseBoundaryExplainer: PhaseBoundaryExplainerService? = nil,
+        progressionService: ProgressionService? = nil
     ) {
         self.progressReportSnapshot = progressReportSnapshot
         self.consentService = consentService
         self.weeklySummaryService = weeklySummaryService
+        self.phaseBoundaryExplainer = phaseBoundaryExplainer
+        self.progressionService = progressionService
     }
 
     public var body: some View {
@@ -65,7 +77,9 @@ public struct ProfileView: View {
                         SettingsView(
                             progressReportSnapshot: progressReportSnapshot,
                             consentService: consentService,
-                            weeklySummaryService: weeklySummaryService
+                            weeklySummaryService: weeklySummaryService,
+                            phaseBoundaryExplainer: phaseBoundaryExplainer,
+                            progressionService: progressionService
                         )
                     } label: {
                         Label("All settings", systemImage: "gear")
