@@ -95,6 +95,18 @@ public struct AppRootView: View {
     // expiry window. Surfaced through `ParentalConsentManagerView` from
     // SettingsView's "For parents" section (parental-gate guarded).
     @State private var consent = ParentalConsentService()
+    // Phase 4 global-microbiome tour orchestration. Pairs with
+    // `ProgressionService.global-microbiome-tour` gate (PR #137) +
+    // `GlobalMicrobiomeTourView` (PR #169) surfaced from MicrobiomeView's
+    // toolbar; placeholder catalog renders "Coming soon" affordances
+    // until per-stop reviewer-signed-off prose lands per ADR-016 +
+    // `.claude/rules/distributed-narrative.md` § cultural-sensitivity gates.
+    @State private var globalTour = GlobalMicrobiomeTourService()
+    // Phase 3+ in-app progression gating. Threads through MicrobiomeView
+    // and the global-tour view so unlock-hint copy reflects the kid's
+    // actual session-day count. Pre-Phase-3 surfaces remain unaffected
+    // because their consumer paths don't read the service.
+    @State private var progression = ProgressionService()
     // Local weekly-summary notification coordinator. Closes the
     // FEATURE_PLAN.md § Parent Integration → "Weekly summary" item.
     // Opt-in by default per FTC 2026; the SettingsView toggle is gated
@@ -581,7 +593,9 @@ public struct AppRootView: View {
                         sensory: sensory,
                         adaptiveProgress: adaptiveProgress,
                         simplifyChallenge: settingsStore.settings.simplifyChallenge,
-                        catalog: catalog
+                        catalog: catalog,
+                        globalTour: globalTour,
+                        progression: progression
                     )
                 }
             }
