@@ -24,6 +24,7 @@ public struct MicrobiomeView: View {
     @State private var showingOralMicrobiome = false
     @State private var showingSkinMicrobiome = false
     @State private var showingSoilMicrobiome = false
+    @State private var showingGlobalTour = false
     @State private var mentorMessage: String
 
     // Achievement-criteria tracking. Tick-counter reset every time the
@@ -50,6 +51,14 @@ public struct MicrobiomeView: View {
     /// affordance for the oral surface is hidden so callers (e.g., unit
     /// previews) that don't need it don't pay the wiring cost.
     private let catalog: MicrobeCatalogService?
+    /// Phase 4 global-microbiome tour service. When nil, the global-tour
+    /// toolbar item is hidden so the existing call sites don't pay the
+    /// wiring cost; AppRootView injects the canonical instance.
+    private let globalTour: GlobalMicrobiomeTourService?
+    /// Phase 3+ progression service. When nil, the tour view falls back to
+    /// the scaffold "not yet" copy; AppRootView injects the canonical
+    /// instance so the gate hint reflects the kid's actual session count.
+    private let progression: ProgressionService?
 
     public init(
         simulator: MicrobiomeSimulator,
@@ -61,7 +70,9 @@ public struct MicrobiomeView: View {
         sensory: SensoryPaletteCoordinator? = nil,
         adaptiveProgress: AdaptiveImmunityProgressStore? = nil,
         simplifyChallenge: Bool = false,
-        catalog: MicrobeCatalogService? = nil
+        catalog: MicrobeCatalogService? = nil,
+        globalTour: GlobalMicrobiomeTourService? = nil,
+        progression: ProgressionService? = nil
     ) {
         let initial = MicrobiomePuzzleScene(
             size: CGSize(width: 400, height: 600),
@@ -77,6 +88,8 @@ public struct MicrobiomeView: View {
         self.adaptiveProgress = adaptiveProgress
         self.simplifyChallenge = simplifyChallenge
         self.catalog = catalog
+        self.globalTour = globalTour
+        self.progression = progression
         let initialCue = mentor?.fallbackEcologyHypothesis(for: .balanced)
         _mentorMessage = State(initialValue: initialCue.map { "\($0.observation) \($0.hypothesis)" }
             ?? "Pick a feeding mode and tick the gut. Watch who grows.")
@@ -146,6 +159,16 @@ public struct MicrobiomeView: View {
                         .accessibilityHint("Open the soil microbiome puzzle")
                     }
                 }
+                if globalTour != nil {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button {
+                            showingGlobalTour = true
+                        } label: {
+                            Label("Global tour", systemImage: "globe.americas.fill")
+                        }
+                        .accessibilityHint("Open the global microbiome tour — Yellowstone, deep-sea vents, your gut, the soil")
+                    }
+                }
             }
             .navigationDestination(isPresented: $showingImmuneGame) {
                 ImmuneGameView(
@@ -196,6 +219,15 @@ public struct MicrobiomeView: View {
                         celebration: celebration,
                         analytics: analytics,
                         sensory: sensory
+                    )
+                }
+            }
+            .navigationDestination(isPresented: $showingGlobalTour) {
+                if let globalTour {
+                    GlobalMicrobiomeTourView(
+                        tour: globalTour,
+                        progression: progression,
+                        catalog: catalog
                     )
                 }
             }
