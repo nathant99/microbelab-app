@@ -115,7 +115,7 @@ struct ExperimentsServiceTests {
 
     @Test func defaultsHaveSensibleMetadata() {
         let defaults = ExperimentsService.defaultExperiments()
-        #expect(defaults.count == 2)
+        #expect(defaults.count == 3)
         for definition in defaults {
             // Each definition must have at least one variant with non-zero weight
             // (otherwise ForgeExperiments.ExperimentAssigner traps on
@@ -127,5 +127,14 @@ struct ExperimentsServiceTests {
             // End date must be after start.
             #expect(definition.endDate > definition.startDate)
         }
+    }
+
+    @Test func castVoicingExperimentRegisteredAndDefaultsControl() {
+        let service = ExperimentsService(seed: "cast-voicing-default")
+        let variant = service.assignedVariant(for: ExperimentsService.castVoicingID)
+        #expect(variant != nil)
+        #expect(variant?.id == "control",
+                "cast_voicing must default to control until the focused DN-S voicing round flips weight")
+        #expect(service.isEnabled(ExperimentsService.castVoicingID) == false)
     }
 }
