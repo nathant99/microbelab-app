@@ -296,6 +296,44 @@ public final class VeeMentor {
         }
     }
 
+    /// Curriculum-safe static `GlobalMicrobiomeTourCue` for the named
+    /// scenario — always available, never blocks. Trauma-informed +
+    /// cultural-respect register per `Docs/TECHNICAL_DESIGN.md` § Phase 4 +
+    /// `.claude/rules/distributed-narrative.md` § cultural-sensitivity gates:
+    /// Yellowstone surface MUST surface Indigenous TEK credit; deep-sea +
+    /// soil framed as thriving systems (never "scary" / "dirt"); gut
+    /// bridges back to Phase 1 / 2 ecology math.
+    ///
+    /// **Load-bearing**: the Yellowstone fallback surfaces the Indigenous
+    /// TEK credit verbatim in the wonderObservation OR connectionToCast
+    /// so the cultural-respect gate is preserved even when FoundationModels
+    /// is unavailable. The token "Indigenous" is the pinned register marker
+    /// (parameterized test asserts presence at the Yellowstone case).
+    public func fallbackGlobalMicrobiomeTourCue(for scenario: GlobalMicrobiomeTourScenario) -> GlobalMicrobiomeTourCue {
+        switch scenario {
+        case .yellowstoneHotSpring:
+            return GlobalMicrobiomeTourCue(
+                wonderObservation: "What might it be like to thrive in water hot enough to brew tea?",
+                connectionToCast: "Often Crenarch and Therm settle right in — Indigenous communities have known these hot springs as sacred living places for generations, and the microbes have been here even longer."
+            )
+        case .deepSeaVent:
+            return GlobalMicrobiomeTourCue(
+                wonderObservation: "What might make food when sunlight never reaches the seafloor?",
+                connectionToCast: "Usually Crenarch and Baro thrive on the sulfide chemistry — a thriving community at the vent, not a dark scary place."
+            )
+        case .humanGut:
+            return GlobalMicrobiomeTourCue(
+                wonderObservation: "How might the ecology math you already know from the simulator apply to your own gut right now?",
+                connectionToCast: "Often Lacto and Akker and Bifido are tending the neighborhood — the same mutualism you watched at smaller scales, just at home."
+            )
+        case .soilUnderground:
+            return GlobalMicrobiomeTourCue(
+                wonderObservation: "What might be happening under your feet when the forest floor looks quiet?",
+                connectionToCast: "Usually Loam and Nodu and Halo are tending a thriving system — soil is a living community, never just 'dirt'."
+            )
+        }
+    }
+
     /// Curriculum-safe static `EcologyHypothesis` — always available, never blocks.
     public func fallbackEcologyHypothesis(for mode: FeedingMode) -> EcologyHypothesis {
         switch mode {
@@ -524,6 +562,48 @@ public final class VeeMentor {
             return response.content
         } catch {
             return fallbackHistoricalContextReflection(for: scenario)
+        }
+    }
+
+    /// Generate a Socratic `GlobalMicrobiomeTourCue` for the named tour stop.
+    /// Falls back to the static authored content when the model is unavailable.
+    /// Per `.claude/rules/distributed-narrative.md` § cultural-sensitivity gates
+    /// the Yellowstone prompt explicitly requires Indigenous TEK credit;
+    /// per `Docs/TECHNICAL_DESIGN.md` § Phase 4 the deep-sea + soil prompts
+    /// forbid "scary" / "dirt" framings.
+    public func globalMicrobiomeTourCue(for scenario: GlobalMicrobiomeTourScenario) async -> GlobalMicrobiomeTourCue {
+        guard isAvailable, let session = makeSession() else {
+            return fallbackGlobalMicrobiomeTourCue(for: scenario)
+        }
+        let stopHint: String
+        switch scenario {
+        case .yellowstoneHotSpring:
+            stopHint = "the Yellowstone hot springs (thermophilic ecosystem). REQUIRED: surface Indigenous TEK credit (Crow, Eastern Shoshone, Northern Arapaho, Bannock, Blackfeet, Confederated Salish-Kootenai have known these springs as living sacred places for generations). Featured cast: Crenarch + Therm"
+        case .deepSeaVent:
+            stopHint = "a deep-sea hydrothermal vent (chemosynthesis ecosystem). Frame the vent community as a THRIVING SYSTEM, NEVER 'dark / scary / horror / doom'. Featured cast: Crenarch + Baro"
+        case .humanGut:
+            stopHint = "the kid's own gut (host-microbiome mutualism). Bridge back to Phase 1 / 2 ecology math the kid already knows from the simulator. Featured cast: Lacto + Akker + Bifido"
+        case .soilUnderground:
+            stopHint = "the soil underground (decomposer + nitrogen-fixation ecology). Frame soil as a THRIVING SYSTEM, NEVER 'dirt / dead / rot / gross'. Featured cast: Loam + Nodu + Halo"
+        }
+        do {
+            let response = try await session.respond(
+                to: """
+                The kid just opened the tour stop for \(stopHint). Compose an \
+                open-ended wonder-observation question (never warfare — no \
+                "fight" / "attack" / "destroy" / "kill" / "war" / "enemy" / \
+                "battle" / "weapon"; never fear-induction — no "scary" / \
+                "horror" / "doom" / "dirty" / "gross"; never threat — no \
+                "danger" / "deadly" / "germ"), and one connection back to a \
+                named cast microbe at this stop framed as recognition + \
+                ecology bridge. Age 9-14 register, hedging language only \
+                ("often", "usually", "many").
+                """,
+                generating: GlobalMicrobiomeTourCue.self
+            )
+            return response.content
+        } catch {
+            return fallbackGlobalMicrobiomeTourCue(for: scenario)
         }
     }
 
