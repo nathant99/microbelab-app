@@ -39,10 +39,26 @@ public nonisolated struct QuestionKitService: Sendable {
         "soil-microbiome"
     ]
 
+    /// Slugs of every Phase-3 kit bundled to date. Kits 09-12 ship as
+    /// `.draftAwaitingReview` placeholders until external SAMHSA TIP 57
+    /// register reviewer signoff lands per ADR-016. The bundled JSON is
+    /// structural scaffolding — `loadAllPhase3Kits()` filters out any kit
+    /// whose `authoring != .reviewerSignedOff`, so draft content NEVER
+    /// surfaces to a kid. Order is canonical kit order.
+    public static let phase3KitSlugs: [String] = [
+        "vaccines",
+        "herd-immunity",
+        "hygiene",
+        "public-health"
+    ]
+
     /// Convenience union: every shipped kit slug in canonical order. Used by
     /// new UI surfaces that span both phases (e.g., the Codex → Quizzes Menu).
+    /// Note: this returns SLUGS regardless of authoring state — consumer
+    /// surfaces that should hide draft content must call
+    /// `loadAllShippedKits()` instead so unreviewed kits get filtered out.
     public static var allKitSlugs: [String] {
-        phase1KitSlugs + phase2KitSlugs
+        phase1KitSlugs + phase2KitSlugs + phase3KitSlugs
     }
 
     public init() {}
@@ -91,5 +107,33 @@ public nonisolated struct QuestionKitService: Sendable {
                 return nil
             }
         }
+    }
+
+    /// Convenience: load every Phase-3 kit slug that has reached
+    /// reviewer-signoff. Kits still in `.placeholder` or
+    /// `.draftAwaitingReview` are silently dropped so unreviewed content
+    /// NEVER surfaces to a kid. Same drop-on-error semantics as
+    /// `loadAllPhase1Kits()`. Returns an empty array until the first Phase-3
+    /// kit ships reviewer-signed-off (this is the canonical state at the
+    /// scaffold round).
+    public func loadAllPhase3Kits() -> [QuestionKit] {
+        Self.phase3KitSlugs.compactMap { slug in
+            switch loadKit(slug: slug) {
+            case .success(let kit):
+                guard kit.authoring == .reviewerSignedOff else { return nil }
+                return kit
+            case .failure(let error):
+                DebugLog.data("QuestionKitService.loadAllPhase3Kits failed for \(slug): \(error)")
+                return nil
+            }
+        }
+    }
+
+    /// Convenience: load every shipped kit across all phases, filtering out
+    /// Phase-3 kits that are still in placeholder / draft authoring. This is
+    /// the canonical accessor for UI surfaces that span phases (Codex →
+    /// Quizzes Menu, ProgressReport snapshots).
+    public func loadAllShippedKits() -> [QuestionKit] {
+        loadAllPhase1Kits() + loadAllPhase2Kits() + loadAllPhase3Kits()
     }
 }

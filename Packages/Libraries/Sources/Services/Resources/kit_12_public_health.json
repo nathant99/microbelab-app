@@ -1,0 +1,23 @@
+{
+  "id": "9DB2A1F0-FFFF-4012-A000-000000000012",
+  "slug": "public-health",
+  "title": "Helpers at every scale",
+  "summary": "How public-health helpers — nurses, scientists, parents, neighbors — work together to keep communities steady. Trauma-informed register per ADR-016 SAMHSA TIP 57: community helpers + caring framing, NEVER warfare / panic / crisis. Kit ships as draftAwaitingReview placeholder until external reviewer signoff lands; consumer code filters via QuestionKitService.loadAllPhase3Kits().",
+  "kitNumber": 12,
+  "authoring": "draftAwaitingReview",
+  "questions": [
+    {
+      "id": "AAAAA012-0000-4012-8000-000000000001",
+      "prompt": "Reviewer-signoff pending — Phase 3 public health kit question placeholder.",
+      "choices": [
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending",
+        "Reviewer-signoff pending"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reviewer-signoff pending — questions ship in a future round once SAMHSA TIP 57 register review completes per ADR-016.",
+      "curriculumStandard": "NHES 7"
+    }
+  ]
+}
