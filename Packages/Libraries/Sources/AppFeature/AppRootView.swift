@@ -180,6 +180,16 @@ public struct AppRootView: View {
     // the freshest snapshot every cold launch when the toggle is on so
     // the next-fire body reflects current state.
     @State private var weeklySummary = WeeklySummaryService()
+    // Declared Age Range API state holder. The actual system call lives in
+    // `SystemAgeVerificationCard` (a SwiftUI surface presented behind the
+    // parental gate from SettingsView); this service holds the most-recent
+    // result + the capability probe so every reader (SettingsView readout,
+    // parent-handoff downstream consumers) reads from one place. Per
+    // `.claude/rules/age-assurance.md` the entitlement is provisioned via
+    // the Xcode GUI per `Docs/HANDOFF_TO_USER_DECLARED_AGE_RANGE_ENTITLEMENT.md`;
+    // without the entitlement the `isCapable` probe returns false and the
+    // verification card surfaces the math-gate fallback affordance.
+    @State private var ageAssurance = AgeAssuranceService()
     // ForgeSensory palette — routes haptic (and, when SFX bundle lands,
     // audio) feedback for correct/incorrect answers, achievement unlocks,
     // wave clears, and run-complete moments. Closes the FEATURE_PLAN
@@ -731,7 +741,8 @@ public struct AppRootView: View {
                         consentService: consent,
                         weeklySummaryService: weeklySummary,
                         phaseBoundaryExplainer: phaseBoundaryExplainer,
-                        progressionService: progression
+                        progressionService: progression,
+                        ageAssuranceService: ageAssurance
                     )
                 }
             }

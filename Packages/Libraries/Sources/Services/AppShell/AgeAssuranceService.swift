@@ -56,13 +56,19 @@ public nonisolated enum AgeAssuranceCapability {
 /// `@Observable` MainActor surface so SwiftUI can react without each
 /// surface re-probing on every appearance.
 ///
-/// **Status (2026-06-12)**: scaffold only. The wiring lives but the
-/// actual `request` call to Apple's API is intentionally NOT issued —
-/// the entitlement is not yet provisioned via the Xcode GUI (per
-/// `Docs/HANDOFF_TO_USER_XCODE_GUI_TASKS.md`). Once the user adds the
-/// entitlement in the target's Signing & Capabilities tab,
-/// `requestSystemVerification()` will be unblocked and apps can call
-/// `ForgeAccessibility.ForgeSystemAgeGate` from the parent-handoff flow.
+/// **Status (2026-06-17)**: SwiftUI driver shipped at
+/// `AppFeature.SystemAgeVerificationCard` — the actual `await
+/// AgeRangeService.shared.requestAgeRange(ageGates:in:)` call lives in
+/// the card's `verify()` method (UIKit anchor path via the key window's
+/// root VC). This service remains the result-holder + capability probe;
+/// `recordResult(_:)` is the seam the card calls when the system path
+/// returns. The `requestSystemVerification(minimumAge:)` method below
+/// stays as a no-op fallback used by non-UIKit contexts (tests, headless
+/// scaffolds) — the real verification flow runs through the SwiftUI
+/// card. Both paths are gated by `isCapable` (the soft entitlement probe);
+/// without the `com.apple.developer.declared-age-range` entitlement the
+/// system path uniformly returns `.systemUnavailable` and the math gate
+/// in `ParentalGateView` remains the active surface.
 ///
 /// Per `.claude/rules/age-assurance.md`: receiving "Under 13" creates
 /// **COPPA actual knowledge** — all consent flows and record-keeping

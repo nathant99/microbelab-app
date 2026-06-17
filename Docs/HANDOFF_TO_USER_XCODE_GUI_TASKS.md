@@ -80,7 +80,7 @@ Per CLAUDE.md § Xcode-managed file safety — **the agent does not WRITE the xc
 
 Per `.claude/rules/age-assurance.md` § Declared Age Range API (iOS 26+), Apple's privacy-preserving age-range API requires the `com.apple.developer.declared-age-range` entitlement. The agent cannot write `.entitlements` files from disk (per § Unsafe — DO NOT WRITE).
 
-`Services/AgeAssuranceService.swift` ships the scaffold today: the entitlement probe (`AgeAssuranceCapability.isDeclaredAgeRangeAvailable`) reads `Bundle.main`'s `Entitlements` dict and returns `false` until provisioning lands. `SettingsView` → About surfaces a passive readout ("Math gate — Apple gate pending entitlement" → flips to "Declared Age Range API ready" once you add it). ForgeKit's `ForgeSystemAgeGate` already implements the system call + math-gate fallback — once the entitlement is in place, a follow-up PR wires it into `ParentHandoffFlow`.
+`Services/AgeAssuranceService.swift` ships the state holder + entitlement probe (`AgeAssuranceCapability.isDeclaredAgeRangeAvailable`) which reads `Bundle.main`'s `Entitlements` dict and returns `false` until provisioning lands. The thirty-second-pass round (2026-06-17) shipped the SwiftUI driver `AppFeature/Settings/SystemAgeVerificationCard.swift` — the actual `await AgeRangeService.shared.requestAgeRange(ageGates:in:)` call lives in the card's `verify()` method, anchored on the key window's root view controller (UIKit singleton path; chosen over the SwiftUI env action to avoid a Swift 6 strict-Sendable warning on the env action's `@concurrent` `callAsFunction`). The card is wired into `SettingsView` → About behind the parental gate and is gated by the same `isCapable` probe — without the entitlement the "Verify with Apple" button hides and the math-gate fallback affordance surfaces instead.
 
 **To provision** (do once + commit Xcode regenerated diffs):
 
@@ -88,9 +88,11 @@ Per `.claude/rules/age-assurance.md` § Declared Age Range API (iOS 26+), Apple'
 2. Select the `MicrobeLab` app target → **Signing & Capabilities**
 3. Click `+ Capability` → add **Declared Age Range** (iOS 26.2+)
 4. Xcode regenerates `MicrobeLab/MicrobeLab.entitlements` with the new key; commit the file (staging Xcode-regenerated diffs IS fine per CLAUDE.md § Xcode-managed file safety — only authoring the file content from disk is prohibited)
-5. **Critical pre-flight per `.claude/rules/age-assurance.md`** — receiving "Under 13" creates **COPPA actual knowledge**. Do NOT actually invoke `await requestAgeRange(...)` until annual re-consent + retention + COPPA records are in place. The current `AgeAssuranceService.requestSystemVerification(...)` is a stub that no-ops; replace the stub with the live call only when the consent surface ships.
+5. **Critical pre-flight per `.claude/rules/age-assurance.md`** — receiving "Under 13" creates **COPPA actual knowledge**. The SwiftUI card now records the result on the `AgeAssuranceService` state holder, but downstream consent / record-keeping flows MUST run before any downstream UI surface acts on the result. Plan the COPPA consent integration in a focused follow-up round once on-device testing confirms the entitlement provisioning.
 
-Until provisioned, the existing math-based `ParentalGateView` is the parent verification path. The scaffold + passive readout let future sessions see the capability state at a glance.
+Until provisioned, the existing math-based `ParentalGateView` is the parent verification path. The SwiftUI card + service holder let future sessions see the capability state at a glance AND give the consent integration a structurally-correct seam to land into.
+
+See `Docs/HANDOFF_TO_USER_DECLARED_AGE_RANGE_ENTITLEMENT.md` for the focused entitlement provisioning handoff (this section is the aggregator summary).
 
 ## 7. Verifying SPM-only changes without Xcode reload
 
