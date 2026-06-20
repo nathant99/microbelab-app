@@ -99,6 +99,16 @@ public final class VeeMentor {
     /// loss-aversion / "you abandoned us" framing. The output-moderation
     /// pipeline inside CastDialog additionally guards against warfare /
     /// shame / threat language regardless of FoundationModels output.
+    ///
+    /// **Affect-attunement (ForgeKit 1.0.0-rc.3)**: pass a non-nil
+    /// `context.emotionSnapshot` to surface the rc.3 continuous-band
+    /// guidance (source-provenance / distress / arousal / valence + SAMHSA
+    /// presence cue at the acute trifecta). The canonical derivation lives
+    /// in `Services.EmotionSnapshotDerivation.from(despairSeverity:)` —
+    /// reads the on-device reflection-entry severity emitted by
+    /// `DespairSignalDetector` (PR #167) and maps it onto the rc.3 bands.
+    /// `.calm` returns `nil` so the v1 `emotionContext` fallback path stays
+    /// in force; never imply positive valence from absence-of-distress.
     public func voicedRecallCue(
         for slug: String,
         daysSinceLastSeen: Int,

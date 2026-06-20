@@ -4,12 +4,17 @@ import ForgeAvatar
 import ForgeModels
 import ForgeSync
 
-/// Profile tab. Presents the canonical `ForgeAvatar.AvatarStudioView(.lite)`
+/// Profile tab. Presents the canonical `ForgeAvatar.AvatarStudioView`
 /// per `.claude/rules/forgekit.md` § Avatar Edit Authority. The displayed
 /// avatar refreshes whenever the sheet saves.
+///
+/// **ForgeKit 1.0.0-rc.1 follow-through**: ADR-022 dropped the composable
+/// `AvatarAssetCatalog` + multi-bundle WebP layer system. The studio is
+/// now glyph-based; the `.lite` / `.full` presentation split is gone too.
+/// `AvatarStudioSheet` previously plumbed a catalog instance; this is now
+/// unnecessary and removed.
 public struct ProfileView: View {
     @State private var appGroupStore = AppGroupStore()
-    @State private var catalog = AvatarAssetCatalog(appBundles: [])
     @State private var currentAvatar: AvatarConfig = .default
     @State private var showStudio = false
     @State private var displayName = "Explorer"
@@ -64,7 +69,7 @@ public struct ProfileView: View {
                         showStudio = true
                     } label: {
                         HStack(spacing: 12) {
-                            AvatarRenderer(config: currentAvatar, catalog: catalog, size: 56)
+                            AvatarRenderer(config: currentAvatar, size: 56)
                                 .frame(width: 56, height: 56)
                                 .clipShape(Circle())
                             VStack(alignment: .leading, spacing: 2) {
@@ -99,7 +104,6 @@ public struct ProfileView: View {
         .sheet(isPresented: $showStudio) {
             AvatarStudioSheet(
                 appGroupStore: appGroupStore,
-                catalog: catalog,
                 displayName: displayName,
                 onSaved: { saved in
                     currentAvatar = saved
