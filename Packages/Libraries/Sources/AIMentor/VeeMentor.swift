@@ -153,6 +153,31 @@ public final class VeeMentor {
         }
     }
 
+    /// FSRS-6-aware "ready to look closer" cue surfaced by
+    /// `MicrobeMasteryService.recommendedNextMicrobe(among:)`. The mastery
+    /// service identifies one already-discovered microbe whose mastery
+    /// score is below threshold AND whose habitat-prerequisite cohort has
+    /// reached mastery; this cue surfaces the warm invitation on the
+    /// mentor bubble surface (`ExploreView` cold-open) so the
+    /// recommendation reaches the kid's primary touchpoint, not just the
+    /// codex grid caption from PR #188.
+    ///
+    /// Returns `nil` when the slug isn't in the catalog so the caller can
+    /// fall back to the variable-reward / default cold-open copy without
+    /// surfacing a broken callback.
+    ///
+    /// **Trauma-informed posture (load-bearing)**: NEVER frames low
+    /// mastery as deficiency. Copy registers as an open invitation
+    /// ("Ready to look closer at X?") not a remedial nudge ("You need to
+    /// review X"). Mirrors the codex caption stoplist pinned by
+    /// `MicrobeMasteryServiceTests`. The mastery service's own gate (only
+    /// recommend when the kid has ≥ 2 discoveries) keeps the cue from
+    /// firing as a first-session deficiency frame.
+    public func masteryRecommendationCue(for slug: String) -> String? {
+        guard let microbe = microbe(forSlug: slug) else { return nil }
+        return "Ready to look closer at \(microbe.displayName)? A quiet visit might lock in what you noticed."
+    }
+
     // MARK: - Static fallbacks for every @Generable
 
     /// Curriculum-safe static `MicrobeFact` — always available, never blocks.

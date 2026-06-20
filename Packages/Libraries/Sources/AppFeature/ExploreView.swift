@@ -29,6 +29,14 @@ public struct ExploreView: View {
     /// fixtures + previews can omit it (passing nil keeps the cues
     /// surface as-is without persistence side-effects).
     private let discovery: DiscoveryStore?
+    /// Optional FSRS-6 mastery service (PR #188). When wired alongside the
+    /// discovery store, the cold-open mentor cue surfaces the
+    /// "Ready to look closer at X?" recommendation between the recall
+    /// path and the variable-reward path. Per `Docs/TECHNICAL_DESIGN.md`
+    /// the recommendation deepens ForgeGamification consumption beyond
+    /// the codex caption shipped in PR #188 — the mentor surface is the
+    /// kid's primary touchpoint so the recommendation reaches there too.
+    private let mastery: MicrobeMasteryService?
 
     public init(
         catalog: MicrobeCatalogService,
@@ -36,7 +44,8 @@ public struct ExploreView: View {
         sessionCount: Int = 0,
         analytics: AnalyticsService? = nil,
         recall: MentorRecallStore? = nil,
-        discovery: DiscoveryStore? = nil
+        discovery: DiscoveryStore? = nil,
+        mastery: MicrobeMasteryService? = nil
     ) {
         self.catalog = catalog
         self.mentor = mentor
@@ -44,18 +53,30 @@ public struct ExploreView: View {
         self.analytics = analytics
         self.recall = recall
         self.discovery = discovery
+        self.mastery = mastery
         // The scene's size is reset by `.resizeFill` once SpriteView lays out.
         let initialScene = MicroscopeScene(size: CGSize(width: 400, height: 600))
         _scene = State(initialValue: initialScene)
 
-        // Mentor callback layer takes priority over the variable-reward and
-        // default cold-open copy when the kid has previously met a microbe
-        // here. Per Docs/FEATURE_PLAN.md § Delight & Polish → "Character
-        // personality" item: warm "you've been here before" framing only.
+        // Mentor cold-open priority chain (highest → lowest):
+        //   1. Recall callback (kid has met a specific microbe before)
+        //   2. Mastery recommendation (FSRS-6 readiness signal; PR #188)
+        //   3. Variable reward (rare sighting / quiet day)
+        //   4. Default cold-open copy
+        //
+        // Per Docs/FEATURE_PLAN.md § Delight & Polish — every layer ships
+        // warm "you've been here before" framing only; never loss-aversion
+        // or deficiency framing.
         let slugs = catalog.microbes.map(\.slug).sorted()
         if let recallEntry = recall?.entry(for: sessionCount),
            let line = Self.callbackCopy(for: recallEntry, mentor: mentor) {
             _mentorMessage = State(initialValue: line)
+        } else if let masteryLine = Self.masteryRecommendationCopy(
+            mastery: mastery,
+            discovery: discovery,
+            mentor: mentor
+        ) {
+            _mentorMessage = State(initialValue: masteryLine)
         } else if let reward = VariableRewardSelector.select(
             forSessionCount: sessionCount,
             microbeSlugs: slugs
@@ -69,6 +90,27 @@ public struct ExploreView: View {
         } else {
             _mentorMessage = State(initialValue: "Pinch in to zoom. There are tiny lives waiting to be seen.")
         }
+    }
+
+    /// Compose the cold-open mastery-recommendation line, if the mastery
+    /// service + discovery store are both wired AND the service has a
+    /// non-nil recommendation among the kid's discovered set. Returns
+    /// `nil` whenever either dependency is missing or the recommendation
+    /// is unavailable so the caller can fall through to the next cue
+    /// layer.
+    ///
+    /// MainActor-isolated by default since both stores are `@MainActor`.
+    static func masteryRecommendationCopy(
+        mastery: MicrobeMasteryService?,
+        discovery: DiscoveryStore?,
+        mentor: VeeMentor
+    ) -> String? {
+        guard let mastery, let discovery else { return nil }
+        let discovered = discovery.discoveredSlugs
+        guard let slug = mastery.recommendedNextMicrobe(among: discovered) else {
+            return nil
+        }
+        return mentor.masteryRecommendationCue(for: slug)
     }
 
     /// Compose the cold-open callback line referencing a microbe the kid has

@@ -686,7 +686,8 @@ public struct AppRootView: View {
                     sessionCount: sessionCount.sessionCount,
                     analytics: analytics,
                     recall: recall,
-                    discovery: discovery
+                    discovery: discovery,
+                    mastery: mastery
                 )
             }
             Tab("Codex", systemImage: "book", value: MicrobeLabTab.codex) {
