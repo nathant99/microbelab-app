@@ -445,4 +445,42 @@ struct VeeMentorRecallCueTests {
         #expect(voiced == staticLine)
         #expect(staticLine?.contains("yesterday") == true)
     }
+
+    // MARK: - Mastery recommendation cue (Option C, R-34th pass)
+
+    @Test func masteryRecommendationCueQuotesDisplayName() throws {
+        let vee = mentor()
+        let line = try #require(vee.masteryRecommendationCue(for: "lacto"))
+        #expect(line.contains("Lacto"), "cue must quote the canonical display name from catalog")
+    }
+
+    @Test func masteryRecommendationCueAvoidsDeficitFraming() throws {
+        // Trauma-informed posture: the cue MUST frame as warm invitation,
+        // never deficiency. Stoplist mirrors the codex caption
+        // `MicrobeMasteryServiceTests` invariants.
+        let vee = mentor()
+        let line = try #require(vee.masteryRecommendationCue(for: "lacto")).lowercased()
+        let forbidden = [
+            "need to", "have to", "must", "should", "deficient", "weak",
+            "failed", "fell behind", "catch up", "remediate", "review",
+            "low score", "low mastery", "low",
+        ]
+        for token in forbidden {
+            #expect(!line.contains(token), "cue must not contain '\(token)' — deficiency framing forbidden")
+        }
+    }
+
+    @Test func masteryRecommendationCueUsesInvitationRegister() throws {
+        // Positive proof: cue uses an open-invitation register
+        // ("Ready to look closer at X?") not a remedial nudge.
+        let vee = mentor()
+        let line = try #require(vee.masteryRecommendationCue(for: "lacto"))
+        #expect(line.hasPrefix("Ready to look closer at"))
+        #expect(line.contains("?"), "open-invitation phrasing requires a question mark")
+    }
+
+    @Test func masteryRecommendationCueReturnsNilForUnknownSlug() {
+        let vee = mentor()
+        #expect(vee.masteryRecommendationCue(for: "unknown-slug") == nil)
+    }
 }
