@@ -29,7 +29,7 @@ let package = Package(
         .library(name: "AppFeature", targets: ["AppFeature"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nathant99/forgekit.git", from: "0.99.0"),
+        .package(url: "https://github.com/nathant99/forgekit.git", from: "1.0.0-rc.3"),
     ],
     targets: [
         // MARK: - Models

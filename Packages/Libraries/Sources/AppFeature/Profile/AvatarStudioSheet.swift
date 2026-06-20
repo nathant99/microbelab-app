@@ -4,8 +4,14 @@ import ForgeAvatar
 import ForgeModels
 import ForgeSync
 
-/// Sheet host for the shared `ForgeAvatar.AvatarStudioView(.lite)` per
+/// Sheet host for the shared `ForgeAvatar.AvatarStudioView` per
 /// `.claude/rules/forgekit.md` § Avatar Edit Authority.
+///
+/// **ForgeKit 1.0.0-rc.1 follow-through** (ADR-022): the composable
+/// `AvatarAssetCatalog` + multi-bundle WebP layer system was dropped from
+/// `ForgeAvatar`. The studio is now glyph-based (tint + glyph picker only);
+/// the `.lite` / `.full` presentation split is gone too. This sheet no
+/// longer threads a catalog or a presentation enum.
 ///
 /// **CRITICAL gotcha (R489)**: `AvatarStudioView` internally calls
 /// `appGroupStore.setAvatar(_:editedAt:)` on Save, which throws
@@ -15,7 +21,6 @@ import ForgeSync
 /// in `.task` so the user can't tap Save before the seed completes.
 struct AvatarStudioSheet: View {
     let appGroupStore: AppGroupStore
-    let catalog: AvatarAssetCatalog
     let displayName: String
     let onSaved: (AvatarConfig) -> Void
     let onCancelled: () -> Void
@@ -28,8 +33,7 @@ struct AvatarStudioSheet: View {
         AvatarStudioView(
             initialConfig: initialConfig,
             baselineEditedAt: baselineEditedAt,
-            catalog: catalog,
-            presentation: .lite,
+            displayName: displayName,
             appGroupStore: appGroupStore,
             onSaved: onSaved,
             onCancelled: onCancelled
