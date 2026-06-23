@@ -69,9 +69,9 @@ When an audio-pipeline issue surfaces, walk this order:
 4. **If `truncatedData` server-side**: gzip decompression race. Disable gzip on the request.
 5. **If endpoint silently 200s with empty body**: check auth-header consistency (the body might have errored upstream + been swallowed). See § "Auth header consistency check" in `debug-logging.md`.
 
-## Labsmith-side pre-gen pipeline (R411 #889; DN-S Phase 2 audio drama)
+## Hub-side pre-gen pipeline (R411 #889; DN-S Phase 2 audio drama)
 
-For **pre-generated audio bundled into apps as static CAF files** (NOT runtime TTS streaming — that's the path above), labsmith owns the gen pipeline end-to-end per `.claude/rules/portfolio.md` § Asset generation ownership.
+For **pre-generated audio bundled into apps as static CAF files** (NOT runtime TTS streaming — that's the path above), hub owns the gen pipeline end-to-end per `.claude/rules/portfolio.md` § Asset generation ownership.
 
 Canonical script: `scripts/gen_dn_s_audio_drama.py`. Pattern lifted from CQ's `GeminiService.swift` TTS path:
 
@@ -90,23 +90,68 @@ Gemini 2.5 TTS does not clone custom voices (that's Studio-tier Cloud TTS, enter
 Read the following AS <character>. Voice style: <directive from script>. Pace: slightly slower than normal adult speech; clear and deliberate. Tone: age-9-14 readable; warm but not saccharine; trust the reader's intelligence. Voice register guidance: <voiceRegister text from chapter, ≤300 chars>. Text: <line>
 ```
 
-Apps NEVER author this prompt — labsmith does at gen time. The per-character voiceRegister card is the single source of truth.
+Apps NEVER author this prompt — hub does at gen time. The per-character voiceRegister card is the single source of truth.
 
-### Output format chain (updated 2026-06-02 per ADR-022 Q2)
+### Output format chain (updated 2026-06-17 Option PC; was 2026-06-02 ADR-022 Q2)
 
 1. Gemini 2.5 TTS returns `audio/L16;codec=pcm;rate=24000` (raw signed-16-bit PCM mono @ 24kHz)
-2. Labsmith concatenates per-line PCM bytes + tracks per-line byte offsets for WebVTT timing
+2. Hub concatenates per-line PCM bytes + tracks per-line byte offsets for WebVTT timing
 3. Wrap concatenated PCM in 44-byte RIFF/WAVE header → WAV (port of CQ's `wrapPCMInWAV` in Python at `scripts/gen_dn_s_audio_drama.py:wrap_pcm_in_wav`)
 4. **Triple-emit from the single WAV**:
-   - **`.caf`** (app-bundled; iOS-native): `afconvert -f caff -d aac -b 64000 -c 1 in.wav out.caf`
-   - **`.m4a`** (web-distributed; universal browser support): `afconvert -f m4af -d aac -b 64000 -c 1 in.wav out.m4a`
+   - **`.caf`** (app-bundled; iOS-native): `afconvert -f caff -d aac -b 64000 -c 1 in.wav out.caf` — **64 kbps**
+   - **`.m4a`** (web-distributed; universal browser support): `afconvert -f m4af -d aac -b 48000 -c 1 in.wav out.m4a` — **48 kbps** per § Web M4A bitrate below
    - **`.vtt`** (WebVTT chapter+transcript): per-line PCM offset → timestamp; `<v Character>line text` voice tag for WCAG accessibility + per-speaker player styling
 5. Ship all three (`.caf` + `.m4a` + `.vtt`) + `catalog.json` to `<app>-app/Resources/AudioDramas/<app>/` via cross-repo PR
 6. App-side `ForgeAudio.AudioDramaPlayer` (ForgeKit 0.99.11+) consumes the bundled `.caf` via `Bundle.module`; spark-anvil-site `<AudioDramaPlayer />` component consumes `.m4a` + `.vtt` via static `public/audio/<app>/` serving
 
 **Catalog metadata** (post-ADR-022): `catalog.json` per-drama entries now carry `bundlePath` (CAF), `webM4APath`, `webVTTPath`, and `chapters[]` (array of `{index, startMs, endMs, character}` per line) so consumers can build chapter-marker navigation in either client.
 
-**Legacy CAF backfill** (for the 124 dramas shipped before ADR-022): the gen script only emits the new sibling files going forward. For existing CAFs, backfill via `afconvert -f m4af -d aac -b 64000 -c 1 existing.caf out.m4a` + write a placeholder VTT (or re-run the full gen script for line-accurate VTT timings).
+**Legacy CAF backfill** (for the 124 dramas shipped before ADR-022): the gen script only emits the new sibling files going forward. For existing CAFs, backfill via `afconvert -f m4af -d aac -b 48000 -c 1 existing.caf out.m4a` (48 kbps per § Web M4A bitrate below) + write a placeholder VTT (or re-run the full gen script for line-accurate VTT timings).
+
+### Web M4A bitrate — 48 kbps (R-WEB-M4A-BITRATE; 2026-06-17)
+
+**The web-distributed `.m4a` leg uses 48 kbps mono AAC-LC at 24 kHz.** The app-bundled `.caf` leg stays at 64 kbps.
+
+Codified after `Docs/AUDIT_AUDIO_BITRATE_DEDUP_2026-06-17.md` (Option OD) surfaced that the prior portfolio-wide 64 kbps default contributed materially to Cloudflare Pages `public/` footprint at portfolio scale (3.36 GB across 1513 audio files). 48 kbps mono AAC-LC at 24 kHz on spoken-word lives well within the AAC-LC transparent band per ISO/IEC 14496-3 + AAC-LC perceptual-quality literature; the bitrate drop reduces site `public/audio/` + `public/chapters/` audio footprint by ~25% (~0.92 GB) at zero perceptible quality cost for portfolio TTS register.
+
+**Why the asymmetry**:
+
+| Leg | Bitrate | Where it ships | Sizing constraint |
+|---|---|---|---|
+| `.caf` | **64 kbps** | App bundle (`<app>-app/Resources/AudioDramas/<app>/*.caf` → bundled into IPA via `Bundle.module`) | App Store / TestFlight ceiling; CAF size is part of overall bundle size where IPA cap is at 4 GB+; current portfolio audio per app is <100 MB so 64 kbps headroom is fine |
+| `.m4a` | **48 kbps** | Cloudflare Pages (`spark-anvil-site/public/{audio,chapters}/<app>/*.m4a`) | Cloudflare Pages `public/` deploy-size ceiling; saw ENOSPC at ~4.2 GB; 48 kbps mono drops audio footprint enough to push the ENOSPC ceiling out 24+ months |
+
+**Forward gen**:
+- `scripts/pilot_interleaved_ensemble_chapter.py::wav_to_m4a` — emits at 48 kbps (ffmpeg `-b:a 48k` / afconvert `-b 48000`)
+- `scripts/gen_dn_s_audio_drama.py::encode_wav_to_m4a` — emits at 48 kbps (default arg); CAF leg unchanged at 64 kbps
+- `scripts/backfill_audio_m4a_vtt.sh` — emits at 48 kbps when backfilling from CAF
+- All other scripts emitting M4A for web distribution MUST follow
+
+**Bulk re-encode**: `scripts/reencode_audio_to_48kbps.py` re-encodes the 1500+ historical M4A files already shipped to spark-anvil-site at 60-69 kbps. Operates on `public/{audio,chapters}/*/*.m4a`; skips versioned archives (defense in depth over PR #929 sync filter); idempotent (skip-if-already-at-target with 5 kbps margin); dry-run by default. Source-of-truth `.m4a` siblings in app-repo `Resources/AudioDramas/<app>/` are NOT touched by the bulk re-encode — those align to the source on next gen-run.
+
+**Transcode-at-sync seam (R-TRANSCODE-AT-SYNC; 2026-06-17, Option RD)**: `sync_content_to_site.sh` now transcodes source `.m4a` files above target on-the-fly during sync. The seam closes the re-bloat regression class — without it, future syncs from un-updated 64 kbps sources would re-emit at the source rate on top of the already-transcoded 48 kbps site files.
+
+| Source .m4a state | Sync behavior |
+|---|---|
+| At-target (≤ 53 kbps; 48 + 5 kbps margin) | Plain `cp -p` source to dst (preserves quality; no upscale) |
+| Above-target (> 53 kbps) | `ffmpeg -c:a aac -b:a 48k -ac 1 -movflags +faststart -f mp4` source → dst |
+| ffmpeg / ffprobe missing OR `--no-transcode` | Plain `cp -p` + warning emission |
+| Transcode failure (corrupt source) | Cleanup tmp + fall back to plain `cp -p` (FAILED_TRANSCODE_FALLBACK_COPY counter) |
+
+`sync_content_to_site.sh --no-transcode` reverts to pre-seam plain `cp` behavior for emergency-rollback / debugging. The seam is per-file independent; if one source m4a corrupts, the others still sync.
+
+**Opportunistic per-app re-encode (companion of the seam)**: when an app session re-runs `gen_dn_s_audio_drama.py` (or any audio gen), the regenerated `.m4a` in `<app>-app/Resources/AudioDramas/<app>/` lands at 48 kbps by default. The next `sync_content_to_site.sh` run becomes a no-op for that app. Over time, the portfolio's source-of-truth `.m4a` files trend toward 48 kbps without a coordinated retroactive wave — closes Option A of the QC plan (`Docs/PLAN_APP_REPO_SOURCE_M4A_REENCODE_2026-06-17.md`) opportunistically.
+
+**Reversibility**: a future rule supersession can restore 64 kbps. Re-encoding 48 → 64 is a non-recoverable lossy step (information lost in the 64 → 48 pass); if quality issues surface in the field, re-gen from source via `gen_dn_s_audio_drama.py --regen-all`. Source TTS PCM bytes are not retained, but Gemini API determinism for the same prompt is high enough that re-gen approximates the original within imperceptible margin.
+
+**Bitrate selection** (why 48 not 32 or 56):
+
+- 32 kbps mono AAC-LC: borderline for kid dialog clarity — perceptual audits flag artifact at high-energy plosives + sibilance
+- 48 kbps mono AAC-LC: well within transparent band for 24 kHz spoken-word; chosen default
+- 56 kbps mono AAC-LC: imperceptibly different from 48 kbps for spoken-word; not worth the 8 kbps headroom delta
+- 64 kbps mono AAC-LC: prior portfolio default; transparent but over-spec for kid TTS narration register
+
+**Empirical validation**: ffmpeg AAC-LC encoder hits actual ~50 kbps on portfolio TTS source when targeting 48k (VBR closes within tolerance); ~23% file-size reduction vs prior 64 kbps default observed in single-file smoke test (PR #932 verification).
 
 ### Cost discipline (R410 #888)
 
@@ -117,7 +162,7 @@ Apps NEVER author this prompt — labsmith does at gen time. The per-character v
 
 ### Script-format convention
 
-Audio drama scripts live at `labsmith/Resources/AudioDramaScripts/<app>/<drama-title>.script.md` with YAML front-matter (`drama-title:` + `app:` + `source-chapter:` + `duration-target-seconds:`) followed by `[CHARACTER, voice-directive]: dialogue` markers. The format is consumed by `gen_dn_s_audio_drama.py` automatically.
+Audio drama scripts live at `spark-anvil-hub/Resources/AudioDramaScripts/<app>/<drama-title>.script.md` with YAML front-matter (`drama-title:` + `app:` + `source-chapter:` + `duration-target-seconds:`) followed by `[CHARACTER, voice-directive]: dialogue` markers. The format is consumed by `gen_dn_s_audio_drama.py` automatically.
 
 ### Register sourcing — UPPER tier (FK 7-8), NOT lower tier
 
@@ -148,7 +193,7 @@ Per WORK_QUEUE 2026-06-04 § Audio drama version preservation + ADR-025:
 - `gen_dn_s_audio_drama.py` **refuses to overwrite** an existing `<drama>.caf` unless `--overwrite-canonical` (or `--regen-all`) is passed
 - When `--overwrite-canonical` is in effect AND a prior canonical exists, the prior `<drama>.{caf,m4a,vtt}` is archived as `<drama>-v1-<YYYY-MM-DD>.{caf,m4a,vtt}` (date = prior file's mtime) BEFORE regen writes the new canonical
 - `catalog.json versions[]` is appended with the archived version record + the new canonical entry; `canonicalVersionIndex` points to the new entry
-- Site distribution (`scripts/sync_content_to_site.sh`) syncs ONLY the canonical version; sibling versions stay in the app repo as labsmith-side curation artifacts (not bundled to apps' production builds)
+- Site distribution (`scripts/sync_content_to_site.sh`) syncs ONLY the canonical version; sibling versions stay in the app repo as hub-side curation artifacts (not bundled to apps' production builds)
 - Vendor variants (`<drama>-elevenlabs.caf`, future `<drama>-cloud-tts-neural2.caf` etc.) follow the same versions[] tracking; pre-existing convention preserved
 
 ### Default attribution metadata (when script.md front-matter is sparse)
@@ -187,15 +232,15 @@ python3 scripts/gen_dn_s_audio_drama.py --regen-all --apply --start-at activefor
 
 ### Pre-gen vs runtime — orthogonal axes
 
-If an app needs RUNTIME TTS (kid types a word → server proxies → returns audio mid-session), that's the path documented above in § Server: wrap raw PCM in WAV. NOT this pre-gen path. They share the same Gemini model + same WAV-wrap mechanic, but run at different times by different actors (runtime: app server; pre-gen: labsmith curation).
+If an app needs RUNTIME TTS (kid types a word → server proxies → returns audio mid-session), that's the path documented above in § Server: wrap raw PCM in WAV. NOT this pre-gen path. They share the same Gemini model + same WAV-wrap mechanic, but run at different times by different actors (runtime: app server; pre-gen: hub curation).
 
 ## Cross-references
 
-- `labsmith/.claude/rules/debug-logging.md` § Real-world cascade lessons — body-sniff sizing + auth-consistency + "don't declare fixed early" rules
-- `labsmith/.claude/rules/portfolio.md` § Asset generation ownership + handoff requirement — Phase 2 audio drama listed in canonical asset class table
-- `labsmith/Docs/RESEARCH_TTS_AUDIO_PIPELINE_CASCADE_2026-05-29.md` — full 8-lesson cascade table + per-layer diagnosis methodology
-- `labsmith/Docs/PLAN_DN_S_PHASE_2_AUDIO_DRAMA.md` — parent plan (Option E of DN-S Integration per ADR-019)
-- `labsmith/scripts/gen_dn_s_audio_drama.py` — canonical labsmith-side pre-gen script (R411 #889)
+- `spark-anvil-hub/.claude/rules/debug-logging.md` § Real-world cascade lessons — body-sniff sizing + auth-consistency + "don't declare fixed early" rules
+- `spark-anvil-hub/.claude/rules/portfolio.md` § Asset generation ownership + handoff requirement — Phase 2 audio drama listed in canonical asset class table
+- `spark-anvil-hub/Docs/RESEARCH_TTS_AUDIO_PIPELINE_CASCADE_2026-05-29.md` — full 8-lesson cascade table + per-layer diagnosis methodology
+- `spark-anvil-hub/Docs/PLAN_DN_S_PHASE_2_AUDIO_DRAMA.md` — parent plan (Option E of DN-S Integration per ADR-019)
+- `spark-anvil-hub/scripts/gen_dn_s_audio_drama.py` — canonical hub-side pre-gen script (R411 #889)
 - `curiosityquest-app/Server/CuriosityQuestServer/Sources/Services/GeminiService.swift` (PRs #137 + #138) — gzip-disable + PCM→WAV reference impl (server runtime path)
 - `curiosityquest-app/Packages/Libraries/Sources/Services/TTSService.swift` (PRs #131 / #134 / #136) — iOS-side body-sniff + timeout diagnostics
 - `forgekit/Sources/Client/ForgeAudio/AudioDramaPlayer.swift` (0.99.11) — app-side bundle player

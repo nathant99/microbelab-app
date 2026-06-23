@@ -15,16 +15,6 @@ paths:
 
 This rule supersedes any per-file rules that say "Xcode must be closed when editing X" — those still hold for human workflows, but for an agent operating in-IDE, the safe rule is **don't touch Xcode-managed files at all**.
 
-## Quick rule (load-bearing)
-
-| Operation | Verdict |
-|---|---|
-| Author / Edit `*.xcworkspace/contents.xcworkspacedata` / `*.pbxproj` / `*.xcscheme` / `*.xctestplan` / `Info.plist` / `*.entitlements` / `*.xcassets/Contents.json` | ❌ NEVER |
-| `git add` + `git commit` on those files when Xcode regenerated them | ✅ FINE — Xcode owns the content; the agent is just packaging the diff |
-| Verify SPM build via `swift build --package-path Packages/Libraries` (or `cd Packages/Libraries && swift build`) | ✅ Preferred — terminal-only, no Xcode reload |
-| Verify build via `xcodebuild` | ❌ Forces Xcode workspace reload, can terminate agent session; defer to MCP `BuildProject` when build coverage > SPM-only is needed |
-| Author `Docs/HANDOFF_TO_USER_<TOPIC>.md` for GUI tasks | ✅ Canonical escape hatch |
-
 ## Why this matters
 
 When the agent edits a file Xcode owns, one of three things happens:
@@ -110,7 +100,7 @@ If the agent accidentally wrote to an Xcode-managed file and Xcode shows Externa
 
 ## Documenting this rule
 
-When labsmith next syncs `.claude/rules/` across all 131 apps, this rule propagates portfolio-wide. App sessions invoking the Coding Assistant integration inherit it automatically.
+When hub next syncs `.claude/rules/` across all 131 apps, this rule propagates portfolio-wide. App sessions invoking the Coding Assistant integration inherit it automatically.
 
 ## Reference
 
