@@ -82,6 +82,26 @@ Canonical script: `scripts/gen_dn_s_audio_drama.py`. Pattern lifted from CQ's `G
 - **SDK**: `google-genai` Python (`pip3 install google-genai`); `genai.Client(api_key=...).models.generate_content(model=..., config=GenerateContentConfig(response_modalities=["AUDIO"]))`
 - **Pro tier** (`gemini-2.5-pro-preview-tts`) reserved for hero-character voicing where Flash quality is insufficient
 
+#### Verify the key BEFORE any paid batch (R-GEMINI-KEY-VERIFY-BEFORE-BATCH; 2026-07-02)
+
+**Before running any paid Gemini wave (TTS, illustrations, cast portraits, book covers), sanity-check the key shape AND run a cheap auth probe — never assume the key is live.** Codified after the 2026-06-30 FractionForge session opened with `~/.config/labsmith/gemini_api_key` holding the 14-char literal placeholder `gemini api key`, which silently blocked all paid gen (the failure looked like a gen bug, not a config gap). Memory `project-gemini-key-placeholder.md` records the placeholder history.
+
+Two-step check:
+
+```bash
+# 1. Shape check — a real key is ~39 chars, starts with "AIza", has no spaces
+KEY=$(cat ~/.config/labsmith/gemini_api_key)
+[ "${#KEY}" -ge 39 ] && [[ "$KEY" == AIza* ]] && [[ "$KEY" != *" "* ]] \
+    && echo "shape OK (${#KEY} chars)" || echo "SUSPECT KEY — do NOT run a paid batch"
+
+# 2. Cheap auth probe — one free list call; if it errors, the key is invalid/unauthorized
+python3 -c "from google import genai; import os; \
+c=genai.Client(api_key=open(os.path.expanduser('~/.config/labsmith/gemini_api_key')).read().strip()); \
+print('auth OK:', next(iter(c.models.list())).name)"
+```
+
+Only run the wave once BOTH pass. This is cheaper than a half-completed batch that fails partway (Gemini partial-batch failures leave the pipeline in a mixed state; per R-GEMINI-KEY-SERIAL waves are single-flight, so a mid-batch auth failure wastes the whole serial run). When the probe passes but throughput crawls, suspect throttle (R-GEMINI-KEY-SERIAL), not the key.
+
 ### Per-character voice — prompt-driven, NOT cloning
 
 Gemini 2.5 TTS does not clone custom voices (that's Studio-tier Cloud TTS, enterprise). Instead, per-character voice register from `<app>-app/Docs/dn-s/chapters/<char>.md` § Voice register becomes the TTS prompt prefix:
@@ -179,12 +199,14 @@ A single drama at FK 7-8 serves the entire 9-14 audience because:
 - If a script needs revision (e.g., voice-register drift), edit `<drama-title>.script.md` directly + re-run `gen_dn_s_audio_drama.py`.
 - Existing dramas generated from pre-rewrite chapters (FK 10.5) do NOT need re-generation — the gen pipeline reads the script file, not the chapter MD.
 
-### TTS vendor choice (canonical per RESEARCH_TTS_QUALITY_GOOGLE_CLOUD_VS_ELEVENLABS_VS_GEMINI_2026-06-04)
+### TTS vendor choice — Gemini 2.5 canonical (post-V15 codification 2026-06-24)
 
-- **Gemini 2.5 Flash TTS — canonical for ~615 portfolio dramas.** Native multi-speaker single-call is unique in the 2026 vendor landscape. Cost ~$25-75 portfolio-wide.
-- **ElevenLabs v3 — reserved for hero-character A/B pilots only** (3 dramas: Sir Pinwell + Direct-Proof Dora + Lexa). Audio tag system (`[whispers]`, `[laughs]`) + voice cloning capability. Stitched single-speaker-per-call.
-- **Google Cloud TTS classic/WaveNet/Neural2/Studio — do NOT use.** No native multi-speaker; same cost as Gemini Pro but without the multi-speaker advantage.
-- **Gemini 2.5 Pro TTS — reserve for hero characters only** (~$2 per drama vs Flash ~$0.20). Use when register fidelity matters more than cost.
+Per `RESEARCH_TTS_QUALITY_GOOGLE_CLOUD_VS_ELEVENLABS_VS_GEMINI_2026-06-04` + V15 production verification: **Gemini 2.5 TTS won the A/B pilot.** As of V15 (2026-06-24) all 963 audio drama M4A files in production are Gemini-generated; 0 ElevenLabs variants reached production. The vendor decision is codified — new dramas ship Gemini Flash by default with NO A/B parallel.
+
+- **Gemini 2.5 Flash TTS — CANONICAL for all portfolio dramas.** Native multi-speaker single-call is unique in the 2026 vendor landscape. Cost ~$0.20/drama; ~$25-75 portfolio-wide. This is the default; no per-drama vendor flag needed.
+- **Gemini 2.5 Pro TTS — hero-character override only** (~$2 per drama vs Flash ~$0.20). Use when register fidelity matters more than cost. ~5 hero characters portfolio-wide.
+- **ElevenLabs v3 — RETIRED from production rotation.** 3 Phase 2A pilot dramas (Sir Pinwell + Direct-Proof Dora + Lexa) preserved in `<app>-app/Resources/AudioDramas/<app>/<drama>-elevenlabs.caf` as A/B artifacts; not used for forward gen. ElevenLabs may return if a future audio-tag-driven hero drama justifies the ~$30-100 spend, but that requires per-drama founder approval.
+- **Google Cloud TTS classic/WaveNet/Neural2/Studio — do NOT use.** No native multi-speaker; same cost as Gemini Pro without the multi-speaker advantage.
 
 ### Version preservation discipline (keep-all-versions policy)
 

@@ -289,7 +289,85 @@ When any pre-2026-06-12 single-beat chapter is touched for ANY reason — regist
 6. Multi-beat post-step if applicable per R-MULTIBEAT-SNAPSHOT
 ```
 
+### R-DIR-FEDC-CHAPTER — Affect-anchoring required on every multibeat chapter (2026-06-27)
+
+Per the V18 DIR/Floortime therapist review (`Docs/RESEARCH_AND_AUDIT_DIR_FLOORTIME_THERAPIST_FEEDBACK_2026-06-25.md`) and Greenspan's Functional Emotional Developmental Capacities (FEDC 5+, where abstract reasoning is built FROM affect-anchored emotional experience): **every NEW multibeat chapter (single-character OR ensemble) MUST ship two affect anchors.** This was author-discipline through V22 (FractionForge followed it by hand); V23 makes it an enforced gate.
+
+| Requirement | What | Why |
+|---|---|---|
+| **1. Affect-recognition reflection-prompt** | `reflection-prompts[]` front-matter with **≥1** prompt that invites the reader's OWN felt-sense — either names a feeling/body-sensation OR uses a reflective second-person invitation ("Have you ever felt…?", "Is there something you…?"). Canonically placed after beats 1 + 4. | Reader empathy (therapist Axis 1 + Pixar Rule #15). The reader maps the character's experience onto their own. |
+| **2. Affect-anchored closer** | The final narrative beat ends on the **felt-sense**, not the bare math/concept. The V18 `halver.md` P0 was exactly this: "it ended on the math instead of the feeling." | FEDC: the emotional anchor is what makes the abstract idea stick. A math-only ending strands the concept without affective scaffolding. |
+
+**The gate** — `scripts/audit_chapter_dir_fedc_compliance.py`:
+
+- `NO_REFLECTION_PROMPTS` (high) — front-matter has no `reflection-prompts:` list
+- `NO_AFFECT_PROMPT` (medium) — has prompts but none is affect-recognition (no feeling word AND no reflective second-person invitation)
+- `MATH_ONLY_CLOSER` (high) — the closer paragraph names the primitive / a math term but contains NO affect/feeling word
+
+Run gate-mode on the chapters being shipped (forward-looking; do NOT retroactively fail the pre-convention backlog):
+
+```bash
+python3 scripts/audit_chapter_dir_fedc_compliance.py --ci-mode --files <changed-chapter-md> [...]
+```
+
+The gate is wired into the opt-in per-app pre-push hook (`scripts/git-hooks/pre-push-chapter-checks.sh`, gate #3) scoped to chapters changed in the push, and into the in-session pipeline below (step 5a). **FractionForge V22 (liner/gather/times/tenth/rank) is the reference impl — all 5 pass gate-mode.**
+
+**Trauma-axis note**: trauma-gated chapters use the SAMHSA body-sensation register (ADR-016/021), a *stricter* form of the same affect-anchor principle — the gate's affect lexicon includes body-sensation words (breath / shoulders / steady / unclench …) so those pass by construction.
+
+**When it applies**: every new/rewritten multibeat chapter in the cast-expansion + ensemble rollout (FractionForge → NumberSense → GeometryForge → rest of Math → ELA → Science → …). **When it does NOT**: pre-convention backlog chapters (surfaced for visibility by a bare portfolio run, not a merge blocker); asset-only regens with no prose change.
+
 **Cross-references**:
+- `Docs/RESEARCH_AND_AUDIT_DIR_FLOORTIME_THERAPIST_FEEDBACK_2026-06-25.md` — the 5-axis therapist feedback (source of truth)
+- `.claude/rules/forgekit.md` § R-FORGEPEDAGOGY-SCAFFOLDING — R1/R3/R7 DIR/Floortime alignment
+- `fractionforge-app/Docs/dn-s/chapters/halver.md` — V18 end-on-feeling rewrite reference impl
+- `scripts/audit_chapter_dir_fedc_compliance.py` — the gate
+
+### V15 reference-impl in-session polish discipline (codified V16 2026-06-24)
+
+V15 (2026-06-24) shipped 4 trauma-axis ensemble pair chapters (wellnessforge/steady-pause, saffronlab/rise-simmer, mindforge/settle-inside, safetyforge/tell-trace) using a documented in-session polish pipeline. Each chapter took ~45-60 min Opus 4.7 in-session + ~$0.32 pilot regen. The pipeline is reference-impl for any forward trauma-axis ensemble chapter ship (and any non-trauma ensemble chapter that benefits from the same compliance review).
+
+**8-step in-session pipeline**:
+
+1. **In-session Opus editorial polish of Pro draft**:
+   - Front-matter cleanup (`character` / `role` / `primitive` / `register` / `chapter-round` / `status`; quoted-string discipline per the prebuild YAML normalizer)
+   - § R-CHAPTER-REGISTER stoplist scrub (engineering jargon / project-mgmt jargon / reviewer-framework jargon / meta-pedagogy)
+   - Crisis-resource embedding under `## A note for grown-ups` H2 (988 / 741741 / Childhelp 1-800-422-4453 — for trauma-axis chapters per ADR-016 § Compliance gates)
+   - Cultural-context note authoring where relevant (per ADR-020 § Cultural credit; e.g., saffronlab/rise-simmer Indigenous-knowledge-credit framing)
+   - ADR compliance review per chapter (ADR-016 text axis / ADR-020 cultural-credit / ADR-021 audio axis / ADR-025 v2 attribution / ADR-029 audio player rendering on T1+T2)
+2. **Place at canonical Tier-1 path**: `<app>-app/Docs/dn-s/chapters/<slug>.md`
+3. **Auto-segment**: `python3 scripts/auto_segment_chapter.py --chapter <md-path> --tier 1` → 5-beat sidecar
+4. **Pilot regen**: `python3 scripts/pilot_interleaved_ensemble_chapter.py --manifest <sidecar> --out-dir Resources/PilotsAndExperiments/<wave-id>/<app>` → 5 beats (Pro $0.134 + 4× Flash $0.045) + Gemini 2.5 TTS audio + ADR-025 v2 intro/outro frames
+5. **Per-beat text-leak gate** via `audit_image_text_leaks.py` (R-PATH-B-TEXT-LEAK-GATE). LEAK → resolve via `gate-allow-text` allow-list in chapter front-matter per § INTENTIONAL_CURRICULUM_SIGNAGE OR regen with tightened prompt
+5a. **DIR/FEDC compliance gate** (R-DIR-FEDC-CHAPTER) — `python3 scripts/audit_chapter_dir_fedc_compliance.py --ci-mode --files <chapter-md>`. MUST pass: ≥1 affect-recognition `reflection-prompt` + affect-anchored (not math-only) closer. Author the prompts + felt-sense ending in step 1; this step verifies
+6. **PNG → WebP convert** (V11 ENOSPC discipline) + `cp` to `spark-anvil-site/public/chapters/<app>/`
+6.5. **(NEW V16) Pair portrait gen for ensemble chapters**: `python3 scripts/gen_cast_portraits.py --app <slug> --pairs <slug>:<chapter-slug> --include-gated --yes`. **REQUIRED for ensemble pair / cohort chapters** to satisfy § R-CAST-PORTRAIT-SLUG CI check — V15 omitted this step and the 4 V15 chapters tripped the Cloudflare prebuild gate the next round (closed V16 P0). Single-character chapters skip this step (their portrait already lives in dnCast.members[])
+7. **Content collection sync**: `bash scripts/sync_content_to_site.sh --apply --app <slug>` → auto-commits + pushes to spark-anvil-site `main`
+8. **Per-app branch + chapter MD + handoff doc + PR + merge**: branch off main; commit chapter MD + audit doc + per-app `Docs/HANDOFF_FROM_HUB_DN_S_*.md` citing relevant ADRs + asset paths
+
+**Per-chapter cost**: ~$0.32 pilot regen + (~$0.045 pair portrait if ensemble) + $0 Opus polish (Claude Code subscription).
+
+**Per-chapter wall-clock**: ~45-60 min interactive (editorial polish dominates; pilot + sync + PR is ~10 min mechanical).
+
+**When this discipline applies**:
+
+- Forward authoring of any trauma-axis chapter (ADR-016 / ADR-020 / ADR-021 carve-out cluster)
+- Forward authoring of any ensemble pair / cohort chapter (per § R-ENSEMBLE-AUTHORING)
+- Phase A.2 placeholder remediation chapters per `Docs/AUDIT_DN_DN_S_CHAPTER_QUALITY_PHASE_A2_CALIBRATION_2026-06-11.md`
+- Any chapter where author judgment + compliance review + crisis-resource embedding + cultural-context authoring would benefit from in-session Opus over a scripted batch run
+
+**When this discipline does NOT apply** (scripted batch path is fine):
+
+- Portfolio-scale opportunistic-upgrade waves under § R-MULTIBEAT-DEFAULT (Option E B1 selective wave)
+- Non-trauma-axis single-character chapter regen waves
+- Asset-only regens (no prose change)
+
+**Cross-references**:
+- `Docs/CONTEXT_HANDOFF_2026-06-24_V15_TRAUMA_AXIS_AUDITS_PDF_DEFER.md` § Item 1 (parent V15 ship; 4 reference-impl chapters)
+- `.claude/rules/spark-anvil-website.md` § R-PATH-B-PROMPT-PARITY (step 5 + step 6 prompt-side discipline)
+- `.claude/rules/spark-anvil-website.md` § R-CAST-PORTRAIT-SLUG (step 6.5 portrait CI check)
+- `Docs/WORK_QUEUE_INBOUND_HANDOFFS_2026-05-20.md` § V16 P0 (V15 step-6.5 omission incident)
+
+**Cross-references** (parent R-AUTHOR-MODEL-CHOICE):
 - `Docs/RESEARCH_MODEL_CHOICE_CHAPTER_AUTHORING_2026-06-12.md` — 10-source synthesis + per-axis evidence
 - `scripts/gen_ensemble_chapter_draft.py:41` — Gemini 2.5 Pro hardcode; stays for scripted batch
 - `scripts/audit_chapter_quality.py:54-64` — canonical methodology-H2 regex list
@@ -331,6 +409,8 @@ See `Docs/ADR-029_AUDIO_PLAYER_TIER_RENDERING_2026-06-18.md` for the full decisi
 - Tier-1 target: FK 4-6 / Flesch ease 70-90 / average sentence length 10-14 words / polysyllabic ratio <12% / 800-1500w per chapter (up to 2400 ensemble)
 - Tier-2 target: FK 7-8 / Flesch ease 60-75 / average sentence length 14-18 words / polysyllabic ratio <15% / 1000-1800w per chapter (up to 2400 ensemble)
 - Both: voice register card + arc-across-kits + relationships sections verbatim (rewriters preserve these)
+
+**Tier-2 FK 7-8 is a TARGET BAND, not a literal gate (R-TIER-2-FK-ASPIRATIONAL; 2026-07-02).** In practice the founding cohorts ship Tier-2 below FK 7 — e.g., FractionForge's founding-5 Tier-2 land at FK 4.4-7.5 (de-facto ~5-6). Chasing FK 7-8 by inflating vocabulary risks harming the warm, trust-the-reader 9-14 voice the chapters depend on. The **operative bar** is: Tier-2 is *meaningfully denser than its Tier-1 sibling (≈ +2 reading grades)* AND *consistent with the app's founding-cohort Tier-2 register* — documented honestly per chapter, not force-fit to a metric. When a new expansion-cast chapter's Tier-2 lands below FK 7 but ≈ +2 grades over its Tier-1 and matches the founding-cohort register, that is CORRECT, not a defect. Never inflate polysyllabic vocabulary purely to hit the FK number. Codified from the FractionForge Tier-2 expansion-5 session (2026-06-30).
 
 **Audit tool**: `scripts/audit_pdf_book_content.py` runs per-chapter Flesch-Kincaid + Flesch ease + ASL + polysyllabic + word-count checks. Run after any chapter authoring/rewrite.
 
@@ -651,6 +731,44 @@ In those carve-outs, Tier-2 visuals are independently gen'd at full ~$0.32/chapt
 
 - `Docs/AUDIT_GAMBITTALES_READER_PERCEPTION_TIER_1_2_2026-06-13.md` — reader-perception audit that codified this rule
 - `Docs/WORK_QUEUE_INBOUND_HANDOFFS_2026-05-20.md` § Queue #869 — strategic Q resolved (DD-DEFERRED → AA-CODIFIED)
+
+## Cast-expansion integration debt (R-CAST-EXPANSION-INTEGRATION; 2026-07-02)
+
+**When a DN cast is EXPANDED (e.g., FractionForge 5→10 to close a /method curriculum-coverage gap), shipping the new members' Tier-1 chapters is NOT the finish line — it opens a multi-axis integration debt that stays invisible until a later audit or inbound handoff surfaces it.** This is the "**authored ≠ integrated**" pattern — one level up from "registered ≠ wired" (`.claude/rules/portfolio.md` § Asset Consumer Audit). The SAME round that authors an expansion chapter (or a tracked follow-up handoff) MUST close every downstream axis, or the cast member is authored-but-dark.
+
+### Why the rule exists
+
+The FractionForge expansion-5 (`liner`/`gather`/`times`/`tenth`/`rank`) shipped Tier-1 chapters in V22 (2026-06-24) but as of 2026-06-30 still lacked: Tier-2 advanced editions + Tier-2 audio + site `/advanced` pages (closed 2026-06-30, hub PR #1089 + site PRs #339/#341); **app-bundle** cast portraits + `CastMember.all` roster entries, so Move B per-kit cameos could not render (inbound `HANDOFF_FROM_APP_EXPANSION_CAST_PORTRAITS.md`, closed 2026-07-02 hub delivery); and both the Move B + Move D per-app handoffs carried a stale hardcoded "Cast total: 5". Each gap surfaced separately, weeks apart. See `Docs/AUDIT_FRACTIONFORGE_CAST_UTILIZATION_2026-06-29.md`.
+
+### The Cast-Expansion Integration Checklist (per NEW member)
+
+When a DN cast grows, close ALL of these per new member — in the same round or a tracked follow-up handoff:
+
+1. **Tier-1 chapter** — 5-beat multibeat (R-MULTIBEAT-DEFAULT); passes DIR/FEDC (R-DIR-FEDC-CHAPTER) + register stoplist (R-CHAPTER-REGISTER) + text-leak (R-PATH-B-TEXT-LEAK-GATE) + anatomy (R-ANATOMY-GATE) gates.
+2. **Tier-2 advanced edition** — `Resources/DN-S-Tier-Upper/chapters/<app>/<slug>.md` + Tier-2 audio + site `/advanced` page. Per R-TIER-2-MULTIBEAT-REUSE (beat art byte-reused; prose+audio differ) + R-TIER-2-CONTENT-ENTRY (the `src/content/chapters/<app>/<slug>-advanced.md` entry is what makes the route build). Use `scripts/t2_coverage_wave_runner.sh <app>:<slug,...>` end-to-end.
+3. **Site cast portrait** — `spark-anvil-site/public/cast/<app>/<slug>.webp` (R-CAST-PORTRAIT-SLUG; slug matches the chapter MD filename).
+4. **App-bundle cast portrait + roster entry** — `<app>-app/Libraries/.../Resources/Cast/<slug>.webp` (byte-reuse the site portrait — it's the same `gen_cast_portraits.py` output; don't re-gen) + a `CastMember.all` roster entry delivered via `HANDOFF_FROM_HUB_*.md` (hub ships asset + roster data; the app session writes the Swift). Move B cameos gate on a *renderable speaker* = roster entry + app-bundle portrait; without both, the cameo can't render.
+5. **Move B per-kit cameos** authored/refreshed into the member's home kits (cast count derived from `dnCast.members[]` — see companion fix below).
+6. **Move D voicing handoff** refreshed (cast count derived from `dnCast.members[]`).
+
+### Companion fix — derive cast totals from `dnCast.members[]`, never hardcode
+
+The Move B (`TEMPLATE_HANDOFF_FROM_LABSMITH_DN_S_PER_KIT_CAMEOS.md`) + Move D (`TEMPLATE_HANDOFF_FROM_LABSMITH_DN_S_AI_MENTOR_VOICING.md`) templates + every generated per-app handoff MUST express cast totals as **"N = count of `dnCast.members[]` (in `spark-anvil-site/src/data/apps.generated.ts`) / `CastMember.all`"**, not a literal "Cast total: N". A hardcoded count silently goes stale the moment the cast expands, and the stale number is what made the FractionForge integration debt invisible in the Move B/D handoffs. When authoring or refreshing a per-app cameo/voicing handoff, re-derive the count at author time.
+
+### When this rule applies
+
+- Any DN cast expansion (adding ≥1 member to an app that already shipped a founding cast).
+- New-app authoring where the cast is authored incrementally — each member is only "done" when all 6 axes close.
+- Auditing a cast for utilization gaps — enumerate the 6 axes per member; any open axis is integration debt.
+
+### Cross-references
+
+- `Docs/AUDIT_FRACTIONFORGE_CAST_UTILIZATION_2026-06-29.md` — the audit that surfaced the class (10-authored / 5-integrated gap)
+- `Docs/CONTEXT_HANDOFF_2026-07-02_FRACTIONFORGE_TIER2_SHIPPED.md` — the session that closed the FractionForge axes + queued this codification
+- `.claude/rules/portfolio.md` § Asset Consumer Audit — the "registered ≠ wired" precedent one level down
+- `.claude/rules/spark-anvil-website.md` § R-CAST-PORTRAIT-SLUG + § R-TIER-2-CONTENT-ENTRY + § R-SIDECAR-TIER-REQUIRED — the per-axis site rules this checklist references
+- § R-TIER-2-MULTIBEAT-REUSE + § Dual-tier chapter editions — the Tier-2 axis
+- § DN-S Integration (Move B / Move D) — the cameo + voicing axes
 
 ## Cross-references
 
