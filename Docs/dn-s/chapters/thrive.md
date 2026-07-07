@@ -13,58 +13,82 @@ reflection-prompts:
   - beat-after: 4
     prompt: "Thrive finds courage in tiny survivors who make a home where it's hard. Have you ever felt a little braver realizing you can adapt to a place or situation that seemed too tough at first?"
 gate-allow-text-pattern: '^[A-Za-z0-9]{1,4}$'
-word-count: ~1010
+word-count: ~1230
 ---
 
 # Thrive and the Life That Won't Give Up
 
-Thrive is *a hardy, bright-eyed extremophile-microbe-tween (chunky-cartoon round-and-armored shape) in a chunky weatherproof lab-suit with tiny goggles and a thermometer-and-salt-jar kit.* Thrive is tough, cheerful, and full of wonder — fond of saying *"life finds a way, even where nothing should live."*
+At the lip of a boiling hot spring in MicrobeLab, where the water hissed and steamed and no sensible creature would ever put down roots, a tiny round microbe-tween named Thrive was doing the one thing everyone kept telling her not to do. She was moving *in.*
 
-Thrive is *small but unstoppable*, *warm-amber-with-mineral-streaks*, *delighted by impossible places* — boiling springs, frozen ice, the crushing deep sea, water saltier than tears.
+She had a weatherproof lab-suit, tiny goggles fogged with mist, and a little kit of thermometers and salt jars slung over one armored side. The spring bubbled at a temperature that would cook an egg in seconds. Thrive dipped one careful sensor into it, read the number, and let out a delighted little whistle.
 
-This is essential. Thrive embodies the **extremophile** primitive — microbes that survive where almost nothing else can. Some love scalding heat. Some live locked in glacier ice. Some thrive in water so salty or so acidic it would harm anything else. Wherever the world seems impossible, some microbe has quietly made it home.
+"Perfect," she said, to no one.
 
-*Reflection: have you ever felt surprised or moved that something kept going somewhere you didn't think it could?*
+A visiting microbe drifted past on the cooler edge of the pool, took one look at where Thrive was headed, and squeaked. "You can't live *there.* That water's practically fire!"
 
----
+"Watch me," said Thrive.
 
-Thrive grew up near a steaming hot spring, in water far too hot for most living things. As a tiny microbe, Thrive used to wonder: *am I the only life out here?* Then one day a wise old heat-loving microbe showed Thrive the truth.
+She let the current pull her over the edge and down into the scalding blue. The other microbe braced for the worst — for Thrive to curl up and come apart like a boiled leaf. Instead, Thrive settled onto a warm mineral shelf, stretched, and *multiplied.* Where there had been one small tough shape, there were suddenly two, then four, then a whole shimmering patch of them, glowing faintly against the steaming stone. The impossible water wasn't killing her. It was feeding her. Given her heat, given her minerals, she was doing what her kind did best — turning a place that should have been empty into a crowd.
 
-"Look closer," the elder said. "In the boiling water — life. In the ice on the mountain — life. At the bottom of the darkest sea, by vents that would melt stone — life. The world has no corner too harsh for someone to call home."
-
-Thrive never forgot it. The harshest places weren't empty. They were full of tough, patient survivors who had found a way to belong exactly where they were. That, to Thrive, was the most wonderful thing in all of science.
+"See?" she called up through the bubbles. "The world thinks this corner is empty. It's just waiting for someone built for it."
 
 ---
 
-Thrive showed a visiting student three sealed jars: one steaming hot, one frozen, one full of bright salty brine.
+Thrive had learned that near this very spring, when she was small enough to fit on a grain of sand.
 
-"Watch," Thrive said. In each impossible jar, tiny specks of life glowed. "Heat-lovers in the hot one. Ice-dwellers in the frozen one. Salt-lovers in the brine. None of them could swap homes — but each is perfectly built for *its* place."
+Back then she'd been afraid of exactly the thing she now loved. She'd huddle on the cool rim, watching the boiling middle, and think: *there's nothing out there. I'm alone. The whole hot heart of this place is dead.* It made her feel small in a bad way — like the world was mostly emptiness, with a few frightened specks clinging to the safe edges.
 
-The student stared. "How do they survive?"
+An old heat-loving microbe, one who had lived deep in the scald for longer than anyone could remember, drifted up beside her one day. She didn't tell Thrive to be brave. She just said, "You feel lonely out here, don't you? Like the harsh places are empty?"
 
-"Special tricks," Thrive said. "Heat-lovers have tough insides that don't fall apart in boiling water. Ice-dwellers make their own antifreeze. Each one adapted, slowly, over a very long time, until the impossible place became *home.* They don't just survive there. They *thrive* there."
+Thrive nodded, miserable.
 
----
+"Look closer, little one." The elder tipped toward the steam. "In the boiling water — life. In the ice up the mountain — life. At the bottom of the darkest sea, by vents that would melt stone — life. There is no corner of this world too harsh for *someone* to call home."
 
-"Here's the best part," Thrive said, leading the student to a model of a deep-sea vent, glowing in the dark.
-
-"Scientists thought nothing could live down here — no sunlight, crushing pressure, scalding water. Then they looked. And they found whole *gardens* of life, all powered by microbes living off the vent's chemicals." Thrive's eyes shone. "Every time we think we've found the edge of where life can be, we look closer and find someone already living there."
-
-The student peered into the glowing dark, amazed at the life thriving where it seemed impossible.
-
-*Reflection: have you ever felt a little braver realizing you can adapt to a place or situation that seemed too tough at first?*
+Thrive stared into the hot blue she'd been so sure was dead. And once she truly looked, she saw them — faint, tough, patient glimmers everywhere, all thriving. The harsh places weren't empty. They were *full.* The loneliness came apart in her chest and turned into the biggest wonder she had ever felt.
 
 ---
 
-Thrive walked the student back to the three impossible jars, each quietly full of life.
+She walked to MicrobeLab at twelve, because a place that studied life ought to understand the kind of life that grows where nothing should.
 
-"Here's what I want you to carry," Thrive said softly. "Life is far tougher and far more clever than it looks. In the hottest, coldest, saltiest, darkest places — places that seem impossible — some small brave thing has made a home and is *thriving.* The world is more full of life than anyone first believes."
+Photo, one of the older cast who ran the habitat benches, met her at the door. He didn't ask her to prove she was tough. He asked one question. "Where does life live?"
 
-The student looked at the steaming, frozen, salty jars with new respect — three impossible homes, each full of tiny, unstoppable life.
+Thrive didn't answer with words. She uncapped her salt jar — brine so heavy it stung the air — and tipped a single drop onto a clean slide. Then she waited. Within a moment the drop began to shimmer, tiny salt-loving specks blooming and dividing in water that should have shriveled anything alive.
 
-"I am Thrive," they said, holding up the salt jar. "The primitive I teach is **extremophiles**. The move is **life finds a way, adapting to thrive even where nothing should live.**"
+"That should be a desert," Photo said, testing her.
 
-And the student felt a quiet courage — a sense that toughness comes in tiny packages, and that almost anywhere can become a place to belong.
+"It *is* a home," Thrive said. "Give something the right conditions — even brutal ones — and it doesn't just hang on. It multiplies. It fills the place up." She watched her specks double again. "Nowhere is as empty as it looks."
+
+Photo looked at the glittering, impossible drop for a long moment. "You belong here," he said.
+
+---
+
+Thrive's bench was crowded with jars that were secretly alive.
+
+A student came in one afternoon, slumped and stuck. She'd been staring at a diagram of a frozen glacier and a boiling geyser, and she pushed it away in frustration. "These places are dead," she said. "Why am I even studying them? Nothing lives there."
+
+Thrive knew that slump. She'd felt it on the cool rim, years ago.
+
+"Warm this jar for me," she said, sliding over a sealed jar of cloudy water and a little heat-pad. The student set it on the warmth. "Now watch the number." A thermometer strip on the side crept up. As it did, faint green glimmers woke inside and began to spread. "Heat-lovers," Thrive said. "They were asleep in the cold. Give them their warmth and they *thrive* — double, and double again."
+
+She slid over a second jar, this one frosted with ice. "The freezing one isn't dead either. The ice-dwellers just make their own antifreeze and keep going, slow and steady." She tapped the salty brine jar last. "And the salt-lovers fill water that would shrivel you or me. Each one needs its own conditions — heat, or ice, or salt. Give a living thing what it needs, and it doesn't just survive. It grows into a crowd."
+
+The student leaned close as the warmed jar bloomed thick with green. "So they were there the whole time?"
+
+"Waiting for the right conditions," Thrive said. "That's the whole trick. Life doesn't need *easy.* It just needs *its* place — and then it fills it right up."
+
+---
+
+Later, when the benches had gone quiet, the student came back with one more question. She was softer now.
+
+"When a place looks impossible," she said, "and you can't see anything living in it... how do you know something could still make a home there?"
+
+Thrive thought about the cool rim, and the loneliness, and the elder's slow voice turning it into wonder.
+
+"You feel it, once you've seen it enough times," she said. "There's this catch in your chest — a kind of held-breath hope — right before you look closer at somewhere you were sure was empty. And almost always, *there they are.* Something tough and small, given exactly what it needs, quietly filling the place up." She looked toward her steaming spring through the window. "The hottest, coldest, saltiest, darkest corners of the world aren't the lonely ones. They're crowded. You just have to believe someone might belong there, and then go look."
+
+The student nodded slowly, and Thrive watched the stuck, heavy feeling lift off her shoulders — the same way, years ago, hers had lifted on the rim.
+
+She didn't say the rest out loud, but she felt it, warm and steady and glad all the way through: *anywhere can become a home, if you give it what it needs. Even the places that scared you first. Even you.*
 
 ---
 

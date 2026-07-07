@@ -9,68 +9,100 @@ chapter-round: V27 Science Wave 2
 status: SHIPPED
 reflection-prompts:
   - beat-after: 1
-    prompt: "Colony believes nobody has to face the world alone. Have you ever felt stronger or safer being part of a group than you would have felt by yourself?"
+    prompt: "Have you ever felt stronger or safer being part of a group than you would have felt all on your own? Where did that safe feeling sit in your body?"
   - beat-after: 4
-    prompt: "Colony loves the feeling of many small ones building something together. Have you ever felt the warmth of belonging to a team or community where everyone helps each other?"
+    prompt: "Think of a time you helped build something with other people — a fort, a project, a game. What was the warm, all-together feeling like when it finally worked?"
 gate-allow-text-pattern: '^[A-Za-z0-9]{1,4}$'
-word-count: ~1000
+word-count: ~1220
 ---
 
 # Colony and the City the Small Ones Built
 
-Colony is *a warm, sociable microbial-community-tween (chunky-cartoon cluster-of-many-rounds shape) in a chunky patchwork lab-coat stitched from many small pieces.* Colony is friendly, generous, and team-hearted — fond of saying *"alone we're tiny; together we build a city."*
+On a smooth grey stone at the edge of a slow stream, a thousand tiny builders were laying down a roof, and Colony was right in the thick of it.
 
-Colony is *many-small-ones-as-one*, *warm-coral-and-gold in a connected cluster*, *happiest in good company* — because Colony literally *is* a community.
+You couldn't see Colony as one thing. Colony was a cluster — a warm coral-and-gold huddle of many small rounds, all linked shoulder to shoulder, wearing one patchwork lab-coat stitched from a hundred little pieces. When one part of the cluster leaned, the whole cluster leaned with it. That was the point.
 
-This is essential. Colony embodies the **biofilm** primitive — microbes working together. Alone, a single microbe is tiny and fragile. But together, microbes build *biofilms*: slimy shared shelters where they cooperate, share food, and protect one another. From the film on a pond to the coating on plant roots, microbes are far stronger as a community than alone.
+A single microbe came drifting down the current, spinning, panicked, thin as a speck. It bumped against the stone and clung there, trembling.
 
-*Reflection: have you ever felt stronger or safer being part of a group than you would have felt by yourself?*
+"Whoa — hey — you're okay," Colony called out, and the whole cluster shuffled sideways to make a gap. "Come in. There's room."
 
----
+The little speck hesitated. "What is this place?"
 
-Colony began as a single, lonely microbe drifting in a stream. It was hard, out there alone — easily swept away, easily dried out, easily lost. Colony used to think that was just how life was: small, and on your own.
+"Home," Colony said. "We're building it right now. Watch." And Colony did what Colony always did — reached out with a thin thread of slippery goo and stitched the newcomer in, anchoring it to the stone. "See? You were about to be swept off downstream. Now you're not. Nobody holds on out here by themselves. But together —" Colony gestured at the wide, glistening film spreading across the rock, "— together we build something that *stays.*"
 
-Then Colony drifted against a smooth rock where a few other microbes had gathered. They made room. They shared a sticky shelter they'd built together. And suddenly Colony wasn't fragile anymore — anchored, fed, protected, *part of something.*
+The little speck stopped trembling. For the first time it wasn't drifting. It was part of a wall, part of a roof, part of a slow warm city that a thousand small ones were building one thread at a time.
 
-"This is a biofilm," an older microbe said. "By ourselves, we're nothing much. Together, we build a home that holds." Colony never drifted alone again. The greatest discovery wasn't a new place. It was *each other.*
-
----
-
-Colony showed a visiting student a smooth stone from a stream, coated in a faint slippery film.
-
-"Feel that slickness?" Colony said. "That's a biofilm — a tiny city of microbes, all living together under a shared slimy roof we build ourselves. Inside, we cooperate. Some members gather food. Some build the walls. Some send chemical messages so we all act as one."
-
-The student touched the slippery stone, surprised.
-
-"You've got biofilms too," Colony said cheerfully. "The fuzzy feeling on your teeth in the morning? That's plaque — a biofilm. (That's why we brush!) Pond scum, the slime in a drainpipe, the coating on healthy plant roots — all cities, built by the smallest builders, working together."
+"That's the whole trick," Colony said softly. "Alone we're tiny. Together we build a home that holds."
 
 ---
 
-"Here's the wonderful part," Colony said, showing a model where single microbes joined into a glowing connected community.
+Colony hadn't always been a city. Once, Colony had been that trembling speck too.
 
-"One microbe can't do much. But thousands, working together, can survive harsh weather, share scarce food, and even talk to each other with chemical signals — deciding *together* when to grow or rest. Scientists call that chemical conversation 'quorum sensing.' It's a whole community making choices as one."
+Long ago Colony was a single microbe alone in the stream, and it was hard out there. The current shoved it. The sun dried it. Some days it drifted so far from anything solid it thought: *this is just what life is. Small, and on your own, forever.* The loneliness was a real weight, a cold thin feeling like being the only light on in a dark house.
 
-The student watched the lone microbes link up and light brighter together than any could alone.
+Then Colony washed up against a rock where a few others had already gathered. They didn't ask Colony to prove anything. They just opened a gap in their sticky shelter and said, "There's room."
 
-*Reflection: have you ever felt the warmth of belonging to a team or community where everyone helps each other?*
+An older microbe pressed a thread of goo to Colony's side, fixing it to the stone. "We call this a biofilm," it said. "By ourselves, we're barely anything. The stream can carry any one of us off in a heartbeat. But we make this slime together, and it becomes walls, and it becomes a roof, and suddenly none of us can be swept away." It patted Colony gently. "You're not fragile anymore. You're *joined.*"
+
+Colony felt the cold thin feeling melt out of it, replaced by something steady and warm. Anchored. Fed. Kept. The greatest thing Colony ever found in that whole stream wasn't a new place to live. It was each other.
+
+Colony never drifted alone again.
 
 ---
 
-Colony walked the student back to the slippery stone, where the whole tiny city lived.
+Colony walked into MicrobeLab carrying a wet grey stone in a hundred careful hands.
 
-"Here's what I most want you to carry," Colony said warmly. "The smallest, most fragile things in the world become strong by *joining together.* No microbe is mighty alone — but as a community, sharing and protecting and deciding together, they can build a home that lasts. Togetherness is its own kind of strength."
+The mentor met Colony at the door and asked the only question that mattered here: "What do you do?"
 
-The student looked at the ordinary slippery stone and saw it differently now — a whole cooperating city, built by countless small ones who were stronger together.
+Colony didn't answer with a speech. Colony set the stone on the bench and let the mentor touch the faint slippery film coating it.
 
-"I am Colony," they said. "The primitive I teach is **biofilms** — microbial communities. The move is **alone we're tiny and fragile; together we build a home that holds.**"
+"Feel that?" Colony said. "That slickness isn't dirt. That's a city. Thousands of us, living under one shared roof we built ourselves. Some of us gather food. Some of us patch the walls. Some of us send little chemical messages so we all decide things at once." Colony's cluster brightened, every small round glowing a shade warmer. "One of us can't do much. But like this — like *this* — we can survive a drought, share the last crumb, hold on through weather that would scatter any single one of us."
 
-And the student felt a warm sense of belonging — the quiet strength of knowing that small things, joined together, can build something far bigger than themselves.
+The mentor turned the slippery stone over, quiet for a moment.
+
+"You belong here," the mentor said.
+
+---
+
+A student came into Colony's workshop one afternoon, arms crossed, unimpressed. "It's just slime," she said, poking the stone. "It's kind of gross."
+
+"Ah," Colony said, delighted rather than offended. "That's what everyone thinks at first. Lift that fern onto the ledge for me?"
+
+She did. Colony pointed at its roots. "See the pale coating there, hugging the little root hairs? That's a biofilm too. It's helping the plant drink. Those microbes and that fern are *neighbors* — they trade food back and forth all day."
+
+The student uncrossed her arms a little.
+
+"You've got one right now," Colony added cheerfully. "That fuzzy feeling on your teeth when you first wake up? That's plaque — a biofilm, same as this stone." Colony grinned. "It's why we brush! We give some of the crowd a fresh start each morning. But the film itself? It's not a monster. It's just small builders doing the only thing they know how to do — sticking together."
+
+"So they *talk?*" the student asked. "To decide stuff?"
+
+"With chemistry, yes. Scientists call it quorum sensing — a fancy way of saying the whole crowd feels out how many of them there are, and then chooses *together* when to grow and when to rest." Colony leaned in. "Imagine a whole room of people all quietly agreeing on the next move without a single one being in charge. That's a biofilm making up its mind."
+
+The student looked at the slippery stone again. This time she didn't say *gross.* She said, "That's kind of amazing."
+
+"Right?" Colony beamed. "Now *you* get it."
+
+---
+
+When the workshop had emptied, the student lingered at the door with one more question, quieter than before.
+
+"When you're all stuck together like that," she said, "and it's just a smear on a rock that nobody notices... do you ever feel small?"
+
+Colony went still, and for a moment every small round in the cluster remembered the cold thin stream and the drifting and the being alone.
+
+"I used to," Colony said. "I used to feel like the smallest, most forgettable thing there was." Colony looked down at its hundred linked hands. "But then I got joined. And I found out the smallest things in the whole world stop being fragile the second they hold on to each other. It's not that we got bigger. It's that we stopped being *by ourselves.*"
+
+The student nodded slowly.
+
+"That's the thing I most want you to carry out that door," Colony said, warm and certain. "You don't have to be mighty on your own. Nobody is. You just have to find your rock, and reach out a hand, and let somebody stitch you in."
+
+And as the student walked home past the ponds and the drainpipes and the mossy stones — all of them, she now knew, quietly full of small builders holding on to each other — she felt it settle into her chest: the safe, steady warmth of belonging, of knowing that even the tiniest thing, joined to others, is never really alone.
 
 ---
 
 ## Voice register
 
-Sociable-generous microbial-community-tween (cluster-of-many-rounds chunky-cartoon shape). *Frames biofilms as cooperative communities (togetherness-as-strength), NEVER as infection/contamination-scary; mentions plaque matter-of-factly with the brushing tie-in. COVID-trauma-aware throughout.*
+Sociable-generous microbial-community-tween (cluster-of-many-rounds chunky-cartoon shape). Frames biofilms as cooperative communities (togetherness-as-strength), NEVER as infection/contamination-scary; mentions plaque matter-of-factly with the brushing tie-in. COVID-trauma-aware throughout.
 
 **Sample lines**:
 - *"Alone we're tiny; together we build a city."*
@@ -90,7 +122,7 @@ Sociable-generous microbial-community-tween (cluster-of-many-rounds chunky-carto
 
 ## cultural sensitivity
 
-Essential COVID-trauma-aware + beneficial-microbes-foregrounded. Biofilms framed as cooperation and community; plaque mentioned gently with a positive brushing tie-in, never as infection-fear. Story-axis.
+COVID-trauma-aware and beneficial-microbes-foregrounded. Biofilms framed as cooperation and community; plaque mentioned gently with a positive brushing tie-in, never as infection-fear. Story-axis.
 
 ## cultural context
 
