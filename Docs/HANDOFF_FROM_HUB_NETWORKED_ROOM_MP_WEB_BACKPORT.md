@@ -1,28 +1,23 @@
-# HANDOFF — Hub → microbelab-app: networked room MP + pass-and-play (web-pioneered → iOS backport)
+# Handoff from Hub — networked room-code MP (MicrobeLab Duel Online) — web → iOS backport
 
-Direction: **hub → app**. The `/play/microbelab` web clone shipped **networked room-code multiplayer**
-+ **same-device pass-and-play** (Microbe Duel); the iOS app is single-player, so this is a
-web-pioneered learning-relevant feature owed back to iOS (R-CLONE-BIDIRECTIONAL-BACKPORT). 🟡 open.
+Direction: **hub → app**. The MicrobeLab `/play` web clone shipped **networked room-code multiplayer** in its
+ADR-048 expansion pass 2. Per `R-CLONE-BIDIRECTIONAL-BACKPORT`, it is offered back to iOS; 🟡 open until shipped.
 
-## What the web shipped (ADR-048 Wave 2, site PR #905)
-- **Pass-and-play** — 2–4 players take turns on ONE device over the same MC-kit questions; highest
-  first-try score wins. Serverless, on-device (COPPA-safe). Reference: `_shared/passAndPlay.ts`.
-- **Networked room MP** — host mints a short room code → peers join → alternating-turn quiz over the
-  **Cloudflare Durable-Objects + WebSocket** SparkRoom transport (V261, ADR-041). Safety BY DESIGN:
-  NO free-text chat / NO voice / ephemeral generated names / code-gated ephemeral rooms / no accounts /
-  no PII. Reference: `_shared/roomMode.ts` + the live `/api/room/*` Worker.
-- Surfaced flag-gated on a `/play/microbelab/versus` route ('Same device' / 'Online room' tabs).
+## What the web pioneered — "MicrobeLab Duel Online"
+A same-questions quiz duel over a short room code (host mints → peer joins → highest first-try score wins),
+on the shared V261 Cloudflare Durable-Objects + WebSocket transport. **Safety-by-design (non-waivable):** no
+free-text chat / no voice (pre-set emotes) · ephemeral generated names (no PII) · code-gated ephemeral rooms
+(no accounts/persistence/discovery). Same-device pass-and-play ("MicrobeLab Duel") is the offline sibling.
 
 ## Proposed iOS surface
-- **Pass-and-play** → `ForgePassAndPlay` (the 4-stage privacy-curtain hotseat, ForgeKit) over this app's
-  MC kits — 2–4 seats, per-seat first-try score race, anti-shame (private per turn, round always advances).
-- **Room MP** → the ForgeKit server-room model (`RoomRegistry`/`RoomManager`/`BroadcastService`/
-  `ForgeServerMultiplayer`) — the iOS parity of the web SparkRoom transport. Safety-by-design invariants
-  are NON-waivable (no free-text chat/voice; pre-set emotes only; ephemeral names; code-gated rooms).
+ForgeKit owns the server room model (`RoomRegistry`/`RoomManager`/`BroadcastService`/`ForgeServerMultiplayer`).
+Wire a MicrobeLab room-code quiz over the concept kits, mirroring the web duel. Counsel gate CLEARED (ADR-041).
 
-## What this handoff does NOT cover
-The iOS Swift/Xcode implementation — that is this app's own CC session's work. Hub filed this handoff
-(the START of the obligation); the ledger 🟡 row closes when iOS ships or waives it.
+## Reference impl (web)
+`spark-anvil-site/src/lib/play/microbelab/{versus,roomVersus,adventure}.ts` + `_shared/roomMode.ts` (V261 client).
 
-Cross-refs: `.claude/rules/spark-anvil-website.md` § R-WEB-CLONE-MULTIPLAYER / § R-WEB-CLONE-SOCIAL-MODES ·
-ADR-041 · ADR-048 · `.claude/rules/forgekit.md` § ForgePassAndPlay / § Server modules.
+## Not covered
+Hub does NOT write Swift — the app session implements + files `HANDOFF_FROM_APP_*_SHIPPED.md`. No new
+transport / account / PII (COPPA + safety-by-design).
+
+Cross-refs: `spark-anvil-hub/Docs/web/microbelab/PARITY_WEB_VS_IOS.md` · ADR-048 · ADR-041 · `R-WEB-CLONE-MULTIPLAYER`.
