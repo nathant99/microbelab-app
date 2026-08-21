@@ -1232,6 +1232,1056 @@
         }
       ],
       "canonicalVersionIndex": 0
+    },
+    {
+      "id": "80e8c692-a16a-45f6-b556-bac12be4930b",
+      "title": "Colony \u2014 The City The Small Ones Built",
+      "titleSlug": "colony-colony",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "colony"
+      ],
+      "durationSeconds": 179.93,
+      "bundlePath": "AudioDramas/microbelab/colony-colony.caf",
+      "webM4APath": "AudioDramas/microbelab/colony-colony.m4a",
+      "webVTTPath": "AudioDramas/microbelab/colony-colony.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 8970,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 8970,
+          "endMs": 15861,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 15861,
+          "endMs": 28192,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 28192,
+          "endMs": 39043,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 39043,
+          "endMs": 50174,
+          "character": "COLONY"
+        },
+        {
+          "index": 6,
+          "startMs": 50174,
+          "endMs": 59785,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 59785,
+          "endMs": 68756,
+          "character": "COLONY"
+        },
+        {
+          "index": 8,
+          "startMs": 68756,
+          "endMs": 76447,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 76447,
+          "endMs": 85978,
+          "character": "COLONY"
+        },
+        {
+          "index": 10,
+          "startMs": 85978,
+          "endMs": 98229,
+          "character": "COLONY"
+        },
+        {
+          "index": 11,
+          "startMs": 98229,
+          "endMs": 105560,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 105560,
+          "endMs": 115251,
+          "character": "COLONY"
+        },
+        {
+          "index": 13,
+          "startMs": 115251,
+          "endMs": 125262,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 125262,
+          "endMs": 134913,
+          "character": "COLONY"
+        },
+        {
+          "index": 15,
+          "startMs": 134913,
+          "endMs": 146124,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 146124,
+          "endMs": 154575,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 154575,
+          "endMs": 162346,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 162346,
+          "endMs": 168557,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 168557,
+          "endMs": 179928,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/colony",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 179928,
+          "bundlePath": "AudioDramas/microbelab/colony-colony.caf",
+          "webM4APath": "AudioDramas/microbelab/colony-colony.m4a",
+          "webVTTPath": "AudioDramas/microbelab/colony-colony.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "cff23015-2b4d-4c08-a2ce-5450c6e063c2",
+      "title": "Crumble \u2014 The Great Returning",
+      "titleSlug": "crumble-crumble",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "crumble"
+      ],
+      "durationSeconds": 176.37,
+      "bundlePath": "AudioDramas/microbelab/crumble-crumble.caf",
+      "webM4APath": "AudioDramas/microbelab/crumble-crumble.m4a",
+      "webVTTPath": "AudioDramas/microbelab/crumble-crumble.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7810,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7810,
+          "endMs": 15501,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 15501,
+          "endMs": 27392,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 27392,
+          "endMs": 36483,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 5,
+          "startMs": 36483,
+          "endMs": 44814,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 6,
+          "startMs": 44814,
+          "endMs": 54105,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 7,
+          "startMs": 54105,
+          "endMs": 63556,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 8,
+          "startMs": 63556,
+          "endMs": 71327,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 71327,
+          "endMs": 82138,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 10,
+          "startMs": 82138,
+          "endMs": 92909,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 11,
+          "startMs": 92909,
+          "endMs": 105880,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 12,
+          "startMs": 105880,
+          "endMs": 115051,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 13,
+          "startMs": 115051,
+          "endMs": 120942,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 120942,
+          "endMs": 131233,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 15,
+          "startMs": 131233,
+          "endMs": 142484,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 142484,
+          "endMs": 152135,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 152135,
+          "endMs": 159706,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 159706,
+          "endMs": 165237,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 165237,
+          "endMs": 176368,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/crumble",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 176368,
+          "bundlePath": "AudioDramas/microbelab/crumble-crumble.caf",
+          "webM4APath": "AudioDramas/microbelab/crumble-crumble.m4a",
+          "webVTTPath": "AudioDramas/microbelab/crumble-crumble.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "4ae102d2-a681-40eb-bfb8-f4cb1d75b8a9",
+      "title": "Shimmer \u2014 The Living Light",
+      "titleSlug": "shimmer-shimmer",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "shimmer"
+      ],
+      "durationSeconds": 169.89,
+      "bundlePath": "AudioDramas/microbelab/shimmer-shimmer.caf",
+      "webM4APath": "AudioDramas/microbelab/shimmer-shimmer.m4a",
+      "webVTTPath": "AudioDramas/microbelab/shimmer-shimmer.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 7490,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 7490,
+          "endMs": 14861,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 14861,
+          "endMs": 26992,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 26992,
+          "endMs": 38483,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 5,
+          "startMs": 38483,
+          "endMs": 43974,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 6,
+          "startMs": 43974,
+          "endMs": 53705,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 7,
+          "startMs": 53705,
+          "endMs": 65596,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 8,
+          "startMs": 65596,
+          "endMs": 72607,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 72607,
+          "endMs": 79298,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 10,
+          "startMs": 79298,
+          "endMs": 86629,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 11,
+          "startMs": 86629,
+          "endMs": 96640,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 96640,
+          "endMs": 105451,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 13,
+          "startMs": 105451,
+          "endMs": 113062,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 113062,
+          "endMs": 123713,
+          "character": "SHIMMER"
+        },
+        {
+          "index": 15,
+          "startMs": 123713,
+          "endMs": 135004,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 135004,
+          "endMs": 143855,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 143855,
+          "endMs": 150906,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 150906,
+          "endMs": 156717,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 156717,
+          "endMs": 169888,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/shimmer",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 169888,
+          "bundlePath": "AudioDramas/microbelab/shimmer-shimmer.caf",
+          "webM4APath": "AudioDramas/microbelab/shimmer-shimmer.m4a",
+          "webVTTPath": "AudioDramas/microbelab/shimmer-shimmer.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "d17ec1cb-683a-4a5c-9ef1-25e30fa47eb2",
+      "title": "Thrive \u2014 The Life That Won't Give Up",
+      "titleSlug": "thrive-thrive",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "thrive"
+      ],
+      "durationSeconds": 184.41,
+      "bundlePath": "AudioDramas/microbelab/thrive-thrive.caf",
+      "webM4APath": "AudioDramas/microbelab/thrive-thrive.m4a",
+      "webVTTPath": "AudioDramas/microbelab/thrive-thrive.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 8810,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 8810,
+          "endMs": 16741,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 16741,
+          "endMs": 29192,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 29192,
+          "endMs": 39483,
+          "character": "THRIVE"
+        },
+        {
+          "index": 5,
+          "startMs": 39483,
+          "endMs": 51734,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 6,
+          "startMs": 51734,
+          "endMs": 59985,
+          "character": "THRIVE"
+        },
+        {
+          "index": 7,
+          "startMs": 59985,
+          "endMs": 70436,
+          "character": "THRIVE"
+        },
+        {
+          "index": 8,
+          "startMs": 70436,
+          "endMs": 80967,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 9,
+          "startMs": 80967,
+          "endMs": 92298,
+          "character": "THRIVE"
+        },
+        {
+          "index": 10,
+          "startMs": 92298,
+          "endMs": 100509,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 11,
+          "startMs": 100509,
+          "endMs": 110480,
+          "character": "THRIVE"
+        },
+        {
+          "index": 12,
+          "startMs": 110480,
+          "endMs": 119291,
+          "character": "THRIVE"
+        },
+        {
+          "index": 13,
+          "startMs": 119291,
+          "endMs": 131142,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 14,
+          "startMs": 131142,
+          "endMs": 142273,
+          "character": "THRIVE"
+        },
+        {
+          "index": 15,
+          "startMs": 142273,
+          "endMs": 152284,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 152284,
+          "endMs": 160335,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 160335,
+          "endMs": 167666,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 167666,
+          "endMs": 173037,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 173037,
+          "endMs": 184408,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/thrive",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 184408,
+          "bundlePath": "AudioDramas/microbelab/thrive-thrive.caf",
+          "webM4APath": "AudioDramas/microbelab/thrive-thrive.m4a",
+          "webVTTPath": "AudioDramas/microbelab/thrive-thrive.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "1b345085-7833-4391-8920-681b6423d2f9",
+      "title": "The Great Return \u2014 The Endless Ring",
+      "titleSlug": "the-great-return-the-endless-ring",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "the-great-return"
+      ],
+      "durationSeconds": 185.9,
+      "bundlePath": "AudioDramas/microbelab/the-great-return-the-endless-ring.caf",
+      "webM4APath": "AudioDramas/microbelab/the-great-return-the-endless-ring.m4a",
+      "webVTTPath": "AudioDramas/microbelab/the-great-return-the-endless-ring.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 9370,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 9370,
+          "endMs": 16621,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 16621,
+          "endMs": 27592,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 27592,
+          "endMs": 41363,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 5,
+          "startMs": 41363,
+          "endMs": 49054,
+          "character": "NET"
+        },
+        {
+          "index": 6,
+          "startMs": 49054,
+          "endMs": 59585,
+          "character": "PHOTO"
+        },
+        {
+          "index": 7,
+          "startMs": 59585,
+          "endMs": 67036,
+          "character": "PHOTO"
+        },
+        {
+          "index": 8,
+          "startMs": 67036,
+          "endMs": 78287,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 9,
+          "startMs": 78287,
+          "endMs": 86498,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 10,
+          "startMs": 86498,
+          "endMs": 97429,
+          "character": "NET"
+        },
+        {
+          "index": 11,
+          "startMs": 97429,
+          "endMs": 107000,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 107000,
+          "endMs": 112851,
+          "character": "PHOTO"
+        },
+        {
+          "index": 13,
+          "startMs": 112851,
+          "endMs": 120102,
+          "character": "CRUMBLE"
+        },
+        {
+          "index": 14,
+          "startMs": 120102,
+          "endMs": 129313,
+          "character": "NET"
+        },
+        {
+          "index": 15,
+          "startMs": 129313,
+          "endMs": 136884,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 16,
+          "startMs": 136884,
+          "endMs": 151015,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 151015,
+          "endMs": 159986,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 159986,
+          "endMs": 167037,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 167037,
+          "endMs": 172968,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 20,
+          "startMs": 172968,
+          "endMs": 185899,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/the-great-return",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 185899,
+          "bundlePath": "AudioDramas/microbelab/the-great-return-the-endless-ring.caf",
+          "webM4APath": "AudioDramas/microbelab/the-great-return-the-endless-ring.m4a",
+          "webVTTPath": "AudioDramas/microbelab/the-great-return-the-endless-ring.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
+    },
+    {
+      "id": "f7315cc5-79c5-46e0-a80d-6cf50840821a",
+      "title": "The Rising \u2014 Two Gifts In One Bowl",
+      "titleSlug": "the-rising-two-gifts",
+      "appSlug": "microbelab",
+      "sourceChapterSlugs": [
+        "the-rising"
+      ],
+      "durationSeconds": 171.02,
+      "bundlePath": "AudioDramas/microbelab/the-rising-two-gifts.caf",
+      "webM4APath": "AudioDramas/microbelab/the-rising-two-gifts.m4a",
+      "webVTTPath": "AudioDramas/microbelab/the-rising-two-gifts.vtt",
+      "chapters": [
+        {
+          "index": 1,
+          "startMs": 0,
+          "endMs": 8210,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 2,
+          "startMs": 8210,
+          "endMs": 14821,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 3,
+          "startMs": 14821,
+          "endMs": 27872,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 4,
+          "startMs": 27872,
+          "endMs": 34003,
+          "character": "YEAST"
+        },
+        {
+          "index": 5,
+          "startMs": 34003,
+          "endMs": 39014,
+          "character": "LACTO"
+        },
+        {
+          "index": 6,
+          "startMs": 39014,
+          "endMs": 46345,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 7,
+          "startMs": 46345,
+          "endMs": 56356,
+          "character": "LACTO"
+        },
+        {
+          "index": 8,
+          "startMs": 56356,
+          "endMs": 65127,
+          "character": "LACTO"
+        },
+        {
+          "index": 9,
+          "startMs": 65127,
+          "endMs": 74578,
+          "character": "YEAST"
+        },
+        {
+          "index": 10,
+          "startMs": 74578,
+          "endMs": 83869,
+          "character": "YEAST"
+        },
+        {
+          "index": 11,
+          "startMs": 83869,
+          "endMs": 93080,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 12,
+          "startMs": 93080,
+          "endMs": 103091,
+          "character": "LACTO"
+        },
+        {
+          "index": 13,
+          "startMs": 103091,
+          "endMs": 110542,
+          "character": "YEAST"
+        },
+        {
+          "index": 14,
+          "startMs": 110542,
+          "endMs": 116873,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 15,
+          "startMs": 116873,
+          "endMs": 124204,
+          "character": "LACTO"
+        },
+        {
+          "index": 16,
+          "startMs": 124204,
+          "endMs": 135055,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 17,
+          "startMs": 135055,
+          "endMs": 143026,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 18,
+          "startMs": 143026,
+          "endMs": 152397,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 19,
+          "startMs": 152397,
+          "endMs": 158288,
+          "character": "NARRATOR"
+        },
+        {
+          "index": 20,
+          "startMs": 158288,
+          "endMs": 171019,
+          "character": "NARRATOR"
+        }
+      ],
+      "moderationSensitivity": "normal",
+      "traumaConstraints": null,
+      "attributionVersion": "v2",
+      "version": "2026-08-20",
+      "releaseDate": "2026-08-20",
+      "aiContentDisclosure": {
+        "vendor": "Gemini 2.5 Flash TTS",
+        "model": "gemini-2.5-flash-preview-tts",
+        "voiceSource": "synthetic",
+        "humanVoiceCloned": false
+      },
+      "coppaDisclosure": {
+        "childVoiceDataCollected": false,
+        "dataRetention": "n/a"
+      },
+      "curriculumAlignment": [
+        "Common Core and Next Generation Science Standards"
+      ],
+      "ageRecommendation": "9-14",
+      "license": "CC BY-NC-SA 4.0",
+      "studio": "Spark and Anvil",
+      "studioStatus": "501(c)(3) public charity (pending)",
+      "traumaAxis": null,
+      "traumaResources": null,
+      "sensitivityReviewer": null,
+      "culturalAdvisor": null,
+      "funder": null,
+      "writingCredit": "Spark and Anvil writing team",
+      "musicCredit": "Spark and Anvil brand sting (pending)",
+      "episodeArtworkAttribution": "Gemini 2.5 Pro illustration pipeline",
+      "cohortDiscoveryUrl": "https://sparkanvil.org/cast/microbelab/the-rising",
+      "versions": [
+        {
+          "vendor": "Gemini 2.5 Flash TTS",
+          "tier": "flash",
+          "dateGenerated": "2026-08-20",
+          "attributionVersion": "v2",
+          "durationMs": 171019,
+          "bundlePath": "AudioDramas/microbelab/the-rising-two-gifts.caf",
+          "webM4APath": "AudioDramas/microbelab/the-rising-two-gifts.m4a",
+          "webVTTPath": "AudioDramas/microbelab/the-rising-two-gifts.vtt"
+        }
+      ],
+      "canonicalVersionIndex": 0
     }
   ]
 }
