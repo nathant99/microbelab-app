@@ -3,6 +3,7 @@ character: Spore
 role: Lessons-layer cast (microbiology primitive — pathogens; opt-in gated)
 app: microbelab
 primitive: SPORE — some friends. some not. all real.
+mnemonic: "Spore knows some microbes are friends and some are not — all of them are real, so learn which is which."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; opt-in gated; STRONGEST gate)
 chapter-round: Round 425 #830

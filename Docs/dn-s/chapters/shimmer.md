@@ -3,6 +3,7 @@ character: Shimmer
 role: Lessons-layer cast (microbiology primitive — bioluminescent microbes)
 app: microbelab
 primitive: SHIMMER — *some tiny life makes its own light.* Bioluminescent microbes turn chemical energy into a soft living glow — lighting up ocean waves at night, glowing in the deep sea, partnering with animals who carry them like lanterns. Living light, made by the smallest things.
+mnemonic: "Shimmer turns chemical energy into a soft living glow — the tiniest life making its own light in the dark sea."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; beneficial-microbes-foregrounded)
 chapter-round: V27 Science Wave 2

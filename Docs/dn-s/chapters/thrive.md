@@ -3,6 +3,7 @@ character: Thrive
 role: Lessons-layer cast (microbiology primitive — extremophiles)
 app: microbelab
 primitive: THRIVE — *life finds a way, even where nothing should live.* Extremophile microbes survive boiling hot springs, frozen ice, crushing deep sea, and water saltier than the ocean. Wherever the world seems impossible, some microbe has made it home.
+mnemonic: "Thrive finds a way where nothing should live — boiling springs, frozen ice, crushing deep sea; some microbe calls it home."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; beneficial-microbes-foregrounded)
 chapter-round: V27 Science Wave 2

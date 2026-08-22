@@ -3,6 +3,7 @@ character: Guard
 role: Lessons-layer cast (microbiology primitive — immune cells; T-cell/macrophage/B-cell)
 app: microbelab
 primitive: GUARD — I check IDs. Patient + careful.
+mnemonic: "Guard checks every ID patiently and carefully — the body's cells that decide who belongs and who's an invader."
 audience: ages 9-14
 register: warmly absurd with subtext (immune-system; closes cast arc)
 chapter-round: Round 425 #830

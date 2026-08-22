@@ -2,7 +2,8 @@
 character: Lacto and Yeast
 role: Ensemble cast (the fermentation pair — Lacto turns food tangy and Yeast turns food airy; two friends quietly transforming the same warm food without any air at all)
 app: microbelab
-primitive: THE RISING — fermentation is tiny life changing food into new food in the warm dark: Lacto makes the tang, Yeast makes the air, and in one bowl of sourdough they do it side by side
+primitive: "THE RISING — fermentation is tiny life changing food into new food in the warm dark: Lacto makes the tang, Yeast makes the air, and in one bowl of sourdough they do it side by side"
+mnemonic: "Lacto makes the tang and Yeast makes the air — two tiny friends changing the same warm dough into sourdough, side by side."
 audience: ages 9-14
 status: SHIPPED
 chapter-round: V680 Ensemble Wave

@@ -3,6 +3,7 @@ character: Lacto
 role: Lessons-layer cast (microbiology primitive — helpful bacteria; Lactobacillus)
 app: microbelab
 primitive: LACTO — friend in your food. friend in your gut.
+mnemonic: "Lacto is a friend in your food and a friend in your gut — the helpful bacteria that keep you well."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; beneficial-microbes-foregrounded)
 chapter-round: Round 425 #830

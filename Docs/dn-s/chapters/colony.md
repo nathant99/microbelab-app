@@ -3,6 +3,7 @@ character: Colony
 role: Lessons-layer cast (microbiology primitive — biofilms / microbial communities)
 app: microbelab
 primitive: COLONY — *microbes build cities together.* Alone, a microbe is tiny and fragile; together, they build biofilms — slimy shared shelters where they cooperate, share food, and protect each other. From dental plaque to pond films to root coatings, microbes are stronger as a community.
+mnemonic: "Colony builds microbe cities — alone a microbe is fragile, but together they make biofilms where they share food and shelter."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; beneficial-microbes-foregrounded)
 chapter-round: V27 Science Wave 2

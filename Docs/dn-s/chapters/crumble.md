@@ -3,6 +3,7 @@ character: Crumble
 role: Lessons-layer cast (microbiology primitive — decomposers / nutrient recyclers)
 app: microbelab
 primitive: CRUMBLE — nothing is wasted; everything is returned. Decomposer microbes break down dead leaves, fallen logs, and food scraps into nutrients the soil can use again. The great recyclers — turning endings back into beginnings.
+mnemonic: "Crumble breaks the dead back into nutrients the soil can use — the recyclers who turn endings into beginnings, wasting nothing."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; beneficial-microbes-foregrounded)
 chapter-round: V27 Science Wave 2

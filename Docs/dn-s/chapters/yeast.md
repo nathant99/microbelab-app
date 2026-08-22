@@ -3,6 +3,7 @@ character: Yeast
 role: Lessons-layer cast (microbiology primitive — helpful fungi; Saccharomyces)
 app: microbelab
 primitive: YEAST — *I make air inside bread.*
+mnemonic: "Yeast makes the air inside bread — tiny fungi puffing the dough up as they eat."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware; helpful-fungi)
 chapter-round: Round 425 #830

@@ -3,6 +3,7 @@ character: Photo, Crumble and Net
 role: Ensemble cast (the great matter cycle — Photo begins it with sunlight, Crumble returns endings to the soil, Net carries what is returned to new life)
 app: microbelab
 primitive: THE GREAT RETURN — sunlight becomes living things (Photo), living things become soil again (Crumble), and soil becomes new life (Net) — one ring that never has an end, only a next beginning
+mnemonic: "Photo makes life from sunlight, Crumble returns life to the soil, and Net carries it to new life — one ring with no end, only a next beginning."
 audience: ages 9-14
 status: SHIPPED
 chapter-round: V680 Ensemble Wave

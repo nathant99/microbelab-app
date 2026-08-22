@@ -3,6 +3,7 @@ character: Photo
 role: Lessons-layer cast (microbiology primitive — photosynthetic microbes; cyanobacteria)
 app: microbelab
 primitive: PHOTO — *sunlight. then air. then everything else.*
+mnemonic: "Photo caught sunlight first, then made the air, then made everything else possible."
 audience: ages 9-14
 register: warmly absurd with subtext (COVID-trauma-aware)
 chapter-round: Round 425 #830

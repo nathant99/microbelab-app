@@ -3,6 +3,7 @@ character: Net
 role: Lessons-layer cast (microbiology primitive — mycorrhizal fungi + nitrogen-fixers)
 app: microbelab
 primitive: NET — forests talk through me. underground networks that share.
+mnemonic: "Net is the underground web that lets forests share — fungal threads passing food and messages between roots."
 audience: ages 9-14
 register: warmly absurd with subtext (cross-app network-systems cluster)
 chapter-round: Round 425 #830
