@@ -400,7 +400,7 @@
       "sourceChapterSlugs": [
         "lacto"
       ],
-      "durationSeconds": 147.12,
+      "durationSeconds": 146.28,
       "bundlePath": "AudioDramas/microbelab/lacto-lacto.caf",
       "webM4APath": "AudioDramas/microbelab/lacto-lacto.m4a",
       "webVTTPath": "AudioDramas/microbelab/lacto-lacto.vtt",
@@ -432,85 +432,85 @@
         {
           "index": 5,
           "startMs": 33923,
-          "endMs": 42414,
+          "endMs": 41534,
           "character": "LACTO"
         },
         {
           "index": 6,
-          "startMs": 42414,
-          "endMs": 50145,
+          "startMs": 41534,
+          "endMs": 49265,
           "character": "LACTO"
         },
         {
           "index": 7,
-          "startMs": 50145,
-          "endMs": 55916,
+          "startMs": 49265,
+          "endMs": 55036,
           "character": "LACTO"
         },
         {
           "index": 8,
-          "startMs": 55916,
-          "endMs": 65487,
+          "startMs": 55036,
+          "endMs": 64607,
           "character": "NARRATOR"
         },
         {
           "index": 9,
-          "startMs": 65487,
-          "endMs": 74498,
+          "startMs": 64607,
+          "endMs": 73618,
           "character": "NARRATOR"
         },
         {
           "index": 10,
-          "startMs": 74498,
-          "endMs": 81029,
+          "startMs": 73618,
+          "endMs": 80149,
           "character": "LACTO"
         },
         {
           "index": 11,
-          "startMs": 81029,
-          "endMs": 89000,
+          "startMs": 80149,
+          "endMs": 88120,
           "character": "NARRATOR"
         },
         {
           "index": 12,
-          "startMs": 89000,
-          "endMs": 96371,
+          "startMs": 88120,
+          "endMs": 95491,
           "character": "LACTO"
         },
         {
           "index": 13,
-          "startMs": 96371,
-          "endMs": 104782,
+          "startMs": 95491,
+          "endMs": 103902,
           "character": "LACTO"
         },
         {
           "index": 14,
-          "startMs": 104782,
-          "endMs": 114313,
+          "startMs": 103902,
+          "endMs": 113433,
           "character": "NARRATOR"
         },
         {
           "index": 15,
-          "startMs": 114313,
-          "endMs": 122324,
+          "startMs": 113433,
+          "endMs": 121444,
           "character": "NARRATOR"
         },
         {
           "index": 16,
-          "startMs": 122324,
-          "endMs": 129175,
+          "startMs": 121444,
+          "endMs": 128295,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 129175,
-          "endMs": 134866,
+          "startMs": 128295,
+          "endMs": 133986,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 134866,
-          "endMs": 147117,
+          "startMs": 133986,
+          "endMs": 146237,
           "character": "NARRATOR"
         }
       ],
@@ -734,7 +734,7 @@
       "sourceChapterSlugs": [
         "photo"
       ],
-      "durationSeconds": 158.17,
+      "durationSeconds": 156.21,
       "bundlePath": "AudioDramas/microbelab/photo-photo.caf",
       "webM4APath": "AudioDramas/microbelab/photo-photo.m4a",
       "webVTTPath": "AudioDramas/microbelab/photo-photo.vtt",
@@ -826,31 +826,31 @@
         {
           "index": 15,
           "startMs": 113753,
-          "endMs": 123524,
+          "endMs": 121524,
           "character": "NARRATOR"
         },
         {
           "index": 16,
-          "startMs": 123524,
-          "endMs": 132215,
+          "startMs": 121524,
+          "endMs": 130215,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 132215,
-          "endMs": 139666,
+          "startMs": 130215,
+          "endMs": 137666,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 139666,
-          "endMs": 145557,
+          "startMs": 137666,
+          "endMs": 143557,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 145557,
-          "endMs": 158168,
+          "startMs": 143557,
+          "endMs": 156168,
           "character": "NARRATOR"
         }
       ],
