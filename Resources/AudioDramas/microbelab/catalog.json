@@ -8,7 +8,7 @@
       "sourceChapterSlugs": [
         "lacto"
       ],
-      "durationSeconds": 270.92,
+      "durationSeconds": 265.65,
       "bundlePath": "AudioDramas/microbelab/lacto-friend-in-your-food.caf",
       "webM4APath": "AudioDramas/microbelab/lacto-friend-in-your-food.m4a",
       "webVTTPath": "AudioDramas/microbelab/lacto-friend-in-your-food.vtt",
@@ -148,25 +148,25 @@
         {
           "index": 23,
           "startMs": 235761,
-          "endMs": 244492,
+          "endMs": 244486,
           "character": "NARRATOR"
         },
         {
           "index": 24,
-          "startMs": 244492,
-          "endMs": 252183,
+          "startMs": 244486,
+          "endMs": 246905,
           "character": "NARRATOR"
         },
         {
           "index": 25,
-          "startMs": 252183,
-          "endMs": 257873,
+          "startMs": 246905,
+          "endMs": 252595,
           "character": "NARRATOR"
         },
         {
           "index": 26,
-          "startMs": 257873,
-          "endMs": 270924,
+          "startMs": 252595,
+          "endMs": 265646,
           "character": "NARRATOR"
         }
       ],
@@ -233,7 +233,7 @@
       "sourceChapterSlugs": [
         "guard"
       ],
-      "durationSeconds": 141.76,
+      "durationSeconds": 136.96,
       "bundlePath": "AudioDramas/microbelab/guard-guard.caf",
       "webM4APath": "AudioDramas/microbelab/guard-guard.m4a",
       "webVTTPath": "AudioDramas/microbelab/guard-guard.vtt",
@@ -325,25 +325,25 @@
         {
           "index": 15,
           "startMs": 107473,
-          "endMs": 116204,
+          "endMs": 116158,
           "character": "NARRATOR"
         },
         {
           "index": 16,
-          "startMs": 116204,
-          "endMs": 123455,
+          "startMs": 116158,
+          "endMs": 118636,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 123455,
-          "endMs": 129346,
+          "startMs": 118636,
+          "endMs": 124527,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 129346,
-          "endMs": 141757,
+          "startMs": 124527,
+          "endMs": 136938,
           "character": "NARRATOR"
         }
       ],
@@ -400,7 +400,7 @@
       "sourceChapterSlugs": [
         "lacto"
       ],
-      "durationSeconds": 146.28,
+      "durationSeconds": 141.6,
       "bundlePath": "AudioDramas/microbelab/lacto-lacto.caf",
       "webM4APath": "AudioDramas/microbelab/lacto-lacto.m4a",
       "webVTTPath": "AudioDramas/microbelab/lacto-lacto.vtt",
@@ -498,19 +498,19 @@
         {
           "index": 16,
           "startMs": 121444,
-          "endMs": 128295,
+          "endMs": 123594,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 128295,
-          "endMs": 133986,
+          "startMs": 123594,
+          "endMs": 129285,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 133986,
-          "endMs": 146237,
+          "startMs": 129285,
+          "endMs": 141536,
           "character": "NARRATOR"
         }
       ],
@@ -567,7 +567,7 @@
       "sourceChapterSlugs": [
         "net"
       ],
-      "durationSeconds": 156.44,
+      "durationSeconds": 151.56,
       "bundlePath": "AudioDramas/microbelab/net-net.caf",
       "webM4APath": "AudioDramas/microbelab/net-net.m4a",
       "webVTTPath": "AudioDramas/microbelab/net-net.vtt",
@@ -665,19 +665,19 @@
         {
           "index": 16,
           "startMs": 131084,
-          "endMs": 138215,
+          "endMs": 133320,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 138215,
-          "endMs": 143866,
+          "startMs": 133320,
+          "endMs": 138971,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 143866,
-          "endMs": 156437,
+          "startMs": 138971,
+          "endMs": 151542,
           "character": "NARRATOR"
         }
       ],
@@ -734,7 +734,7 @@
       "sourceChapterSlugs": [
         "photo"
       ],
-      "durationSeconds": 156.21,
+      "durationSeconds": 151.37,
       "bundlePath": "AudioDramas/microbelab/photo-photo.caf",
       "webM4APath": "AudioDramas/microbelab/photo-photo.m4a",
       "webVTTPath": "AudioDramas/microbelab/photo-photo.vtt",
@@ -838,19 +838,19 @@
         {
           "index": 17,
           "startMs": 130215,
-          "endMs": 137666,
+          "endMs": 132786,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 137666,
-          "endMs": 143557,
+          "startMs": 132786,
+          "endMs": 138677,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 143557,
-          "endMs": 156168,
+          "startMs": 138677,
+          "endMs": 151288,
           "character": "NARRATOR"
         }
       ],
@@ -907,7 +907,7 @@
       "sourceChapterSlugs": [
         "spore"
       ],
-      "durationSeconds": 137.56,
+      "durationSeconds": 133.04,
       "bundlePath": "AudioDramas/microbelab/spore-spore.caf",
       "webM4APath": "AudioDramas/microbelab/spore-spore.m4a",
       "webVTTPath": "AudioDramas/microbelab/spore-spore.vtt",
@@ -1005,19 +1005,19 @@
         {
           "index": 16,
           "startMs": 112244,
-          "endMs": 120135,
+          "endMs": 115576,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 120135,
-          "endMs": 126506,
+          "startMs": 115576,
+          "endMs": 121947,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 126506,
-          "endMs": 137557,
+          "startMs": 121947,
+          "endMs": 132998,
           "character": "NARRATOR"
         }
       ],
@@ -1074,7 +1074,7 @@
       "sourceChapterSlugs": [
         "yeast"
       ],
-      "durationSeconds": 132.68,
+      "durationSeconds": 128.04,
       "bundlePath": "AudioDramas/microbelab/yeast-yeast.caf",
       "webM4APath": "AudioDramas/microbelab/yeast-yeast.m4a",
       "webVTTPath": "AudioDramas/microbelab/yeast-yeast.vtt",
@@ -1172,19 +1172,19 @@
         {
           "index": 16,
           "startMs": 107524,
-          "endMs": 115535,
+          "endMs": 110886,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 115535,
-          "endMs": 120906,
+          "startMs": 110886,
+          "endMs": 116257,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 120906,
-          "endMs": 132677,
+          "startMs": 116257,
+          "endMs": 128028,
           "character": "NARRATOR"
         }
       ],
@@ -1241,7 +1241,7 @@
       "sourceChapterSlugs": [
         "colony"
       ],
-      "durationSeconds": 179.93,
+      "durationSeconds": 174.77,
       "bundlePath": "AudioDramas/microbelab/colony-colony.caf",
       "webM4APath": "AudioDramas/microbelab/colony-colony.m4a",
       "webVTTPath": "AudioDramas/microbelab/colony-colony.vtt",
@@ -1339,25 +1339,25 @@
         {
           "index": 16,
           "startMs": 146124,
-          "endMs": 154575,
+          "endMs": 154536,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 154575,
-          "endMs": 162346,
+          "startMs": 154536,
+          "endMs": 157152,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 162346,
-          "endMs": 168557,
+          "startMs": 157152,
+          "endMs": 163363,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 168557,
-          "endMs": 179928,
+          "startMs": 163363,
+          "endMs": 174734,
           "character": "NARRATOR"
         }
       ],
@@ -1414,7 +1414,7 @@
       "sourceChapterSlugs": [
         "crumble"
       ],
-      "durationSeconds": 176.37,
+      "durationSeconds": 171.0,
       "bundlePath": "AudioDramas/microbelab/crumble-crumble.caf",
       "webM4APath": "AudioDramas/microbelab/crumble-crumble.m4a",
       "webVTTPath": "AudioDramas/microbelab/crumble-crumble.vtt",
@@ -1512,25 +1512,25 @@
         {
           "index": 16,
           "startMs": 142484,
-          "endMs": 152135,
+          "endMs": 152089,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 152135,
-          "endMs": 159706,
+          "startMs": 152089,
+          "endMs": 154328,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 159706,
-          "endMs": 165237,
+          "startMs": 154328,
+          "endMs": 159859,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 165237,
-          "endMs": 176368,
+          "startMs": 159859,
+          "endMs": 170990,
           "character": "NARRATOR"
         }
       ],
@@ -1587,7 +1587,7 @@
       "sourceChapterSlugs": [
         "shimmer"
       ],
-      "durationSeconds": 169.89,
+      "durationSeconds": 164.86,
       "bundlePath": "AudioDramas/microbelab/shimmer-shimmer.caf",
       "webM4APath": "AudioDramas/microbelab/shimmer-shimmer.m4a",
       "webVTTPath": "AudioDramas/microbelab/shimmer-shimmer.vtt",
@@ -1685,25 +1685,25 @@
         {
           "index": 16,
           "startMs": 135004,
-          "endMs": 143855,
+          "endMs": 143815,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 143855,
-          "endMs": 150906,
+          "startMs": 143815,
+          "endMs": 145868,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 150906,
-          "endMs": 156717,
+          "startMs": 145868,
+          "endMs": 151679,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 156717,
-          "endMs": 169888,
+          "startMs": 151679,
+          "endMs": 164850,
           "character": "NARRATOR"
         }
       ],
@@ -1760,7 +1760,7 @@
       "sourceChapterSlugs": [
         "thrive"
       ],
-      "durationSeconds": 184.41,
+      "durationSeconds": 179.35,
       "bundlePath": "AudioDramas/microbelab/thrive-thrive.caf",
       "webM4APath": "AudioDramas/microbelab/thrive-thrive.m4a",
       "webVTTPath": "AudioDramas/microbelab/thrive-thrive.vtt",
@@ -1858,25 +1858,25 @@
         {
           "index": 16,
           "startMs": 152284,
-          "endMs": 160335,
+          "endMs": 160315,
           "character": "NARRATOR"
         },
         {
           "index": 17,
-          "startMs": 160335,
-          "endMs": 167666,
+          "startMs": 160315,
+          "endMs": 162572,
           "character": "NARRATOR"
         },
         {
           "index": 18,
-          "startMs": 167666,
-          "endMs": 173037,
+          "startMs": 162572,
+          "endMs": 167943,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 173037,
-          "endMs": 184408,
+          "startMs": 167943,
+          "endMs": 179314,
           "character": "NARRATOR"
         }
       ],
@@ -2112,7 +2112,7 @@
       "sourceChapterSlugs": [
         "the-rising"
       ],
-      "durationSeconds": 171.02,
+      "durationSeconds": 164.66,
       "bundlePath": "AudioDramas/microbelab/the-rising-two-gifts.caf",
       "webM4APath": "AudioDramas/microbelab/the-rising-two-gifts.m4a",
       "webVTTPath": "AudioDramas/microbelab/the-rising-two-gifts.vtt",
@@ -2222,19 +2222,19 @@
         {
           "index": 18,
           "startMs": 143026,
-          "endMs": 152397,
+          "endMs": 146005,
           "character": "NARRATOR"
         },
         {
           "index": 19,
-          "startMs": 152397,
-          "endMs": 158288,
+          "startMs": 146005,
+          "endMs": 151896,
           "character": "NARRATOR"
         },
         {
           "index": 20,
-          "startMs": 158288,
-          "endMs": 171019,
+          "startMs": 151896,
+          "endMs": 164627,
           "character": "NARRATOR"
         }
       ],
