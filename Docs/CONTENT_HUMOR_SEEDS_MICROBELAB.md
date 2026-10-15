@@ -312,6 +312,8 @@ Each joke follows the `ForgeJokeData` schema: `jokeType`, `setup`, `punchline`, 
 
 ## Fun Facts (15)
 
+> **Honest Hooks (Program #231, ADR-326, 2026-10-14).** The fun facts below are superseded by spark-anvil-hub `Resources/HonestHooks/microbelab.json` and by `Docs/HANDOFF_FROM_HUB_HONEST_HOOKS.md` in this repo: each was checked against a source, marked (True / Stretched / Nobody knows), corrected where needed, and given one next why.
+
 ### Fun Fact 1
 - **Joke**: Did you know? Antibodies are Y-shaped proteins that lock onto germs with a "lock-and-key" fit. Each antibody matches ONE specific antigen (marker) on a germ -- that precision is what makes them so powerful!
 - **Grade band**: 6-7
