@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Most microbes are beneficial or neutral. Only a small fraction can make people sick.",
-      "curriculumStandard": "NGSS MS-LS1-1"
+      "curriculumStandard": "NGSS MS-LS1-1",
+      "correctAnswer": "Helpful or harmless",
+      "distractors": [
+        "Always dangerous",
+        "Always pathogenic",
+        "Only useful for medicine"
+      ]
     },
     {
       "id": "AAAAA001-0000-4001-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Lactobacillus species are bacteria — they're single-celled and often help with digestion.",
-      "curriculumStandard": "NGSS MS-LS1-1"
+      "curriculumStandard": "NGSS MS-LS1-1",
+      "correctAnswer": "Bacteria",
+      "distractors": [
+        "Virus",
+        "Fungi",
+        "Protist"
+      ]
     },
     {
       "id": "AAAAA001-0000-4001-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Yeast ferments sugars and releases carbon dioxide, which is what makes bread dough rise.",
-      "curriculumStandard": "NGSS MS-LS1-2"
+      "curriculumStandard": "NGSS MS-LS1-2",
+      "correctAnswer": "Carbon dioxide bubbles",
+      "distractors": [
+        "Iron and calcium",
+        "Water and oil",
+        "Salt"
+      ]
     },
     {
       "id": "AAAAA001-0000-4001-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Most bacteria are too small for the naked eye but visible at light-microscope tier — around 100× magnification.",
-      "curriculumStandard": "NGSS MS-LS1-1"
+      "curriculumStandard": "NGSS MS-LS1-1",
+      "correctAnswer": "Light microscope (around 100×)",
+      "distractors": [
+        "Naked eye",
+        "Magnifying glass",
+        "Telescope"
+      ]
     },
     {
       "id": "AAAAA001-0000-4001-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Bifidobacteria feast on dietary fiber — that's why fiber-rich meals tend to support a thriving microbiome.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Fiber from fruits and vegetables",
+      "distractors": [
+        "Plain water only",
+        "Iron filings",
+        "Wood and rocks"
+      ]
     }
   ]
 }

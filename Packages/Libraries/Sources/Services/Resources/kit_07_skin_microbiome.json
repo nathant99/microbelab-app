@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Every patch of skin hosts its own neighborhood of microbes. Dry skin, oily skin, and damp skin each carry their own crowd — all part of you.",
-      "curriculumStandard": "NGSS MS-LS2-2"
+      "curriculumStandard": "NGSS MS-LS2-2",
+      "correctAnswer": "Across the whole surface of your skin — face, arms, scalp, everywhere",
+      "distractors": [
+        "Only inside your blood",
+        "Only on your fingertips",
+        "Only when you're sick"
+      ]
     },
     {
       "id": "AAAAA007-0000-4007-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Cutibacterium acnes is on almost everyone — it feeds on the skin's natural oils and is mostly a quiet helper. Skin changes happen for many reasons; this microbe is one small part of a much bigger ecology.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Keeps the skin balanced by living quietly on natural skin oils",
+      "distractors": [
+        "Only appears after exercise",
+        "Lives only inside the stomach",
+        "Cannot survive on humans"
+      ]
     },
     {
       "id": "AAAAA007-0000-4007-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Demodex mites are part of the normal skin community for nearly everyone. They're tiny, they're quiet, and they're just one more member of the garden.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Live quietly in skin pores and don't cause trouble",
+      "distractors": [
+        "Are dangerous to everyone",
+        "Live only in soil, never on people",
+        "Bite human skin every day"
+      ]
     },
     {
       "id": "AAAAA007-0000-4007-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Skin doesn't need to be sterile — it needs to be cared for. Gentle washing keeps the community in balance; harsh scrubbing can disrupt it.",
-      "curriculumStandard": "NGSS MS-LS2-2"
+      "curriculumStandard": "NGSS MS-LS2-2",
+      "correctAnswer": "Removes excess oil and old skin cells without stripping the protective community",
+      "distractors": [
+        "Sterilizes the skin completely",
+        "Removes all microbes forever",
+        "Makes the skin grow new layers instantly"
+      ]
     },
     {
       "id": "AAAAA007-0000-4007-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Skin sensitivities happen to many people, at every age. They don't mean anyone failed — the skin community just needs more care, and sometimes a grown-up or doctor to help figure out what.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "A sign the skin community needs a little support — moisturizer, calm care, sometimes a doctor's help",
+      "distractors": [
+        "A sign someone did something wrong",
+        "A reason to feel bad about yourself",
+        "Permanent and unfixable"
+      ]
     },
     {
       "id": "AAAAA007-0000-4007-8000-000000000006",
@@ -81,7 +111,13 @@
       ],
       "correctIndex": 0,
       "explanation": "The skin garden — like the gut and the mouth — is mostly quiet helpers. Everyone's skin community is slightly different, and that's part of what makes you, you.",
-      "curriculumStandard": "NGSS MS-LS2-2"
+      "curriculumStandard": "NGSS MS-LS2-2",
+      "correctAnswer": "Quiet members that help keep the skin's protective layer working",
+      "distractors": [
+        "Always dangerous",
+        "Identical across every person",
+        "Visible to the human eye"
+      ]
     }
   ]
 }

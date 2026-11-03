@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Fiber feeds beneficial gut microbes — they ferment it into short-chain fatty acids the body uses for energy.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Plenty of fiber from fruits, vegetables, and whole grains",
+      "distractors": [
+        "Only sugar",
+        "Only fat",
+        "Nothing at all for several days"
+      ]
     },
     {
       "id": "AAAAA002-0000-4002-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Akkermansia feeds on the gut's mucus layer — its presence is often linked to a stronger intestinal lining.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Feeding on the mucus layer and helping keep the gut lining strong",
+      "distractors": [
+        "Eating other microbes",
+        "Making the gut wall thinner",
+        "Producing oxygen"
+      ]
     },
     {
       "id": "AAAAA002-0000-4002-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Antibiotics target bacteria broadly, so they can reduce helpful gut microbes alongside the harmful ones — which is why recovery diets often emphasize fiber.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Reduces many bacteria at once",
+      "distractors": [
+        "Only affects viruses",
+        "Adds extra microbes to the gut",
+        "Has no effect on bacteria"
+      ]
     },
     {
       "id": "AAAAA002-0000-4002-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Trillions of microbes live in the large intestine and colon — it's the densest microbial neighborhood in the body.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Large intestine and colon",
+      "distractors": [
+        "Eyes",
+        "Bone marrow",
+        "Heart"
+      ]
     },
     {
       "id": "AAAAA002-0000-4002-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Diverse plants feed diverse microbes — that's the most reliable way to rebuild a thriving microbiome after a disturbance.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Diverse plants and fiber-rich foods",
+      "distractors": [
+        "Only one type of food",
+        "No food at all",
+        "Only sugary drinks"
+      ]
     },
     {
       "id": "AAAAA002-0000-4002-8000-000000000006",
@@ -81,7 +111,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Lactobacillus species are bacteria — they ferment lactose into lactic acid, which gives yogurt its tang.",
-      "curriculumStandard": "NGSS MS-LS1-1"
+      "curriculumStandard": "NGSS MS-LS1-1",
+      "correctAnswer": "Bacteria",
+      "distractors": [
+        "Fungi",
+        "Protist",
+        "Virus"
+      ]
     }
   ]
 }

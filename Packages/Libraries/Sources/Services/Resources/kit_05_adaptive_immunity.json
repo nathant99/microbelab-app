@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Adaptive immunity is slower the first time you meet a microbe — but it remembers, so the next encounter is faster and calmer.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Learns the shape of each microbe and remembers it next time",
+      "distractors": [
+        "Works faster than innate immunity on the first encounter",
+        "Only protects the skin",
+        "Replaces innate immunity once you're older"
+      ]
     },
     {
       "id": "AAAAA005-0000-4005-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "B-cells produce antibodies. Each B-cell makes antibodies shaped to recognize one specific kind of microbe.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Make antibodies — small proteins shaped to match a specific microbe",
+      "distractors": [
+        "Carry oxygen through the blood",
+        "Send signals to the stomach",
+        "Store calcium for bones"
+      ]
     },
     {
       "id": "AAAAA005-0000-4005-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Antibodies are shaped to fit specific molecules on a microbe's surface — a little like a key fitting a lock.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Matching its shape to a matching shape on the microbe's surface",
+      "distractors": [
+        "Listening for sounds the microbe makes",
+        "Reading the microbe's DNA letter by letter",
+        "Smelling the microbe through the bloodstream"
+      ]
     },
     {
       "id": "AAAAA005-0000-4005-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Memory B-cells are why your second meeting with a microbe is usually shorter and gentler than the first.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Recognizing the shape quickly and making the right antibodies sooner",
+      "distractors": [
+        "Asking your brain to remember",
+        "Producing red blood cells faster",
+        "Raising your temperature for the rest of your life"
+      ]
     },
     {
       "id": "AAAAA005-0000-4005-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "A vaccine introduces the shape of a microbe — or part of it — so the body can practice. If the real microbe shows up later, memory B-cells are already ready.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Showing the body the shape of a microbe so memory B-cells form ahead of time",
+      "distractors": [
+        "Adding more red blood cells",
+        "Replacing your immune system entirely",
+        "Removing all microbes from your body"
+      ]
     },
     {
       "id": "AAAAA005-0000-4005-8000-000000000006",
@@ -81,7 +111,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Adaptive immunity learns which microbes are part of normal life and which are not. Most of what it meets is friendly — it remembers that too.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Quiet helpers it learns to recognize and leave alone",
+      "distractors": [
+        "Always dangerous",
+        "Too small to be recognized",
+        "Made of metal"
+      ]
     }
   ]
 }
