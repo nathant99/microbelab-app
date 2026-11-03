@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Macrophages are big patrol cells — they engulf microbes and debris through a process called phagocytosis.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Surrounding and engulfing microbes the body decides to clear",
+      "distractors": [
+        "Making the heart beat faster",
+        "Producing red blood cells",
+        "Storing fat"
+      ]
     },
     {
       "id": "AAAAA003-0000-4003-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Innate immunity is the fast, general first response — you have it from birth, and it doesn't need to learn each microbe individually.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "First, quick, general response that you're born with",
+      "distractors": [
+        "Slow custom response that learns over months",
+        "Way to make new red blood cells",
+        "Way to digest fiber"
+      ]
     },
     {
       "id": "AAAAA003-0000-4003-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Skin is the body's first barrier — most microbes never get past intact skin.",
-      "curriculumStandard": "NHES 1"
+      "curriculumStandard": "NHES 1",
+      "correctAnswer": "Forms a calm physical barrier most microbes can't cross",
+      "distractors": [
+        "Senses temperature only",
+        "Stores extra blood",
+        "Sends signals to your stomach"
+      ]
     },
     {
       "id": "AAAAA003-0000-4003-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Most microbes the immune system meets are harmless — it learns to wave them through. Only a small fraction trigger a full response.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "The immune cell deciding the microbe is safe and letting it pass",
+      "distractors": [
+        "An infection every time",
+        "A high fever",
+        "Permanent damage"
+      ]
     },
     {
       "id": "AAAAA003-0000-4003-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Hand-washing physically removes microbes from your hands so they never get a chance to enter your eyes, nose, or mouth.",
-      "curriculumStandard": "NHES 7"
+      "curriculumStandard": "NHES 7",
+      "correctAnswer": "Removes microbes before they ever reach the body's barriers",
+      "distractors": [
+        "Makes your skin thicker",
+        "Adds new white blood cells",
+        "Cools your body down"
+      ]
     },
     {
       "id": "AAAAA003-0000-4003-8000-000000000006",
@@ -81,7 +111,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Redness, warmth, and a little swelling are signs that blood flow and immune cells are flowing to the area to clean up and help repair.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Immune cells are arriving to clean up and help repair",
+      "distractors": [
+        "The injury is permanent",
+        "The skin will never heal",
+        "Bones are breaking"
+      ]
     }
   ]
 }

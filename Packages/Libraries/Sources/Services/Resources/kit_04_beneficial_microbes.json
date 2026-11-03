@@ -16,7 +16,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Cyanobacteria use sunlight to make their own food and release oxygen — they helped build the oxygen-rich air we breathe today.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Releasing oxygen during photosynthesis over billions of years",
+      "distractors": [
+        "Eating sand",
+        "Trapping water in the ocean",
+        "Creating volcanoes"
+      ]
     },
     {
       "id": "AAAAA004-0000-4004-8000-000000000002",
@@ -29,7 +35,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Mycorrhizal fungi connect tree roots underground in a living network — many plants share resources and warnings through it.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Linking tree roots so plants can share water and nutrients",
+      "distractors": [
+        "Making leaves grow faster than is healthy",
+        "Eating tree bark",
+        "Replacing the soil"
+      ]
     },
     {
       "id": "AAAAA004-0000-4004-8000-000000000003",
@@ -42,7 +54,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Most E. coli strains are harmless gut residents — they help produce vitamin K, which the body uses for healthy bones and blood clotting.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Help make vitamin K inside the gut",
+      "distractors": [
+        "Replace red blood cells",
+        "Cause every infection",
+        "Live only on the moon"
+      ]
     },
     {
       "id": "AAAAA004-0000-4004-8000-000000000004",
@@ -55,7 +73,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Fermented foods use beneficial bacteria (often Lactobacillus) and sometimes yeasts to transform milk, vegetables, or grain into longer-lasting, tangier foods.",
-      "curriculumStandard": "NGSS MS-LS1-1"
+      "curriculumStandard": "NGSS MS-LS1-1",
+      "correctAnswer": "Beneficial bacteria and yeasts",
+      "distractors": [
+        "Viruses only",
+        "No microbes at all",
+        "Soil-only archaea"
+      ]
     },
     {
       "id": "AAAAA004-0000-4004-8000-000000000005",
@@ -68,7 +92,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Akkermansia muciniphila feeds on the gut's mucus layer — when it's thriving, the intestinal lining tends to stay strong.",
-      "curriculumStandard": "NGSS MS-LS1-3"
+      "curriculumStandard": "NGSS MS-LS1-3",
+      "correctAnswer": "Feeding on the mucus layer and helping keep the gut wall strong",
+      "distractors": [
+        "Replacing your liver",
+        "Producing oxygen for your lungs",
+        "Making your heart beat"
+      ]
     },
     {
       "id": "AAAAA004-0000-4004-8000-000000000006",
@@ -81,7 +111,13 @@
       ],
       "correctIndex": 0,
       "explanation": "Deinococcus radiodurans is one of Earth's toughest microbes — scientists study it to learn how life endures conditions that would defeat most cells.",
-      "curriculumStandard": "NGSS MS-LS2-3"
+      "curriculumStandard": "NGSS MS-LS2-3",
+      "correctAnswer": "Survives extreme radiation, cold, and dehydration",
+      "distractors": [
+        "Lives only in milk",
+        "Eats only sugar",
+        "Causes the common cold"
+      ]
     }
   ]
 }
